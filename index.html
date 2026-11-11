@@ -800,13 +800,13 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
   <!-- ================= 事件处置：左侧 ================= -->
   <aside id="evLeft">
     <section class="panel" style="flex:1 1 0;min-height:0">
-      <div class="ph"><i class="dm"></i><h3>单一事件</h3><span class="ev-sum" id="singleSum">共 5 起</span></div>
+      <div class="ph"><i class="dm"></i><h3>单一事件</h3><span class="ev-sum" id="singleSum">共 4 起</span></div>
       <div class="pb" style="display:flex;flex-direction:column;gap:8px;min-height:0">
         <div class="wl-filter" id="singleFilter">
-          <button class="chip on" data-f="all">全部 <b id="sfAll">5</b></button>
+          <button class="chip on" data-f="all">全部 <b id="sfAll">4</b></button>
+          <button class="chip red" data-f="red">红色 <b id="sfRed">1</b></button>
           <button class="chip" data-f="or">橙色 <b id="sfOr">2</b></button>
           <button class="chip" data-f="ye">黄色 <b id="sfYe">1</b></button>
-          <button class="chip" data-f="bl">蓝色 <b id="sfBl">2</b></button>
         </div>
         <div class="ev-list" id="singleList"></div>
         <div class="pager" style="justify-content:space-between">
@@ -905,8 +905,7 @@ const SINGLE=[
  {id:'E-1',town:'大箕铺镇',spot:'石家堍',src:'热成像摄像机 CH-09',time:'2026-11-10 19:42',lv:'red',status:'处置中',sb:'b1',multi:1},
  {id:'E-2',town:'保安镇',spot:'后背山',src:'热成像摄像机 CH-03',time:'2026-11-10 19:19',lv:'or',status:'待派发',sb:'b3'},
  {id:'E-3',town:'陈贵镇',spot:'雷山风景区',src:'热成像摄像机 CH-05',time:'2026-11-10 18:18',lv:'ye',status:'核查中',sb:'b2'},
- {id:'E-4',town:'灵乡镇',spot:'宫台山',src:'卫星热点 · NOAA-20',time:'2026-11-10 17:15',lv:'or',status:'已处置',sb:'b2'},
- {id:'E-5',town:'金湖街道',spot:'龙角山',src:'热成像摄像机 CH-02',time:'2026-11-10 16:47',lv:'bl',status:'已归档',sb:'b2'}
+ {id:'E-4',town:'灵乡镇',spot:'宫台山',src:'卫星热点 · NOAA-20',time:'2026-11-10 17:15',lv:'or',status:'已处置',sb:'b2'}
 ];
 const MULTI=[
  {id:'M-1',town:'大箕铺镇',spot:'石家堍',title:'石家堍森林火情',info:'涉及 3 个部门 · 已持续 20 分钟',lv:'red',status:'联合处置中',sb:'b4'},
