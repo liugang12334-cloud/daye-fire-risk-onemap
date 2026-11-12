@@ -127,18 +127,18 @@ svg{display:block}
 .cam-line em.r{background:var(--red);box-shadow:0 0 8px var(--red)}
 .cam-line b{margin-left:auto;font-family:var(--num);font-size:15px;color:#17549b}
 
-/* 物联感知 */
-.iot-row{display:flex;align-items:center;gap:10px;padding:5px 0}
-.iot-row+.iot-row{border-top:1px dashed rgba(47,141,238,.12)}
-.iot-ico{width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;border:1px solid rgba(47,141,238,.22);background:rgba(47,141,238,.08)}
-.iot-ico svg{width:14px;height:14px;stroke:var(--cy2);fill:none;stroke-width:1.6}
-.iot-name{font-size:12.5px;color:#2c5680;flex:1 1 auto;letter-spacing:.4px}
-.iot-val{font-family:var(--num);font-size:19px;color:#163e66;text-align:right}
-.iot-val .u{font-size:11px;color:#5e7fa0;font-family:"PingFang SC";margin-left:2px}
+/* 应急物资（左栏指标行） */
+.res-row{display:flex;align-items:center;gap:10px;padding:5px 0}
+.res-row+.res-row{border-top:1px dashed rgba(47,141,238,.12)}
+.res-ico{width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;border:1px solid rgba(47,141,238,.22);background:rgba(47,141,238,.08)}
+.res-ico svg{width:14px;height:14px;stroke:var(--cy2);fill:none;stroke-width:1.6}
+.res-name{font-size:12.5px;color:#2c5680;flex:1 1 auto;letter-spacing:.4px}
+.res-val{font-family:var(--num);font-size:19px;color:#163e66;text-align:right}
+.res-val .u{font-size:11px;color:#5e7fa0;font-family:"PingFang SC";margin-left:2px}
 .bar{position:relative;height:5px;margin-top:6px;background:rgba(255,255,255,.07);overflow:hidden}
 .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(47,141,238,.5),var(--cy));box-shadow:0 0 10px rgba(47,141,238,.6)}
 .bar.warn i{background:linear-gradient(90deg,rgba(255,156,61,.5),var(--or))}
-.iot-sub{display:flex;justify-content:space-between;font-size:11px;color:#5e7fa0;margin-top:5px}
+.res-sub{display:flex;justify-content:space-between;font-size:11px;color:#5e7fa0;margin-top:5px}
 
 /* 人工巡护 */
 .m-patrol .pb{display:flex;flex-direction:column;justify-content:space-evenly;gap:6px}
@@ -154,6 +154,30 @@ svg{display:block}
 .pt-cell b{font-family:var(--num);font-size:15px;color:#163e66}
 .pt-cell.hot{background:rgba(255,90,80,.10);border-left-color:rgba(255,90,90,.75)}
 .pt-cell.amb{background:rgba(255,170,60,.09);border-left-color:rgba(255,180,80,.7)}
+
+/* 人工巡护：队伍建设 / 日常巡护 双 tab */
+.p-patrol .pb{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:4px}
+.pt-tabs{display:flex;gap:6px;padding:0 0 6px;border-bottom:1px solid rgba(47,141,238,.18)}
+.pt-tab{flex:1 1 0;height:22px;font-size:11px;color:#2c5680;letter-spacing:.5px;border:1px solid rgba(47,141,238,.22);background:rgba(47,141,238,.08)}
+.pt-tab:hover{border-color:rgba(47,141,238,.45)}
+.pt-tab.on{color:#fff;font-weight:600;border-color:#3fa2f5;background:linear-gradient(180deg,#3fa2f5,#1f7fd6)}
+.pt-pane{display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:6px}
+.pt-pane.on{display:flex}
+.pt-kpis{display:flex;gap:5px}
+.pt-kpi{flex:1 1 0;padding:4px 4px;text-align:center;border:1px solid rgba(47,141,238,.16);background:rgba(47,141,238,.08)}
+.pt-kpi b{display:block;font-family:var(--num);font-size:19px;line-height:1.1;color:#163e66}
+.pt-kpi em{display:block;margin-top:3px;font-size:10px;font-style:normal;color:#5e7fa0;letter-spacing:.2px;white-space:nowrap}
+.pt-sum{display:flex;gap:7px;font-size:10.5px;color:#5e7fa0}
+.pt-sum span{flex:1 1 0;padding:3px 6px;background:rgba(0,150,160,.10);border-left:2px solid rgba(47,141,238,.55);white-space:nowrap}
+.pt-sum b{font-family:var(--num);font-size:14px;color:#163e66;margin-left:4px}
+.pt-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:4px;padding-right:2px}
+.pt-scroll::-webkit-scrollbar{width:4px}
+.pt-scroll::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
+.pt-line{display:flex;align-items:center;gap:6px;padding:4px 6px;font-size:10.5px;color:#2c5680;background:rgba(47,141,238,.06);border-left:2px solid rgba(47,141,238,.45)}
+.pt-line .t{font-family:var(--num);color:#17549b;flex:0 0 auto}
+.pt-line .p{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pt-line .r{flex:0 0 auto;color:#1fa05e}
+.pt-line .r.warn{color:#c9822a}
 
 /* ================= 右栏（总体态势） ================= */
 #rightCol{position:absolute;left:1426px;top:100px;width:478px;height:962px;z-index:10;display:flex;flex-direction:column;gap:10px;transition:opacity .28s,transform .28s}
@@ -405,14 +429,15 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 /* 处置流程 */
 .flow{list-style:none;position:relative;padding-left:2px}
 .flow::before{content:"";position:absolute;left:12px;top:12px;bottom:16px;width:1px;background:linear-gradient(180deg,rgba(47,141,238,.5),rgba(47,141,238,.12))}
-.flow li{position:relative;display:flex;gap:10px;padding:8px 8px 8px 0;cursor:pointer;transition:.16s;border:1px solid transparent}
+.flow li{position:relative;display:flex;gap:10px;padding:6px 8px 6px 0;cursor:pointer;transition:.16s;border:1px solid transparent}
 .flow li:hover{background:rgba(47,141,238,.10);border-color:rgba(47,141,238,.22)}
 .flow li .idx{position:relative;z-index:2;flex:0 0 auto;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;
   font-family:var(--num);font-size:12px;color:#2f8dee;background:#e6f0fa;border:1px solid rgba(47,141,238,.45)}
 .flow li.done .idx{color:#0e3f6e;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5}
 .flow li.now .idx{color:#1a0c02;background:linear-gradient(180deg,#c9822a,#d97a1f);border-color:#c9822a;box-shadow:0 0 16px rgba(255,156,61,.55)}
 .flow li .fc{flex:1 1 auto;min-width:0}
-.flow li .st{font-size:13px;color:#163e66;letter-spacing:.6px;font-weight:600}
+.flow li .st{display:flex;align-items:center;gap:8px;font-size:13px;color:#163e66;letter-spacing:.6px;font-weight:600}
+.flow li .fstate{font-size:10px;font-weight:400;letter-spacing:.2px;color:#5e7fa0;white-space:nowrap}
 .flow li.wait .st{color:#5e7fa0;font-weight:400}
 .flow li .sd{margin-top:3px;font-size:10.5px;color:#5e7fa0;line-height:1.4}
 .flow li .fg{flex:0 0 auto;font-size:10px;padding:2px 6px;height:18px;line-height:13px;letter-spacing:.4px;border:1px solid transparent}
@@ -694,51 +719,60 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
     </section>
 
     <section class="panel m-iot">
-      <div class="ph"><i class="dm"></i><h3>物联感知</h3><button class="more" data-drawer="iot">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
+      <div class="ph"><i class="dm"></i><h3>应急物资</h3><span class="ph-sum">后台建档 · 489 条</span><button class="more" data-drawer="material">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb" style="display:flex;flex-direction:column;justify-content:space-between">
-        <div class="iot-row" style="padding-top:2px">
-          <div class="iot-ico"><svg viewBox="0 0 24 24"><use href="#i-water"/></svg></div>
+        <div class="res-row" style="padding-top:2px">
+          <div class="res-ico"><svg viewBox="0 0 24 24"><use href="#i-box"/></svg></div>
           <div style="flex:1 1 auto">
-            <div style="display:flex;align-items:baseline"><span class="iot-name">已建水箱液位</span><span class="iot-val" style="margin-left:auto">68<span class="u">%</span></span></div>
-            <div class="bar warn"><i style="width:68%"></i></div>
-            <div class="iot-sub"><span>12 座低于 70%</span><span>共 18 座 · 均值 74%</span></div>
-          </div>
-        </div>
-        <div class="iot-row">
-          <div class="iot-ico"><svg viewBox="0 0 24 24"><use href="#i-tower"/></svg></div>
-          <div style="flex:1 1 auto">
-            <div style="display:flex;align-items:baseline"><span class="iot-name">通信终端</span><span class="iot-val" style="margin-left:auto">26<span class="u">台</span></span></div>
-            <div class="bar"><i style="width:96%"></i></div>
-            <div class="iot-sub"><span>在线 25 台</span><span>离线 1 台 · 卫星电话 8 部</span></div>
-          </div>
-        </div>
-        <div class="iot-row">
-          <div class="iot-ico"><svg viewBox="0 0 24 24"><use href="#i-box"/></svg></div>
-          <div style="flex:1 1 auto">
-            <div style="display:flex;align-items:baseline"><span class="iot-name">防火物资库存</span><span class="iot-val" style="margin-left:auto">1,268<span class="u">件</span></span></div>
+            <div style="display:flex;align-items:baseline"><span class="res-name">救援物资</span><span class="res-val" style="margin-left:auto">1,268<span class="u">件</span></span></div>
             <div class="bar"><i style="width:78%"></i></div>
-            <div class="iot-sub"><span>已调拨使用 282 件</span><span>可调用 986 件</span></div>
+            <div class="res-sub"><span>可调用 986 件</span><span>已调拨 282 件</span></div>
+          </div>
+        </div>
+        <div class="res-row">
+          <div class="res-ico"><svg viewBox="0 0 24 24"><use href="#i-command"/></svg></div>
+          <div style="flex:1 1 auto">
+            <div style="display:flex;align-items:baseline"><span class="res-name">应急场所</span><span class="res-val" style="margin-left:auto">18<span class="u">处</span></span></div>
+            <div class="bar"><i style="width:92%"></i></div>
+            <div class="res-sub"><span>储备库 6 处 · 避难场所 12 处</span><span>覆盖 14 个乡镇</span></div>
+          </div>
+        </div>
+        <div class="res-row">
+          <div class="res-ico"><svg viewBox="0 0 24 24"><use href="#i-tower"/></svg></div>
+          <div style="flex:1 1 auto">
+            <div style="display:flex;align-items:baseline"><span class="res-name">救援装备</span><span class="res-val" style="margin-left:auto">64<span class="u">台/套</span></span></div>
+            <div class="bar"><i style="width:86%"></i></div>
+            <div class="res-sub"><span>在用 42 · 待命 22</span><span>水泵 / 无人机 / 通信</span></div>
           </div>
         </div>
       </div>
     </section>
 
     <section class="panel p-patrol">
-      <div class="ph"><i class="dm"></i><h3>人工巡护</h3><button class="more" data-drawer="patrol">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
+      <div class="ph"><i class="dm"></i><h3>人工巡护</h3><span class="ph-sum">今日签到 174 人 · 93.5%</span><button class="more" data-drawer="patrol">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb">
-        <div class="pt-top">
-          <div class="pt-box"><div class="num">186<span class="u">人</span></div><div class="lbl">专业巡查护林员</div></div>
-          <div class="pt-box"><div class="num">24<span class="u">人</span></div><div class="lbl">地灾防治专管员</div></div>
+        <div class="pt-tabs" id="ptTabs">
+          <button class="pt-tab on" data-pt="team">队伍建设</button>
+          <button class="pt-tab" data-pt="daily">日常巡护</button>
         </div>
-        <div class="pt-sub" style="margin-top:2px">群测群防 <span style="color:#5e7fa0">（今日受理）</span></div>
-        <div class="pt-grid">
-          <div class="pt-cell hot"><span>110 转办</span><b>62</b></div>
-          <div class="pt-cell amb"><span>120 上报</span><b>18</b></div>
-          <div class="pt-cell"><span>12345 热线</span><b>46</b></div>
+        <div class="pt-pane on" id="ptTeam">
+          <div class="pt-kpis">
+            <div class="pt-kpi"><b>186</b><em>护林员（人）</em></div>
+            <div class="pt-kpi"><b>3</b><em>扑火队伍（支）</em></div>
+            <div class="pt-kpi"><b>96</b><em>队伍人数（人）</em></div>
+          </div>
+          <div class="pt-sum"><span>地灾防治专管员<b>24</b></span><span>巡护里程<b>1,286</b> km</span></div>
+          <div class="pt-scroll" id="teamList"></div>
+        </div>
+        <div class="pt-pane" id="ptDaily">
+          <div class="pt-kpis">
+            <div class="pt-kpi"><b>428</b><em>巡查次数（次）</em></div>
+            <div class="pt-kpi"><b>86</b><em>巡查地点（处）</em></div>
+          </div>
+          <div class="pt-scroll" id="dailyList"></div>
         </div>
       </div>
-      <div class="pf">今日签到 174 人 · 签到率 93.5% · 巡护里程 1,286 km</div>
-    </section>
+      </section>
   </aside>
 
   <!-- ================= 右栏：总体态势 ================= -->
@@ -786,13 +820,14 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
     </section>
 
     <section class="panel p-warnlist">
-      <div class="ph"><i class="dm"></i><h3>预警列表</h3><span class="ph-sum" id="wlCount">共 6 条</span></div>
+      <div class="ph"><i class="dm"></i><h3>预警列表</h3><span class="ph-sum" id="wlCount">共 7 条</span></div>
       <div class="pb" style="display:flex;flex-direction:column;padding-bottom:8px">
         <div class="wl-filter" id="wlLevel">
           <button class="chip on" data-lv="all">全部</button>
           <button class="chip red" data-lv="red">红色</button>
           <button class="chip" data-lv="or">橙色</button>
           <button class="chip" data-lv="ye">黄色</button>
+          <button class="chip" data-lv="bl">蓝色</button>
           <select class="sel-time" id="wlTime">
             <option value="0">全部时间</option>
             <option value="1">近 1 小时</option>
@@ -841,7 +876,7 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
   <!-- ================= 工单处置：右侧 ================= -->
   <aside id="woRight">
     <section class="panel" style="flex:0 0 452px">
-      <div class="ph"><i class="dm"></i><h3>处置流程</h3><span class="ledger">调度台账 <b>4 / 6</b> 环节</span></div>
+      <div class="ph"><i class="dm"></i><h3>处置流程</h3><span class="ledger">调度台账 <b>4 / 7</b> 环节</span></div>
       <div class="pb" style="padding-top:6px">
         <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:#5e7fa0;margin-bottom:2px">
           <span style="color:#d95b60">◆</span><span>多跨工单处置流程</span>
@@ -893,7 +928,9 @@ tick();setInterval(tick,1000);
 
 /* ================= 数据 ================= */
 const TOWNS=['东岳路街道','东风路街道','罗家桥街道','金湖街道','大箕铺镇','陈贵镇','灵乡镇','保安镇','金山店镇','还地桥镇','金牛镇','刘仁八镇','殷祖镇','茗山乡'];
-/* 统一工单等级体系：预警定级、工单定级、列表筛选、派发时限与处置规则共用同一套（红 / 橙 / 黄） */
+/* 预警等级：红 / 橙 / 黄 / 蓝，蓝色为低等级关注类预警，不生成工单 */
+const WARN_LV={red:'红色',or:'橙色',ye:'黄色',bl:'蓝色'};
+/* 统一工单等级体系：工单定级、列表筛选、派发时限与处置规则共用同一套（红 / 橙 / 黄） */
 const ORDER_LV={red:'红色',or:'橙色',ye:'黄色'};
 const ORDER_LIMIT={red:'30 分钟内到场',or:'1 小时内到场',ye:'2 小时内到场'};
 const ORDER_RULE={red:'人工研判确认',or:'人工研判确认',ye:'AI 自动研判'};
@@ -910,7 +947,9 @@ const WARN=[
  {id:'W-2601',type:'卫星预警',lv:'or',town:'刘仁八镇',spot:'云台山',desc:'NOAA-20 热点像元 3 个，置信度 87%',time:'2026-11-10 18:56',ago:66,status:'待研判',st:'warn',thumb:TH.t5,ai:1},
  {id:'W-2599',type:'人巡预警',lv:'or',town:'灵乡镇',spot:'宫台山',desc:'护林员巡护上报林缘野外用火',time:'2026-11-10 17:20',ago:162,status:'已派发',st:'warn',thumb:TH.t3,ai:0},
  {id:'W-2596',type:'无人机预警',lv:'ye',town:'陈贵镇',spot:'雷山风景区',desc:'巡护航线 UAV-03 烟点识别',time:'2026-11-10 16:05',ago:237,status:'处置中',st:'',thumb:TH.t2,ai:1},
- {id:'W-2593',type:'物联预警',lv:'ye',town:'保安镇',spot:'沼山林区',desc:'林区气象站温度骤升、湿度低于 30%',time:'2026-11-10 15:32',ago:270,status:'已归档',st:'done',thumb:TH.t6,ai:1}
+ {id:'W-2593',type:'物联预警',lv:'ye',town:'保安镇',spot:'沼山林区',desc:'林区气象站温度骤升、湿度低于 30%',time:'2026-11-10 15:32',ago:270,status:'已归档',st:'done',thumb:TH.t6,ai:1},
+ {id:'W-2589',type:'物联预警',lv:'bl',town:'茗山乡',spot:'杨桥林区',desc:'林区气象站回传短时降水，火险等级降至蓝色',time:'2026-11-10 14:26',ago:336,status:'待研判',st:'warn',thumb:TH.t4,ai:1},
+ {id:'W-2586',type:'卫星预警',lv:'bl',town:'殷祖镇',spot:'大冶湖',desc:'FY-3D 低置信度热异常，纳入蓝色关注',time:'2026-11-10 13:48',ago:374,status:'已归档',st:'done',thumb:TH.t6,ai:1}
 ];
 const ORDERS=[
  {id:'WO-2601',town:'大箕铺镇',spot:'石家堍',src:'热成像摄像机 CH-09',time:'2026-11-10 19:42',lv:'red',status:'处置中',sb:'b1',multi:1},
@@ -940,12 +979,13 @@ const MARKS=[
  {k:'grid',x:68,  y:54,  n:'瞭望塔 2 号', m:'值守 1 人 · 可视半径 8 km'}
 ];
 const FLOW=[
- {n:'感知发现',d:'热成像摄像机 CH-09 识别异常热源，AI 初判置信度 94%',st:'ok',tag:'已完成',tm:'19:42'},
- {n:'监测研判',d:'视频 / 卫星 / 护林员上报多源印证，判定为地表火',st:'ok',tag:'已完成',tm:'19:48'},
- {n:'预警下达',d:'预警已推送 3 个涉及部门，乡镇值班室同步签收',st:'ok',tag:'已完成',tm:'19:52'},
- {n:'指挥调度',d:'市森防指统筹，调度 3 个部门联动，派出扑火队 3 支',st:'run',tag:'进行中',tm:'19:58'},
- {n:'现场处置',d:'联合处置中，已持续 20 分钟，火场可见明火 2 处',st:'wait',tag:'待启动',tm:''},
- {n:'评估销号',d:'待火场清理与验收后开展销号评估',st:'wait',tag:'待启动',tm:''}
+ {n:'感知发现',s:'感知发现',d:'热成像摄像机 CH-09 识别异常热源，AI 初判置信度 94%',st:'ok',tag:'已完成',tm:'19:42'},
+ {n:'监测研判',s:'待确认',d:'视频 / 卫星 / 护林员上报多源印证，判定为地表火',st:'ok',tag:'已完成',tm:'19:48'},
+ {n:'预警下达',s:'待指派',d:'预警已推送 3 个涉及部门，乡镇值班室同步签收',st:'ok',tag:'已完成',tm:'19:52'},
+ {n:'指挥调度',s:'待签收',d:'市森防指统筹，调度 3 个部门联动，派出扑火队 3 支',st:'run',tag:'进行中',tm:'19:58'},
+ {n:'现场处置',s:'处置中',d:'联合处置中，已持续 20 分钟，火场可见明火 2 处',st:'wait',tag:'待启动',tm:''},
+ {n:'现场复核',s:'待复核',d:'火场清理与验收复核，上传现场照片与处置结果报告',st:'wait',tag:'待启动',tm:''},
+ {n:'评估销号',s:'已归档',d:'复核通过后开展质效评估，归档销号并同步台账',st:'wait',tag:'待启动',tm:''}
 ];
 const PERF=[
  ['市应急管理局',96,94,95],['市自然资源和建设局',92,90,91],['市公安局',94,93,93],
@@ -981,6 +1021,41 @@ const CAMS=[
 ];
 const IOT_TANKS=[['W-12','灵乡镇 · 宫台山','68%','偏低'],['W-07','大箕铺镇 · 石家堍','74%','正常'],['W-03','陈贵镇 · 雷山','59%','偏低'],['W-15','保安镇 · 沼山','82%','正常'],['W-09','刘仁八镇 · 云台山','66%','偏低'],['W-21','金湖街道 · 龙角山','91%','正常']];
 const MATERIALS=[['风力灭火机','186','142','44'],['灭火水枪','240','188','52'],['防护套装','320','268','52'],['高压水泵','64','52','12'],['无人机电池','128','96','32'],['应急照明','330','240','90']];
+/* 应急资源档案：字段与系统管理 / 应急资源后台「新增资源」一致，本页只读 */
+/* 人工巡护：队伍建设 / 日常巡护 */
+const PATROL_TEAM=[
+ ['市专业扑火一队','42','40','大箕铺镇 / 陈贵镇','在岗'],
+ ['市专业扑火二队','32','31','灵乡镇 / 保安镇','在岗'],
+ ['乡镇半专业队','22','21','刘仁八镇 / 殷祖镇','待命']
+];
+const PATROL_LOGS=[
+ ['08:12','大箕铺镇 · 石家堍','徐志强','林缘用火巡查','正常'],
+ ['08:35','陈贵镇 · 雷山风景区','柯亨林','进山卡口值守','正常'],
+ ['09:06','灵乡镇 · 宫台山','罗宏','重点林区巡护','正常'],
+ ['09:42','保安镇 · 沼山林区','盛磊','枯枝落叶堆积排查','已清理'],
+ ['10:15','刘仁八镇 · 云台山','曹清华','野外用火劝阻','待复核'],
+ ['10:48','金湖街道 · 龙角山','汪义','瞭望塔可视区巡查','正常'],
+ ['11:20','还地桥镇 · 黄金湖','胡学文','湿地防火巡查','正常'],
+ ['11:56','殷祖镇 · 大冶湖','彭芳','林缘带巡护','正常'],
+ ['13:30','茗山乡 · 杨桥林区','马俊','午间高温时段加密巡查','正常'],
+ ['14:08','大箕铺镇 · 后背山','郑宇航','无人机协同核查','正常'],
+ ['15:26','陈贵镇 · 天台山','徐志强','扑火装备点位检查','正常'],
+ ['16:40','灵乡镇 · 宫台山北坡','柯亨林','火险等级蓝色区域复查','正常']
+];
+const RESOURCES=[
+ {code:'RES-MAT-001',name:'风力灭火机',type:'救援物资',cat:'灭火机具',qty:'186',unit:'台',org:'FOREST_FIRE_DUTY',area:'大箕铺镇',pos:'石家堍林区入口',lng:'115.0136',lat:'30.0410',status:'可用',contact:'徐志强',tel:'138****2151',note:'秋季检修合格',src:'后台创建'},
+ {code:'RES-MAT-002',name:'灭火水枪',type:'救援物资',cat:'灭火机具',qty:'240',unit:'支',org:'FOREST_FIRE_DUTY',area:'陈贵镇',pos:'雷山风景区物资点',lng:'114.9205',lat:'29.9866',status:'可用',contact:'柯亨林',tel:'139****8297',note:'与高压水泵配套',src:'后台创建'},
+ {code:'RES-MAT-003',name:'防护套装',type:'救援物资',cat:'个人防护',qty:'320',unit:'套',org:'FOREST_FIRE_DUTY',area:'市应急管理局',pos:'市级中心储备库',lng:'114.9702',lat:'30.0985',status:'可用',contact:'盛磊',tel:'137****4153',note:'含头盔与阻燃服',src:'后台创建'},
+ {code:'RES-MAT-004',name:'防火阻燃服',type:'救援物资',cat:'个人防护',qty:'128',unit:'套',org:'TOWN_DUTY_LX',area:'灵乡镇',pos:'宫台山前置点',lng:'114.8410',lat:'30.0298',status:'维保',contact:'罗宏',tel:'135****8026',note:'8 套返厂维保',src:'后台创建'},
+ {code:'RES-SITE-001',name:'市森林防火物资储备库',type:'应急场所',cat:'物资储备库',qty:'1',unit:'处',org:'FOREST_FIRE_DUTY',area:'金湖街道',pos:'大冶大道北段',lng:'114.9620',lat:'30.0860',status:'可用',contact:'曹清华',tel:'138****6044',note:'市级中心库',src:'后台创建'},
+ {code:'RES-SITE-002',name:'大箕铺镇应急避难场所',type:'应急场所',cat:'应急避难场所',qty:'1',unit:'处',org:'TOWN_DUTY_DJP',area:'大箕铺镇',pos:'镇文化广场',lng:'115.0201',lat:'30.0452',status:'可用',contact:'汪义',tel:'139****3318',note:'可容纳 1200 人',src:'后台创建'},
+ {code:'RES-SITE-003',name:'陈贵镇物资前置点',type:'应急场所',cat:'物资储备库',qty:'1',unit:'处',org:'TOWN_DUTY_CG',area:'陈贵镇',pos:'雷山风景区北门',lng:'114.9188',lat:'29.9901',status:'可用',contact:'胡学文',tel:'137****7721',note:'重点林区前置',src:'后台创建'},
+ {code:'RES-SITE-004',name:'茗山乡应急避难场所',type:'应急场所',cat:'应急避难场所',qty:'1',unit:'处',org:'TOWN_DUTY_MS',area:'茗山乡',pos:'乡中心小学操场',lng:'114.8102',lat:'30.0314',status:'可用',contact:'彭芳',tel:'136****1907',note:'可容纳 800 人',src:'后台创建'},
+ {code:'RES-EQP-001',name:'高压水泵',type:'救援装备',cat:'以水灭火装备',qty:'64',unit:'台',org:'FOREST_FIRE_DUTY',area:'市应急管理局',pos:'市级中心储备库',lng:'114.9702',lat:'30.0985',status:'可用',contact:'盛磊',tel:'137****4153',note:'含配套水带',src:'后台创建'},
+ {code:'RES-EQP-002',name:'双光侦察无人机',type:'救援装备',cat:'航空装备',qty:'8',unit:'架',org:'UAV_CENTER',area:'市自然资源和建设局',pos:'无人机起降点 U-03',lng:'114.9930',lat:'30.0610',status:'可用',contact:'郑宇航',tel:'138****5560',note:'含热成像载荷',src:'后台创建'},
+ {code:'RES-EQP-003',name:'北斗短报文终端',type:'救援装备',cat:'通信装备',qty:'26',unit:'台',org:'COMM_CENTER',area:'市应急管理局',pos:'指挥大厅通信柜',lng:'114.9702',lat:'30.0985',status:'可用',contact:'马俊',tel:'135****2249',note:'无人区巡护配发',src:'后台创建'},
+ {code:'RES-EQP-004',name:'应急照明车',type:'救援装备',cat:'保障装备',qty:'4',unit:'辆',org:'TOWN_DUTY_LX',area:'灵乡镇',pos:'镇政府院内',lng:'114.8410',lat:'30.0298',status:'可用',contact:'罗宏',tel:'135****8026',note:'夜间处置保障',src:'后台创建'}
+];
 const UNITS=[['市应急管理局','市森防指办公室','值班 6 人 · 带队 2 人'],['市自然资源和建设局','森林防火科','值班 4 人 · 技术 2 人'],['市公安局','治安大队','警力 18 人 · 车 4 辆'],['市交通运输局','公路应急中心','机械 3 台 · 人员 12 人'],['市卫生健康委员会','120 急救中心','救护车 2 辆 · 医护 8 人'],['国网黄石电力有限公司','输电运检室','抢修车 2 辆 · 人员 9 人']];
 
 /* ================= 通用 UI ================= */
@@ -1015,7 +1090,7 @@ function wCard(w){
   return '<div class="wcard" data-warn="'+w.id+'">'+
     '<div class="th"><div class="ph-img" style="background:'+w.thumb+'"></div><div class="rgl"></div><em>'+(w.ai?'AI 告警':'人工上报')+'</em></div>'+
     '<div class="wc-main">'+
-      '<div class="wc-t"><h4>'+w.type+' · '+w.town+' · '+w.spot+'</h4><span class="tag '+w.lv+'">'+ORDER_LV[w.lv]+'</span></div>'+
+      '<div class="wc-t"><h4>'+w.type+' · '+w.town+' · '+w.spot+'</h4><span class="tag '+w.lv+'">'+WARN_LV[w.lv]+'</span></div>'+
       '<div class="wc-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+w.desc+'</div>'+
       '<div class="wc-l" style="color:#5e7fa0">告警时间 '+w.time.slice(5)+'</div>'+
       '<div class="wc-f"><span class="wc-st '+(w.st||'')+'"><em></em>'+w.status+'</span>'+
@@ -1065,7 +1140,7 @@ function openWarnDetail(id){
   modal({title:'预警详情',sub:w.id+' · '+w.type,body:
     '<div class="kpi-row">'+
       '<div class="kpi"><em>告警类型</em><b style="font-size:18px">'+w.type+'</b></div>'+
-      '<div class="kpi"><em>工单等级</em><b style="font-size:18px;color:'+({red:'#d95b60',or:'#c9822a',ye:'#ffe08a'})[w.lv]+'">'+ORDER_LV[w.lv]+'工单</b></div>'+
+      '<div class="kpi"><em>预警等级</em><b style="font-size:18px;color:'+({red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'})[w.lv]+'">'+WARN_LV[w.lv]+'预警</b></div>'+
       '<div class="kpi"><em>处置状态</em><b style="font-size:18px">'+w.status+'</b></div>'+
       '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
     '</div>'+
@@ -1073,7 +1148,7 @@ function openWarnDetail(id){
     '<ul class="li-s"><li>监测点位：'+w.town+' · '+w.spot+'</li><li>触发规则：'+w.desc+'</li>'+
     '<li>信号来源：'+(w.ai?'系统自动识别':'护林员上报')+'，接入市城市安全预警平台统一编号 '+w.id+'</li></ul>'+
     '<div class="sec-t">多源印证</div>'+
-    '<div class="ai-box"><h6>AI 研判结果</h6><p>综合视频热源、卫星热点与护林员上报信息，判定该点位为真实火情风险点，建议按 '+ORDER_LV[w.lv]+'工单流程处置。</p>'+
+    '<div class="ai-box"><h6>AI 研判结果</h6><p>综合视频热源、卫星热点与护林员上报信息，'+(w.lv==='bl'?'判定该点位为低等级关注类信号，建议持续监测、暂不生成工单。':'判定该点位为真实火情风险点，建议按 '+WARN_LV[w.lv]+'工单流程处置。')+'</p>'+
     '<div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%"></i></div><b>'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%</b></div></div>'+
     '<div class="note">该预警关联工单：'+(w.town+' · '+w.spot)+'。研判结论提交后同步至工单流转留痕。</div>',
     footer:'<button data-close="1">关闭</button><button class="primary" data-judge2="'+w.id+'">进入研判</button>'});
@@ -1085,7 +1160,7 @@ function judge(id){
   modal({title:'预警研判',sub:w.id+' · '+w.type,w:820,body:
     '<div class="kpi-row">'+
       '<div class="kpi"><em>点位</em><b style="font-size:16px">'+w.town+' · '+w.spot+'</b></div>'+
-      '<div class="kpi"><em>工单等级</em><b style="font-size:16px">'+ORDER_LV[w.lv]+'工单</b></div>'+
+      '<div class="kpi"><em>预警等级</em><b style="font-size:16px">'+WARN_LV[w.lv]+'预警</b></div>'+
       '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
     '</div>'+
     '<div class="sec-t">研判依据</div>'+
@@ -1118,6 +1193,30 @@ function judge(id){
     toast('研判结论已提交：'+v+'，已同步至工单流转记录');
   });
 }
+
+/* ================= 应急物资：清单与档案 ================= */
+function resTbl(type){
+  return tbl(['资源编码','名称','分类','数量','归属单位','所在地区','联系人','状态','档案'],
+    RESOURCES.filter(function(r){return r.type===type;}).map(function(r){
+      return [r.code,r.name,r.cat,r.qty+r.unit,r.org,r.area,r.contact,
+        '<span class="'+(r.status==='可用'?'ok':'warn')+'">'+r.status+'</span>',
+        '<button class="lk" onclick="window.__resDetail(\''+r.code+'\')">查看</button>'];
+    }));
+}
+window.__resDetail=function(code){
+  const r=RESOURCES.filter(function(x){return x.code===code;})[0];
+  if(!r)return;
+  modal({title:'资源档案',sub:r.code+' · '+r.name,w:760,body:
+    '<div class="sec-t">后台创建字段</div>'+
+    tbl(['字段','值'],[
+      ['资源编码',r.code],['名称',r.name],['类型',r.type],['分类',r.cat],
+      ['数量',r.qty],['单位',r.unit],['归属单位（组织编码）',r.org],['所在地区',r.area],
+      ['位置描述',r.pos],['经度',r.lng],['纬度',r.lat],
+      ['状态','<span class="'+(r.status==='可用'?'ok':'warn')+'">'+r.status+'</span>'],
+      ['联系人',r.contact],['联系电话',r.tel],['备注',r.note],['来源',r.src]])+
+    '<div class="note">档案由系统管理 / 应急资源后台创建维护，本页只读展示。</div>',
+    footer:'<button data-close="1">关闭</button>'});
+};
 
 /* ================= 参考详情抽屉 ================= */
 const DRAW={
@@ -1162,43 +1261,40 @@ const DRAW={
       }))+
       '<div class="note">离线点位 CH-11、CH-18 已派单运维，预计 24 小时内恢复；离线期间由邻近点位与无人机巡护补位。</div>';
   }},
-  iot:{t:'物联感知',s:'水箱液位 / 通信终端 / 防火物资',b:function(){
+  material:{t:'应急物资',s:'救援物资 / 应急场所 / 救援装备',b:function(){
     return '<div class="kpi-row">'+
-      '<div class="kpi"><em>消防水箱</em><b>18<small>座</small></b></div>'+
-      '<div class="kpi"><em>平均液位</em><b>74<small>%</small></b></div>'+
-      '<div class="kpi"><em>通信终端</em><b>26<small>台</small></b></div>'+
-      '<div class="kpi"><em>物资库存</em><b>1,268<small>件</small></b></div>'+
-      '<div class="kpi"><em>已调拨</em><b>282<small>件</small></b></div></div>'+
-      '<div class="sec-t">消防水箱液位</div>'+
-      tbl(['编号','位置','液位','状态'],IOT_TANKS.map(function(r){
-        return [r[0],r[1],'<span class="num2">'+r[2]+'</span>','<span class="'+(r[3]==='正常'?'ok':'warn')+'">'+r[3]+'</span>'];
-      }))+
-      '<div class="sec-t">防火物资库存与使用</div>'+
-      tbl(['物资名称','库存（件）','在用（件）','可调用（件）'],MATERIALS.map(function(r){
-        return [r[0],'<span class="num2">'+r[1]+'</span>','<span class="num2">'+r[2]+'</span>','<span class="num2 ok">'+r[3]+'</span>'];
-      }))+
-      '<div class="sec-t">通信终端</div>'+
-      tbl(['类型','数量','在线','备注'],[['卫星电话','8','8','市森防指 / 重点乡镇各 1 部'],['数字对讲机','14','13','1 台待检修'],['北斗短报文终端','4','4','无人区巡护队配发']])+
-      '<div class="note">液位低于 70% 的水箱已列入本周补水计划，物资调拨需经市森防指审批后出库。</div>';
+      '<div class="kpi"><em>资源档案</em><b>489<small>条</small></b></div>'+
+      '<div class="kpi"><em>救援物资</em><b>1,268<small>件</small></b></div>'+
+      '<div class="kpi"><em>应急场所</em><b>18<small>处</small></b></div>'+
+      '<div class="kpi"><em>救援装备</em><b>64<small>台/套</small></b></div>'+
+      '<div class="kpi"><em>可用档案</em><b>486<small>条</small></b></div></div>'+
+      '<div class="sec-t">救援物资</div>'+resTbl('救援物资')+
+      '<div class="sec-t">应急场所</div>'+resTbl('应急场所')+
+      '<div class="sec-t">救援装备</div>'+resTbl('救援装备')+
+      '<div class="note">资源档案由系统管理 / 应急资源后台统一创建与维护，本页只读展示；点击「查看」可核对经纬度、位置描述、联系人与备注等完整字段。</div>';
   }},
-  patrol:{t:'人工巡护',s:'护林员 / 地灾专管员 / 群测群防',b:function(){
+  patrol:{t:'人工巡护',s:'队伍建设 / 日常巡护',b:function(){
     return '<div class="kpi-row">'+
-      '<div class="kpi"><em>专业巡查护林员</em><b>186<small>人</small></b></div>'+
-      '<div class="kpi"><em>今日签到</em><b>174<small>人</small></b></div>'+
-      '<div class="kpi"><em>签到率</em><b>93.5<small>%</small></b></div>'+
-      '<div class="kpi"><em>地灾防治专管员</em><b>24<small>人</small></b></div>'+
-      '<div class="kpi"><em>巡护里程</em><b>1,286<small>km</small></b></div></div>'+
-      '<div class="sec-t">网格巡护在岗情况</div>'+
+      '<div class="kpi"><em>护林员</em><b>186<small>人</small></b></div>'+
+      '<div class="kpi"><em>扑火队伍</em><b>3<small>支</small></b></div>'+
+      '<div class="kpi"><em>队伍人数</em><b>96<small>人</small></b></div>'+
+      '<div class="kpi"><em>今日巡查次数</em><b>428<small>次</small></b></div>'+
+      '<div class="kpi"><em>巡查地点</em><b>86<small>处</small></b></div></div>'+
+      '<div class="sec-t">队伍建设 · 网格巡护在岗情况</div>'+
       tbl(['乡镇（街道）','护林员','今日签到','在岗率','重点林区'],[
         ['大箕铺镇','22','21','95.5%','石家堍 / 后背山'],['陈贵镇','18','17','94.4%','雷山 / 天台山'],
         ['灵乡镇','16','15','93.8%','宫台山'],['保安镇','15','14','93.3%','沼山'],
         ['刘仁八镇','14','13','92.9%','云台山'],['金湖街道','13','12','92.3%','龙角山'],
         ['其他 8 个乡镇（街道）','88','82','93.2%','—']])+
-      '<div class="sec-t">群测群防受理情况（今日）</div>'+
-      tbl(['来源','受理量','已办结','办理中','主要事项'],[
-        ['110 转办','62','54','8','林缘用火、烟点举报'],['120 上报','18','16','2','烧伤救治联动'],
-        ['12345 热线','46','38','8','野外用火、秸秆焚烧投诉']])+
-      '<div class="note">地灾防治专管员兼顾防火期巡查，重点时段执行“一日两巡”并回传带定位照片。</div>';
+      '<div class="sec-t">队伍建设 · 扑火队伍</div>'+
+      tbl(['队伍名称','队伍人数','在岗人数','负责区域','状态'],PATROL_TEAM.map(function(r){
+        return [r[0],r[1],r[2],r[3],'<span class="'+(r[4]==='在岗'?'ok':'warn')+'">'+r[4]+'</span>'];
+      }))+
+      '<div class="sec-t">日常巡护 · 今日巡查记录</div>'+
+      tbl(['巡查时间','巡查地点','巡查人','巡查内容','结果'],PATROL_LOGS.map(function(r){
+        return [r[0],r[1],r[2],r[3],'<span class="'+(r[4]==='正常'?'ok':'warn')+'">'+r[4]+'</span>'];
+      }))+
+      '<div class="note">专业巡查护林员与半专业扑火队按网格排班，重点时段执行“一日两巡”并回传带定位照片；巡查记录按时序滚动更新。</div>';
   }},
   firelv:{t:'森林火险等级',s:'等级判定口径',b:function(){
     return '<div class="sec-t">火险等级判定口径</div>'+
@@ -1250,7 +1346,7 @@ $$('.panel').forEach(function(p){
   p.addEventListener('click',function(e){
     const m=p.querySelector('[data-drawer]');
     if(!m)return;
-    if(e.target.closest('[data-drawer],.flv,.ws,.wcard,.woc,table,button,select,input,textarea,.chip'))return;
+    if(e.target.closest('[data-drawer],.flv,.ws,.wcard,.woc,table,button,select,input,textarea,.chip,.pt-tab,.pt-scroll'))return;
     m.click();
   });
 });
@@ -1516,7 +1612,7 @@ function renderFlow(){
     const cls=f.st==='ok'?'done':f.st==='run'?'now':'wait';
     const fg=f.st==='ok'?'ok':f.st==='run'?'run':'wait';
     return '<li class="'+cls+'" data-step="'+i+'"><span class="idx">'+(i+1)+'</span>'+
-      '<div class="fc"><div class="st">'+f.n+'</div><div class="sd">'+f.d+'</div></div>'+
+      '<div class="fc"><div class="st">'+f.n+'<span class="fstate">对应状态 · '+f.s+'</span></div><div class="sd">'+f.d+'</div></div>'+
       '<span class="fg '+fg+'">'+f.tag+'</span></li>';
   }).join('');
   $$('#flowList li').forEach(function(li){
@@ -1527,7 +1623,8 @@ function stepModal(i){
   const f=FLOW[i];
   modal({title:'环节详情',sub:f.n,w:760,body:
     '<div class="kpi-row"><div class="kpi"><em>环节</em><b style="font-size:17px">'+f.n+'</b></div>'+
-    '<div class="kpi"><em>状态</em><b style="font-size:17px">'+f.tag+'</b></div>'+
+    '<div class="kpi"><em>对应状态</em><b style="font-size:17px">'+f.s+'</b></div>'+
+    '<div class="kpi"><em>进度</em><b style="font-size:17px">'+f.tag+'</b></div>'+
     '<div class="kpi"><em>时间</em><b style="font-size:16px">'+(f.tm||'—')+'</b></div></div>'+
     '<div class="sec-t">处置说明</div><p style="font-size:12.5px;color:#2c5680;line-height:1.8">'+f.d+'</p>'+
     '<div class="sec-t">操作留痕</div>'+
@@ -1606,7 +1703,7 @@ $$('.ws').forEach(function(el){
   el.addEventListener('click',function(){
     const t=el.getAttribute('data-wtype');
     const rows=WARN.filter(function(w){return w.type===t;}).map(function(w){
-      return [w.time.slice(5),w.town+' · '+w.spot,w.desc,'<span class="'+(w.lv==='red'?'bad':w.lv==='or'?'warn':'ok')+'">'+ORDER_LV[w.lv]+'</span>',w.status];
+      return [w.time.slice(5),w.town+' · '+w.spot,w.desc,'<span class="'+(w.lv==='red'?'bad':w.lv==='or'?'warn':'ok')+'">'+WARN_LV[w.lv]+'</span>',w.status];
     });
     modal({title:t+'明细',sub:'今日 '+el.querySelector('b').textContent+' 条',w:860,body:
       (rows.length?tbl(['时间','点位','触发规则','工单等级','状态'],rows):'<div class="note">今日暂无该类预警记录，历史记录可在预警列表按时间筛选查看。</div>')+
@@ -1635,11 +1732,33 @@ $$('.flv').forEach(function(el){
   });
 });
 
+/* ================= 人工巡护：双 tab ================= */
+function renderPatrol(){
+  $('#teamList').innerHTML=PATROL_TEAM.map(function(r){
+    return '<div class="pt-line"><span class="t">'+r[0]+'</span><span class="p">'+r[3]+'</span>'+
+      '<span class="r'+(r[4]==='待命'?' warn':'')+'">'+r[1]+' 人 · '+r[4]+'</span></div>';
+  }).join('');
+  $('#dailyList').innerHTML=PATROL_LOGS.map(function(r){
+    return '<div class="pt-line"><span class="t">'+r[0]+'</span><span class="p">'+r[1]+' · '+r[2]+'</span>'+
+      '<span class="r'+(r[4]==='待复核'?' warn':'')+'">'+r[4]+'</span></div>';
+  }).join('');
+}
+$$('#ptTabs .pt-tab').forEach(function(b){
+  b.addEventListener('click',function(e){
+    e.stopPropagation();
+    $$('#ptTabs .pt-tab').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    const team=b.getAttribute('data-pt')==='team';
+    $('#ptTeam').classList.toggle('on',team);
+    $('#ptDaily').classList.toggle('on',!team);
+  });
+});
+
 /* ================= 初始化 ================= */
 (function init(){
   const sel=$('#regionSel');
   TOWNS.forEach(function(t){const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});
-  renderWL();renderMarks();renderOrders();renderFlow();renderPerf();
+  renderWL();renderMarks();renderOrders();renderFlow();renderPerf();renderPatrol();
 })();
 })();
 </script>
