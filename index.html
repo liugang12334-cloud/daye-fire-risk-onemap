@@ -421,10 +421,6 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 .wop-basis li{list-style:none;display:flex;gap:6px;font-size:11px;line-height:1.5;color:#2c5680}
 .wop-basis li b{flex:0 0 auto;width:14px;height:14px;margin-top:1px;display:grid;place-items:center;font-size:9px;
   color:#fff;background:rgba(47,141,238,.9);font-weight:700}
-.wop-foot{display:flex;gap:8px;margin:12px 12px 0}
-.wop-foot button{flex:1 1 0;height:34px;font-size:13px;letter-spacing:1.2px;border:1px solid rgba(47,141,238,.45);color:#17549b;background:rgba(47,141,238,.12);font-weight:600}
-.wop-foot button.primary{accent-color:unset;color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5;font-weight:600}
-.wop-foot button:hover{filter:brightness(1.12);box-shadow:0 0 18px rgba(47,141,238,.35)}
 
 /* 处置流程 */
 .flow{list-style:none;position:relative;padding-left:2px}
@@ -1446,8 +1442,7 @@ function openOrderPop(id){
       '<li><b>2</b><span>NOAA-20 卫星热点像元与点位偏差 0.6 km，时间差 14 分钟</span></li>'+
       '<li><b>3</b><span>护林员 16:04 现场上传照片可见明火，位于东南坡林缘</span></li>'+
       '<li><b>4</b><span>未来 24 小时无有效降水，午后阵风 6 级，火险等级：橙</span></li>'+
-    '</ul>'+
-    '<div class="wop-foot"><button class="primary" data-act="publish">发布工单</button><button data-act="analyze">分析研判</button></div>';
+    '</ul>';
   const pop=$('#orderPop');pop.innerHTML=html;pop.classList.add('on');
   $('#popX').addEventListener('click',closeOrderPop);
   $$('#orderPop [data-act]').forEach(function(b){
@@ -1459,8 +1454,6 @@ function orderAction(act,d){
   if(act==='spread')return spreadModal(d);
   if(act==='evac')return evacModal(d);
   if(act==='dispatch')return dispatchModal(d);
-  if(act==='publish')return publishModal(d);
-  if(act==='analyze')return analyzeModal(d);
 }
 function spreadModal(d){
   modal({title:'火势蔓延分析',sub:d.town+' · '+d.spot,w:880,body:
@@ -1528,47 +1521,6 @@ function dispatchModal(d){
   $('#dpGo').addEventListener('click',function(){closeModal();closeOrderPop();toast('调度指令已下发，3 个联动部门已签收');});
   $('#dpGroup').addEventListener('click',function(){toast('已创建工单群，成员含 3 个联动部门值班负责人');});
 }
-function publishModal(d){
-  modal({title:'发布工单',sub:'工单要素确认后发布至指挥调度',w:820,body:
-    '<div class="sec-t">工单要素</div>'+
-    '<div class="frow"><div class="fitem"><label>工单标题</label><input value="'+d.town+' · '+d.spot+'森林火情"></div>'+
-    '<div class="fitem"><label>工单等级</label><select>'+['red','or','ye'].map(function(k){return '<option value="'+k+'"'+(k===d.lv?' selected':'')+'>'+ORDER_LV[k]+'工单</option>';}).join('')+'</select></div></div>'+
-    '<div class="frow"><div class="fitem"><label>坐标点位</label><input value="'+d.coord+'"></div>'+
-    '<div class="fitem"><label>发生时间</label><input value="'+d.start+'"></div></div>'+
-    '<div class="frow"><div class="fitem"><label>发布范围</label><div class="radios"><div class="radio on"><em></em>市森防指 + 属地乡镇</div><div class="radio"><em></em>全部联动部门</div><div class="radio"><em></em>社会面通告</div></div></div></div>'+
-    '<div class="frow"><div class="fitem"><label>工单描述</label><textarea>'+d.town+d.spot+'林区发生地表火，过火面积约 '+d.area+' 公顷，西南风 3 级，火头向东南方向蔓延，暂无人员伤亡。</textarea></div></div>'+
-    '<div class="note">发布后将生成工单编号并同步至移动端、短信与站内消息，处置进展按环节回写。</div>',
-    footer:'<button data-close="1">取消</button><button class="primary" id="pbGo">确认发布</button>'});
-  $$('#dlg .radios .radio').forEach(function(r){
-    r.addEventListener('click',function(){$$('#dlg .radios .radio').forEach(function(x){x.classList.remove('on');});r.classList.add('on');});
-  });
-  $('#pbGo').addEventListener('click',function(){
-    closeModal();closeOrderPop();
-    FLOW[3].st='run';renderFlow();
-    toast('工单已发布，编号 WO-2026-1110-007，已推送 4 个接收单位');
-  });
-}
-function analyzeModal(d){
-  modal({title:'分析研判',sub:d.town+' · '+d.spot,w:860,body:
-    '<div class="sec-t">多源信息比对</div>'+
-    tbl(['信号源','观测结论','时间','可信度'],[
-      ['热成像摄像机 CH-09','连续 3 帧高温热源，78℃','19:42','高'],
-      ['卫星热点 NOAA-20','热点像元 3 个，偏差 0.6 km','18:56','中'],
-      ['护林员上报','现场照片可见明火','19:36','高'],
-      ['林区气象站','温度 18℃、湿度 45%、西风 3 级','19:40','高']])+
-    '<div class="sec-t">研判结论</div>'+
-    '<div class="ai-box"><h6>AI 辅助研判</h6><p>判定为<b style="color:#c9822a">真实火情（地表火）</b>，起火点位于东南坡林缘，与人为用火痕迹高度相关；当前火势处于初发阶段，具备快速处置条件，建议按 '+ORDER_LV[d.lv]+'工单派发，'+ORDER_LIMIT[d.lv]+'。</p>'+
-    '<div class="conf"><span>综合置信度</span><div class="bar"><i style="width:94%"></i></div><b>94%</b></div></div>'+
-    '<div class="sec-t">人工确认</div>'+
-    '<div class="radios"><div class="radio on"><em></em>确认属实 · 维持工单等级</div><div class="radio"><em></em>升级为红色工单</div><div class="radio"><em></em>降级为黄色工单</div></div>'+
-    '<div class="note">AI 仅提供辅助建议，最终结论由值班指挥员确认，可回退为纯人工研判。</div>',
-    footer:'<button data-close="1">关闭</button><button class="primary" id="anGo">提交研判结论</button>'});
-  $$('#dlg .radios .radio').forEach(function(r){
-    r.addEventListener('click',function(){$$('#dlg .radios .radio').forEach(function(x){x.classList.remove('on');});r.classList.add('on');});
-  });
-  $('#anGo').addEventListener('click',function(){closeModal();toast('研判结论已提交，已写入工单流转留痕');});
-}
-
 /* ================= 工单列表 ================= */
 function woCard(e,isMulti){
   const title=e.town+' · '+e.spot;
