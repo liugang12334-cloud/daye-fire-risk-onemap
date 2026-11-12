@@ -55,7 +55,7 @@ svg{display:block}
 .tb-btn:hover{color:#fff;border-color:#3fa2f5;background:linear-gradient(180deg,#5cb0f8,#2f8dee);box-shadow:0 0 18px rgba(47,141,238,.35)}
 .tb-btn.on{color:#fff !important;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5;font-weight:600;box-shadow:0 0 22px rgba(47,141,238,.5)}
 .tb-btn.on svg{stroke:#0e3f6e}
-#btnEventTxt{color:inherit}
+#btnOrderTxt{color:inherit}
 .ibtn{position:relative;width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.75);
   background:rgba(255,255,255,.28);border-radius:2px;color:#fff;transition:.18s}
 .ibtn:hover{border-color:var(--cy);color:#fff;box-shadow:0 0 16px rgba(47,141,238,.3)}
@@ -203,6 +203,8 @@ svg{display:block}
 
 /* 预警列表 */
 .wl-filter{display:flex;align-items:center;gap:6px;padding:0 0 8px;flex-wrap:wrap}
+.fl-cap{font-size:10px;color:#5e7fa0;white-space:nowrap;letter-spacing:.3px}
+#orderFilter .chip,#crossFilter .chip{padding:0 7px}
 .chip{height:24px;padding:0 10px;font-size:11px;letter-spacing:.5px;color:#2c5680;
   border:1px solid rgba(47,141,238,.28);background:rgba(47,141,238,.08);transition:.16s}
 .chip:hover{color:#163e66;border-color:rgba(47,141,238,.45)}
@@ -314,31 +316,31 @@ svg{display:block}
 #mapLegend span{display:flex;align-items:center;gap:5px}
 #mapLegend em{width:7px;height:7px;border-radius:50%;box-shadow:0 0 6px currentColor;background:currentColor}
 
-/* ================= 事件处置页 ================= */
-#evLeft,#evRight{position:absolute;top:100px;height:962px;z-index:10;display:none;flex-direction:column;gap:10px;opacity:0;transform:translateY(12px);transition:opacity .28s,transform .28s}
-#evLeft{left:16px;width:370px}
-#evRight{left:1426px;width:478px}
-body.mode-event #leftCol,body.mode-event #rightCol{opacity:0;transform:translateY(12px);pointer-events:none}
-body.mode-event #evLeft,body.mode-event #evRight{display:flex;opacity:1;transform:none}
-body.mode-event #leftCol,body.mode-event #rightCol{display:none}
+/* ================= 工单处置页 ================= */
+#woLeft,#woRight{position:absolute;top:100px;height:962px;z-index:10;display:none;flex-direction:column;gap:10px;opacity:0;transform:translateY(12px);transition:opacity .28s,transform .28s}
+#woLeft{left:16px;width:370px}
+#woRight{left:1426px;width:478px}
+body.mode-order #leftCol,body.mode-order #rightCol{opacity:0;transform:translateY(12px);pointer-events:none}
+body.mode-order #woLeft,body.mode-order #woRight{display:flex;opacity:1;transform:none}
+body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 
-.ev-sum{display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7fa0;margin-left:auto;letter-spacing:.4px}
-.ev-list{flex:1 1 auto;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-right:3px;min-height:0}
-.ev-list::-webkit-scrollbar{width:4px}
-.ev-list::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
-.evc{position:relative;display:flex;align-items:center;gap:10px;padding:9px 10px;cursor:pointer;transition:.16s;
+.ph-sum{display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7fa0;margin-left:auto;letter-spacing:.4px}
+.wo-list{flex:1 1 auto;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-right:3px;min-height:0}
+.wo-list::-webkit-scrollbar{width:4px}
+.wo-list::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
+.woc{position:relative;display:flex;align-items:center;gap:10px;padding:9px 10px;cursor:pointer;transition:.16s;
   background:linear-gradient(90deg,rgba(47,141,238,.12),rgba(47,141,238,.05));border:1px solid rgba(47,141,238,.14)}
-.evc:hover{border-color:rgba(47,141,238,.45);background:linear-gradient(90deg,rgba(47,141,238,.18),rgba(47,141,238,.07))}
-.evc.on{border-color:rgba(47,141,238,.7);background:linear-gradient(90deg,rgba(47,141,238,.22),rgba(47,141,238,.10));box-shadow:inset 2px 0 0 var(--cy)}
-.evc .ei{width:28px;height:28px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;border:1px solid currentColor;color:var(--or)}
-.evc .ei svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7}
-.evc.red .ei{color:#e64550} .evc.or .ei{color:#d9822a} .evc.ye .ei{color:#c9921a} .evc.bl .ei{color:#2f8dee}
-.evc-main{flex:1 1 auto;min-width:0}
-.evc-t{display:flex;align-items:center;gap:6px}
-.evc-t h4{font-size:14px;font-weight:600;color:#163e66;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.evc-s{margin-top:4px;font-size:10px;color:#5e7fa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.evc-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.evc-r .go{font-size:12px;color:#5e7fa0}
+.woc:hover{border-color:rgba(47,141,238,.45);background:linear-gradient(90deg,rgba(47,141,238,.18),rgba(47,141,238,.07))}
+.woc.on{border-color:rgba(47,141,238,.7);background:linear-gradient(90deg,rgba(47,141,238,.22),rgba(47,141,238,.10));box-shadow:inset 2px 0 0 var(--cy)}
+.woc .ei{width:28px;height:28px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;border:1px solid currentColor;color:var(--or)}
+.woc .ei svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7}
+.woc.red .ei{color:#e64550} .woc.or .ei{color:#d9822a} .woc.ye .ei{color:#c9921a}
+.woc-main{flex:1 1 auto;min-width:0}
+.woc-t{display:flex;align-items:center;gap:6px}
+.woc-t h4{font-size:14px;font-weight:600;color:#163e66;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.woc-s{margin-top:4px;font-size:10px;color:#5e7fa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.woc-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.woc-r .go{font-size:12px;color:#5e7fa0}
 .st-tag{height:18px;padding:0 6px;font-size:10px;line-height:17px;letter-spacing:.4px}
 .st-tag.b1{color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6)}
 .st-tag.b2{color:#17549b;background:rgba(58,168,255,.22);border:1px solid rgba(58,168,255,.5)}
@@ -348,53 +350,57 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
 .pager button{width:20px;height:18px;border:1px solid rgba(47,141,238,.22);color:#5e7fa0;font-size:11px;line-height:1}
 .pager button:hover{color:#fff;border-color:#3fa2f5;background:linear-gradient(180deg,#3fa2f5,#1f7fd6)}
 
-/* 事件弹窗（地图内） */
-#eventPop{position:absolute;right:16px;top:56px;z-index:9;width:392px;max-height:860px;overflow-y:auto;display:none;
+/* 工单弹窗（地图内） */
+#orderPop{position:absolute;right:16px;top:56px;z-index:9;width:392px;max-height:860px;overflow-y:auto;display:none;
   padding:0 0 12px;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(240,248,255,.97));
   border:1px solid rgba(120,175,230,.6);box-shadow:0 16px 50px rgba(20,60,110,.35),0 0 30px rgba(47,141,238,.18)}
-#eventPop.on{display:block}
-#eventPop::-webkit-scrollbar{width:4px}
-#eventPop::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
-.ep-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:7px;height:34px;padding:0 10px;background:linear-gradient(90deg,rgba(47,141,238,.14),rgba(47,141,238,.03));
+#orderPop.on{display:block}
+#orderPop::-webkit-scrollbar{width:4px}
+#orderPop::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
+.wop-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:7px;height:34px;padding:0 10px;background:linear-gradient(90deg,rgba(47,141,238,.14),rgba(47,141,238,.03));
   border-bottom:1px solid rgba(47,141,238,.3)}
-.ep-h .dm{width:6px;height:6px;background:var(--red);transform:rotate(45deg);box-shadow:0 0 8px var(--red)}
-.ep-h h4{font-size:14px;color:#17549b;letter-spacing:1px;font-weight:700}
-.ep-h .tag{margin-left:2px}
-.ep-h .x{margin-left:auto;color:#5e7fa0;font-size:15px;line-height:1}
-.ep-h .x:hover{color:#17549b}
-.ep-title{display:flex;align-items:center;gap:9px;padding:10px 12px 8px}
-.ep-title .fi{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#e05257;
+.wop-h .dm{width:6px;height:6px;background:var(--red);transform:rotate(45deg);box-shadow:0 0 8px var(--red)}
+.wop-h h4{font-size:14px;color:#17549b;letter-spacing:1px;font-weight:700}
+.wop-h .tag{margin-left:2px}
+.wop-h .x{margin-left:auto;color:#5e7fa0;font-size:15px;line-height:1}
+.wop-h .x:hover{color:#17549b}
+.wop-title{display:flex;align-items:center;gap:9px;padding:10px 12px 8px}
+.wop-meta{display:flex;align-items:center;gap:12px;margin:0 12px 8px;padding:6px 8px;font-size:10.5px;color:#5e7fa0;
+  background:rgba(47,141,238,.08);border:1px solid rgba(47,141,238,.18)}
+.wop-meta span{white-space:nowrap}
+.wop-meta b{margin-left:3px;color:#17549b;font-weight:600}
+.wop-title .fi{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#e05257;
   background:radial-gradient(circle,rgba(255,80,80,.25),rgba(255,60,60,.06));border:1px solid rgba(255,80,80,.5)}
-.ep-title .fi svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
-.ep-title b{font-size:16px;color:#163e66;letter-spacing:.5px}
-.ep-title .st{margin-left:auto;font-size:10px;color:#c23c46;border:1px solid rgba(230,69,80,.45);background:rgba(230,69,80,.12);padding:2px 6px}
-.ep-coord{display:flex;align-items:center;gap:6px;padding:0 12px 8px;font-size:11px;color:#5e7fa0;font-family:var(--num);letter-spacing:.6px}
-.ep-coord svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8}
-.ep-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:0 12px;background:rgba(47,141,238,.14);border:1px solid rgba(47,141,238,.14)}
-.ep-cell{background:#fff;padding:7px 9px}
-.ep-cell em{display:block;font-size:10px;color:#5e7fa0;font-style:normal;letter-spacing:.6px}
-.ep-cell b{display:block;margin-top:3px;font-family:var(--num);font-size:16px;color:#163e66;font-weight:700}
-.ep-cell b small{font-size:10px;color:#5e7fa0;margin-left:2px;font-family:"PingFang SC";font-weight:400}
-.ep-acts{display:flex;flex-direction:column;gap:6px;margin:10px 12px 0}
-.ep-act{display:flex;align-items:center;gap:9px;padding:8px 10px;cursor:pointer;transition:.16s;
+.wop-title .fi svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
+.wop-title b{font-size:16px;color:#163e66;letter-spacing:.5px}
+.wop-title .st{margin-left:auto;font-size:10px;color:#c23c46;border:1px solid rgba(230,69,80,.45);background:rgba(230,69,80,.12);padding:2px 6px}
+.wop-coord{display:flex;align-items:center;gap:6px;padding:0 12px 8px;font-size:11px;color:#5e7fa0;font-family:var(--num);letter-spacing:.6px}
+.wop-coord svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8}
+.wop-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:0 12px;background:rgba(47,141,238,.14);border:1px solid rgba(47,141,238,.14)}
+.wop-cell{background:#fff;padding:7px 9px}
+.wop-cell em{display:block;font-size:10px;color:#5e7fa0;font-style:normal;letter-spacing:.6px}
+.wop-cell b{display:block;margin-top:3px;font-family:var(--num);font-size:16px;color:#163e66;font-weight:700}
+.wop-cell b small{font-size:10px;color:#5e7fa0;margin-left:2px;font-family:"PingFang SC";font-weight:400}
+.wop-acts{display:flex;flex-direction:column;gap:6px;margin:10px 12px 0}
+.wop-act{display:flex;align-items:center;gap:9px;padding:8px 10px;cursor:pointer;transition:.16s;
   background:linear-gradient(90deg,rgba(47,141,238,.10),rgba(255,255,255,.6));border:1px solid rgba(47,141,238,.22);border-left:2px solid rgba(217,122,31,.8)}
-.ep-act:hover{background:linear-gradient(90deg,rgba(47,141,238,.22),rgba(47,141,238,.10));border-color:rgba(47,141,238,.55)}
-.ep-act i{width:22px;height:22px;display:grid;place-items:center;color:#c9822a;flex:0 0 auto}
-.ep-act i svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7}
-.ep-act div{flex:1 1 auto}
-.ep-act h5{font-size:13px;color:#163e66;font-weight:600;letter-spacing:.5px}
-.ep-act p{margin-top:2px;font-size:10px;color:#5e7fa0}
-.ep-act .ar{color:#5e7fa0;font-size:12px}
-.ep-sec{margin:12px 12px 0;font-size:11px;color:#5e7fa0;letter-spacing:1.2px;display:flex;align-items:center;gap:7px}
-.ep-sec::after{content:"";flex:1 1 auto;height:1px;background:linear-gradient(90deg,rgba(47,141,238,.35),transparent)}
-.ep-basis{margin:7px 12px 0;display:flex;flex-direction:column;gap:5px}
-.ep-basis li{list-style:none;display:flex;gap:6px;font-size:11px;line-height:1.5;color:#2c5680}
-.ep-basis li b{flex:0 0 auto;width:14px;height:14px;margin-top:1px;display:grid;place-items:center;font-size:9px;
+.wop-act:hover{background:linear-gradient(90deg,rgba(47,141,238,.22),rgba(47,141,238,.10));border-color:rgba(47,141,238,.55)}
+.wop-act i{width:22px;height:22px;display:grid;place-items:center;color:#c9822a;flex:0 0 auto}
+.wop-act i svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7}
+.wop-act div{flex:1 1 auto}
+.wop-act h5{font-size:13px;color:#163e66;font-weight:600;letter-spacing:.5px}
+.wop-act p{margin-top:2px;font-size:10px;color:#5e7fa0}
+.wop-act .ar{color:#5e7fa0;font-size:12px}
+.wop-sec{margin:12px 12px 0;font-size:11px;color:#5e7fa0;letter-spacing:1.2px;display:flex;align-items:center;gap:7px}
+.wop-sec::after{content:"";flex:1 1 auto;height:1px;background:linear-gradient(90deg,rgba(47,141,238,.35),transparent)}
+.wop-basis{margin:7px 12px 0;display:flex;flex-direction:column;gap:5px}
+.wop-basis li{list-style:none;display:flex;gap:6px;font-size:11px;line-height:1.5;color:#2c5680}
+.wop-basis li b{flex:0 0 auto;width:14px;height:14px;margin-top:1px;display:grid;place-items:center;font-size:9px;
   color:#fff;background:rgba(47,141,238,.9);font-weight:700}
-.ep-foot{display:flex;gap:8px;margin:12px 12px 0}
-.ep-foot button{flex:1 1 0;height:34px;font-size:13px;letter-spacing:1.2px;border:1px solid rgba(47,141,238,.45);color:#17549b;background:rgba(47,141,238,.12);font-weight:600}
-.ep-foot button.primary{accent-color:unset;color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5;font-weight:600}
-.ep-foot button:hover{filter:brightness(1.12);box-shadow:0 0 18px rgba(47,141,238,.35)}
+.wop-foot{display:flex;gap:8px;margin:12px 12px 0}
+.wop-foot button{flex:1 1 0;height:34px;font-size:13px;letter-spacing:1.2px;border:1px solid rgba(47,141,238,.45);color:#17549b;background:rgba(47,141,238,.12);font-weight:600}
+.wop-foot button.primary{accent-color:unset;color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5;font-weight:600}
+.wop-foot button:hover{filter:brightness(1.12);box-shadow:0 0 18px rgba(47,141,238,.35)}
 
 /* 处置流程 */
 .flow{list-style:none;position:relative;padding-left:2px}
@@ -599,7 +605,7 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
       <div class="lyr on" data-layer="iot"><em></em><span>物联设备</span><i class="sw" style="color:#2f8dee"></i></div>
       <div class="lyr on" data-layer="team"><em></em><span>队伍与物资</span><i class="sw" style="color:#7ce38b"></i></div>
       <div class="lyr on" data-layer="grid"><em></em><span>网格巡护</span><i class="sw" style="color:#a7c6ff"></i></div>
-      <div class="lyr on" data-layer="fire"><em></em><span>火情事件</span><i class="sw" style="color:#e64550"></i></div>
+      <div class="lyr on" data-layer="fire"><em></em><span>火情工单</span><i class="sw" style="color:#e64550"></i></div>
     </div>
 
     <div id="mapInset">
@@ -608,15 +614,15 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
       <div class="isc">1 km</div>
     </div>
     <div id="mapLegend">
-      <span style="color:#e64550"><em></em>火情事件</span>
+      <span style="color:#e64550"><em></em>火情工单</span>
       <span style="color:#2f8dee"><em></em>视频监控</span>
       <span style="color:#3fa2f5"><em></em>无人机</span>
       <span style="color:#ffb454"><em></em>卫星热点</span>
     </div>
     <div id="mapScale"><i></i>2 km</div>
 
-    <!-- 事件弹窗 -->
-    <div id="eventPop"></div>
+    <!-- 工单弹窗 -->
+    <div id="orderPop"></div>
   </div>
 
   <!-- ================= 顶栏 ================= -->
@@ -630,7 +636,7 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
       <div class="tt-en">DIGITAL HUBEI · DAYE&nbsp;&nbsp;FOREST FIRE RISK SCENARIO</div>
     </div>
     <div class="tb-right">
-      <button class="tb-btn" id="btnEvent"><svg width="16" height="16" viewBox="0 0 24 24" class="ico" style="margin-right:2px"><use href="#i-command"/></svg><span id="btnEventTxt">事件处置</span></button>
+      <button class="tb-btn" id="btnOrder"><svg width="16" height="16" viewBox="0 0 24 24" class="ico" style="margin-right:2px"><use href="#i-command"/></svg><span id="btnOrderTxt">工单处置</span></button>
       <button class="ibtn" id="btnBell" title="消息中心">
         <svg viewBox="0 0 24 24"><use href="#i-bell"/></svg><span class="dot">6</span>
       </button>
@@ -754,7 +760,7 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
     </section>
 
     <section class="panel m-fire" style="height:224px">
-      <div class="ph"><i class="dm"></i><h3>森林火险等级</h3><span class="ev-sum">按乡镇判定 · 14 个</span><button class="more" data-drawer="firelv">说明<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
+      <div class="ph"><i class="dm"></i><h3>森林火险等级</h3><span class="ph-sum">按乡镇判定 · 14 个</span><button class="more" data-drawer="firelv">说明<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb">
         <div class="fire-lv">
           <div class="flv" data-lv="1" style="--c:#e64550;--p:7"><div class="ring2"><span>Ⅰ</span></div><div class="nm">一级预警</div><div class="vv">1<small>个</small></div></div>
@@ -767,7 +773,7 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
     </section>
 
     <section class="panel m-wstat" style="height:150px">
-      <div class="ph"><i class="dm"></i><h3>预警信息</h3><span class="ev-sum">今日累计 192 条</span><button class="more" data-drawer="wstat">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
+      <div class="ph"><i class="dm"></i><h3>预警信息</h3><span class="ph-sum">今日累计 192 条</span><button class="more" data-drawer="wstat">详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb">
         <div class="wstat">
           <div class="ws" data-wtype="视频预警"><b>31</b><span>视频预警</span><i></i></div>
@@ -780,7 +786,7 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
     </section>
 
     <section class="panel p-warnlist">
-      <div class="ph"><i class="dm"></i><h3>预警列表</h3><span class="ev-sum" id="wlCount">共 6 条</span></div>
+      <div class="ph"><i class="dm"></i><h3>预警列表</h3><span class="ph-sum" id="wlCount">共 6 条</span></div>
       <div class="pb" style="display:flex;flex-direction:column;padding-bottom:8px">
         <div class="wl-filter" id="wlLevel">
           <button class="chip on" data-lv="all">全部</button>
@@ -799,46 +805,46 @@ body.mode-event #leftCol,body.mode-event #rightCol{display:none}
     </section>
   </aside>
 
-  <!-- ================= 事件处置：左侧 ================= -->
-  <aside id="evLeft">
+  <!-- ================= 工单处置：左侧 ================= -->
+  <aside id="woLeft">
     <section class="panel" style="flex:1 1 0;min-height:0">
-      <div class="ph"><i class="dm"></i><h3>单一事件</h3><span class="ev-sum" id="singleSum">共 4 起</span></div>
+      <div class="ph"><i class="dm"></i><h3>单一工单</h3><span class="ph-sum" id="orderSum">共 4 单</span></div>
       <div class="pb" style="display:flex;flex-direction:column;gap:8px;min-height:0">
-        <div class="wl-filter" id="singleFilter">
+        <div class="wl-filter" id="orderFilter"><span class="fl-cap">工单等级</span>
           <button class="chip on" data-f="all">全部 <b id="sfAll">4</b></button>
           <button class="chip red" data-f="red">红色 <b id="sfRed">1</b></button>
           <button class="chip" data-f="or">橙色 <b id="sfOr">2</b></button>
           <button class="chip" data-f="ye">黄色 <b id="sfYe">1</b></button>
         </div>
-        <div class="ev-list" id="singleList"></div>
+        <div class="wo-list" id="orderList"></div>
         <div class="pager" style="justify-content:space-between">
-          <span style="color:#5e7fa0;font-size:10.5px;white-space:nowrap">今日新增 12 起 · 已处置 5 起</span>
+          <span style="color:#5e7fa0;font-size:10.5px;white-space:nowrap">今日新增 12 单 · 已处置 5 单</span>
           <span style="display:flex;align-items:center;gap:8px"><button>‹</button><span>1 / 1</span><button>›</button></span>
         </div>
       </div>
     </section>
 
     <section class="panel" style="flex:0 0 380px">
-      <div class="ph"><i class="dm"></i><h3>多跨事件</h3><span class="ev-sum">单一事件超 6 小时自动转入</span></div>
+      <div class="ph"><i class="dm"></i><h3>多跨工单</h3><span class="ph-sum">单一工单超 6 小时自动转入</span></div>
       <div class="pb" style="display:flex;flex-direction:column;gap:8px;min-height:0">
-        <div class="wl-filter" id="multiFilter">
+        <div class="wl-filter" id="crossFilter"><span class="fl-cap">工单等级</span>
           <button class="chip on" data-f="all">全部 <b>3</b></button>
           <button class="chip" data-f="red">红色 <b>2</b></button>
           <button class="chip" data-f="or">橙色 <b>1</b></button>
         </div>
-        <div class="ev-list" id="multiList"></div>
+        <div class="wo-list" id="crossList"></div>
       </div>
-      <div class="pf">多跨事件由市森防指统一调度，涉及部门联合处置</div>
+      <div class="pf">多跨工单由市森防指统一调度，涉及部门联合处置</div>
     </section>
   </aside>
 
-  <!-- ================= 事件处置：右侧 ================= -->
-  <aside id="evRight">
+  <!-- ================= 工单处置：右侧 ================= -->
+  <aside id="woRight">
     <section class="panel" style="flex:0 0 452px">
       <div class="ph"><i class="dm"></i><h3>处置流程</h3><span class="ledger">调度台账 <b>4 / 6</b> 环节</span></div>
       <div class="pb" style="padding-top:6px">
         <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:#5e7fa0;margin-bottom:2px">
-          <span style="color:#d95b60">◆</span><span>多跨事件处置流程</span>
+          <span style="color:#d95b60">◆</span><span>多跨工单处置流程</span>
           <span style="margin-left:auto;color:#c9822a">大箕铺镇 · 石家堍森林火情</span>
         </div>
         <ol class="flow" id="flowList"></ol>
@@ -887,7 +893,10 @@ tick();setInterval(tick,1000);
 
 /* ================= 数据 ================= */
 const TOWNS=['东岳路街道','东风路街道','罗家桥街道','金湖街道','大箕铺镇','陈贵镇','灵乡镇','保安镇','金山店镇','还地桥镇','金牛镇','刘仁八镇','殷祖镇','茗山乡'];
-const LV={red:'红色',or:'橙色',ye:'黄色',bl:'蓝色'};
+/* 统一工单等级体系：预警定级、工单定级、列表筛选、派发时限与处置规则共用同一套（红 / 橙 / 黄） */
+const ORDER_LV={red:'红色',or:'橙色',ye:'黄色'};
+const ORDER_LIMIT={red:'30 分钟内到场',or:'1 小时内到场',ye:'2 小时内到场'};
+const ORDER_RULE={red:'人工研判确认',or:'人工研判确认',ye:'AI 自动研判'};
 const TH={
  t1:'radial-gradient(circle at 62% 44%,#ffc078,#c2410c 36%,#4a1508 70%,#1b0a06)',
  t2:'radial-gradient(circle at 40% 60%,#8fd6c8,#2f6f63 40%,#0f2a28)',
@@ -903,16 +912,16 @@ const WARN=[
  {id:'W-2596',type:'无人机预警',lv:'ye',town:'陈贵镇',spot:'雷山风景区',desc:'巡护航线 UAV-03 烟点识别',time:'2026-11-10 16:05',ago:237,status:'处置中',st:'',thumb:TH.t2,ai:1},
  {id:'W-2593',type:'物联预警',lv:'ye',town:'保安镇',spot:'沼山林区',desc:'林区气象站温度骤升、湿度低于 30%',time:'2026-11-10 15:32',ago:270,status:'已归档',st:'done',thumb:TH.t6,ai:1}
 ];
-const SINGLE=[
- {id:'E-1',town:'大箕铺镇',spot:'石家堍',src:'热成像摄像机 CH-09',time:'2026-11-10 19:42',lv:'red',status:'处置中',sb:'b1',multi:1},
- {id:'E-2',town:'保安镇',spot:'后背山',src:'热成像摄像机 CH-03',time:'2026-11-10 19:19',lv:'or',status:'待派发',sb:'b3'},
- {id:'E-3',town:'陈贵镇',spot:'雷山风景区',src:'热成像摄像机 CH-05',time:'2026-11-10 18:18',lv:'ye',status:'核查中',sb:'b2'},
- {id:'E-4',town:'灵乡镇',spot:'宫台山',src:'卫星热点 · NOAA-20',time:'2026-11-10 17:15',lv:'or',status:'已处置',sb:'b2'}
+const ORDERS=[
+ {id:'WO-2601',town:'大箕铺镇',spot:'石家堍',src:'热成像摄像机 CH-09',time:'2026-11-10 19:42',lv:'red',status:'处置中',sb:'b1',multi:1},
+ {id:'WO-2602',town:'保安镇',spot:'后背山',src:'热成像摄像机 CH-03',time:'2026-11-10 19:19',lv:'or',status:'待派发',sb:'b3'},
+ {id:'WO-2603',town:'陈贵镇',spot:'雷山风景区',src:'热成像摄像机 CH-05',time:'2026-11-10 18:18',lv:'ye',status:'核查中',sb:'b2'},
+ {id:'WO-2604',town:'灵乡镇',spot:'宫台山',src:'卫星热点 · NOAA-20',time:'2026-11-10 17:15',lv:'or',status:'已处置',sb:'b2'}
 ];
-const MULTI=[
- {id:'M-1',town:'大箕铺镇',spot:'石家堍',title:'石家堍森林火情',info:'涉及 3 个部门 · 已持续 20 分钟',lv:'red',status:'联合处置中',sb:'b4'},
- {id:'M-2',town:'刘仁八镇',spot:'云台山',title:'云台山跨镇火情',info:'涉及 4 个部门 · 已持续 3 小时 12 分',lv:'red',status:'联合处置中',sb:'b4'},
- {id:'M-3',town:'还地桥镇',spot:'黄金湖',title:'黄金湖湿地火情',info:'涉及 2 个部门 · 已持续 1 小时 06 分',lv:'or',status:'待响应',sb:'b3'}
+const CROSS_ORDERS=[
+ {id:'WO-2611',town:'大箕铺镇',spot:'石家堍',title:'石家堍森林火情',info:'涉及 3 个部门 · 已持续 20 分钟',lv:'red',status:'联合处置中',sb:'b4'},
+ {id:'WO-2612',town:'刘仁八镇',spot:'云台山',title:'云台山跨镇火情',info:'涉及 4 个部门 · 已持续 3 小时 12 分',lv:'red',status:'联合处置中',sb:'b4'},
+ {id:'WO-2613',town:'还地桥镇',spot:'黄金湖',title:'黄金湖湿地火情',info:'涉及 2 个部门 · 已持续 1 小时 06 分',lv:'or',status:'待响应',sb:'b3'}
 ];
 const MARKS=[
  {k:'cmd', x:45,  y:37,  n:'市森林防火指挥部', m:'市应急管理局 · 在岗 12 人'},
@@ -988,7 +997,7 @@ function modal(o){
 function closeModal(){modalRoot.classList.remove('on');dlg.innerHTML='';}
 $$('[data-close]').forEach(function(el){el.addEventListener('click',closeModal);});
 modalRoot.addEventListener('click',function(e){if(e.target.getAttribute('data-close'))closeModal();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeEventPop();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeOrderPop();}});
 let toastTimer;
 function toast(msg){
   const t=$('#toast');t.textContent=msg;t.classList.add('on');
@@ -1006,7 +1015,7 @@ function wCard(w){
   return '<div class="wcard" data-warn="'+w.id+'">'+
     '<div class="th"><div class="ph-img" style="background:'+w.thumb+'"></div><div class="rgl"></div><em>'+(w.ai?'AI 告警':'人工上报')+'</em></div>'+
     '<div class="wc-main">'+
-      '<div class="wc-t"><h4>'+w.type+' · '+w.town+' · '+w.spot+'</h4><span class="tag '+w.lv+'">'+LV[w.lv]+'</span></div>'+
+      '<div class="wc-t"><h4>'+w.type+' · '+w.town+' · '+w.spot+'</h4><span class="tag '+w.lv+'">'+ORDER_LV[w.lv]+'</span></div>'+
       '<div class="wc-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+w.desc+'</div>'+
       '<div class="wc-l" style="color:#5e7fa0">告警时间 '+w.time.slice(5)+'</div>'+
       '<div class="wc-f"><span class="wc-st '+(w.st||'')+'"><em></em>'+w.status+'</span>'+
@@ -1056,7 +1065,7 @@ function openWarnDetail(id){
   modal({title:'预警详情',sub:w.id+' · '+w.type,body:
     '<div class="kpi-row">'+
       '<div class="kpi"><em>告警类型</em><b style="font-size:18px">'+w.type+'</b></div>'+
-      '<div class="kpi"><em>告警等级</em><b style="font-size:18px;color:'+({red:'#d95b60',or:'#c9822a',ye:'#ffe08a',bl:'#8fd0ff'})[w.lv]+'">'+LV[w.lv]+'预警</b></div>'+
+      '<div class="kpi"><em>工单等级</em><b style="font-size:18px;color:'+({red:'#d95b60',or:'#c9822a',ye:'#ffe08a'})[w.lv]+'">'+ORDER_LV[w.lv]+'工单</b></div>'+
       '<div class="kpi"><em>处置状态</em><b style="font-size:18px">'+w.status+'</b></div>'+
       '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
     '</div>'+
@@ -1064,9 +1073,9 @@ function openWarnDetail(id){
     '<ul class="li-s"><li>监测点位：'+w.town+' · '+w.spot+'</li><li>触发规则：'+w.desc+'</li>'+
     '<li>信号来源：'+(w.ai?'系统自动识别':'护林员上报')+'，接入市城市安全预警平台统一编号 '+w.id+'</li></ul>'+
     '<div class="sec-t">多源印证</div>'+
-    '<div class="ai-box"><h6>AI 研判结果</h6><p>综合视频热源、卫星热点与护林员上报信息，判定该点位为'+(w.lv==='bl'?'疑似烟点，需现场核查':'真实火情风险点')+'，建议按 '+LV[w.lv]+'预警响应流程处置。</p>'+
+    '<div class="ai-box"><h6>AI 研判结果</h6><p>综合视频热源、卫星热点与护林员上报信息，判定该点位为真实火情风险点，建议按 '+ORDER_LV[w.lv]+'工单流程处置。</p>'+
     '<div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%"></i></div><b>'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%</b></div></div>'+
-    '<div class="note">该预警关联事件：'+(w.town+' · '+w.spot)+'。研判结论提交后同步至工单流转留痕。</div>',
+    '<div class="note">该预警关联工单：'+(w.town+' · '+w.spot)+'。研判结论提交后同步至工单流转留痕。</div>',
     footer:'<button data-close="1">关闭</button><button class="primary" data-judge2="'+w.id+'">进入研判</button>'});
   const b=$('[data-judge2]');if(b)b.addEventListener('click',function(){judge(w.id);});
 }
@@ -1076,7 +1085,7 @@ function judge(id){
   modal({title:'预警研判',sub:w.id+' · '+w.type,w:820,body:
     '<div class="kpi-row">'+
       '<div class="kpi"><em>点位</em><b style="font-size:16px">'+w.town+' · '+w.spot+'</b></div>'+
-      '<div class="kpi"><em>等级</em><b style="font-size:16px">'+LV[w.lv]+'预警</b></div>'+
+      '<div class="kpi"><em>工单等级</em><b style="font-size:16px">'+ORDER_LV[w.lv]+'工单</b></div>'+
       '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
     '</div>'+
     '<div class="sec-t">研判依据</div>'+
@@ -1094,7 +1103,7 @@ function judge(id){
     '</div>'+
     '<div class="frow">'+
       '<div class="fitem"><label>派发单位</label><select id="jgUnit">'+UNITS.map(function(u){return '<option>'+u[0]+'</option>';}).join('')+'</select></div>'+
-      '<div class="fitem"><label>处置时限</label><select><option>黄色预警 · 2 小时内到场</option><option>橙色预警 · 1 小时内到场</option><option>红色预警 · 30 分钟内到场</option></select></div>'+
+      '<div class="fitem"><label>处置时限</label><select><option>黄色工单 · 2 小时内到场</option><option>橙色工单 · 1 小时内到场</option><option>红色工单 · 30 分钟内到场</option></select></div>'+
     '</div>'+
     '<div class="frow"><div class="fitem"><label>研判意见</label><textarea id="jgMemo">建议属地乡镇半专业队先行到场控制火势，市森防指同步备勤。</textarea></div></div>',
     footer:'<button data-close="1">取消</button><button class="primary" id="jgSubmit">提交研判</button>'});
@@ -1205,23 +1214,28 @@ const DRAW={
       '<div class="kpi"><em>已研判</em><b>178<small>条</small></b></div><div class="kpi"><em>待研判</em><b>14<small>条</small></b></div>'+
       '<div class="kpi"><em>误报归档</em><b>96<small>条</small></b></div></div>'+
       '<div class="sec-t">分类明细</div>'+
-      tbl(['信号来源','预警数','已研判','转事件','误报率'],[
+      tbl(['信号来源','预警数','已研判','转工单','误报率'],[
         ['视频预警','31','30','6','22.6%'],['人巡预警','22','21','5','13.6%'],
         ['无人机预警','25','24','4','16.0%'],['卫星预警','26','24','3','34.6%'],['物联预警','88','79','2','58.0%']])+
       '<div class="note">物联预警以气象与液位阈值类为主，误报率偏高，已通过阈值自适应与二次确认机制压降。</div>';
   }},
   rules:{t:'质效评估规则',s:'分值标准与权重',b:function(){
-    return '<div class="sec-t">综合得分构成</div>'+
+    return '<div class="sec-t">统一工单等级与派发规则</div>'+
+      tbl(['工单等级','研判方式','默认派发单位','到场时限'],[
+        ['红色工单','人工研判确认','市森防指统一调度','30 分钟内到场'],
+        ['橙色工单','人工研判确认','属地乡镇 + 联动部门','1 小时内到场'],
+        ['黄色工单','AI 自动研判 · 系统派发','属地乡镇值班室','2 小时内到场']])+
+      '<div class="sec-t">综合得分构成</div>'+
       tbl(['维度','权重','计分方式','数据来源'],[
         ['响应速度','40%','接单至到场时长，按等级基准时长折算','工单流转留痕'],
         ['处置效率','40%','派发至核查完成时长，超时扣分','工单与现场反馈'],
-        ['协同配合','20%','多跨事件部门联动、信息回传完整度','联合处置记录']])+
+        ['协同配合','20%','多跨工单部门联动、信息回传完整度','联合处置记录']])+
       '<div class="sec-t">等级标准</div>'+
       tbl(['综合得分','等级','结果应用'],[
         ['≥ 90','优秀','纳入年度考核加分项，典型经验全市推广'],
         ['80 – 89','良好','保持现有机制，针对薄弱环节整改'],
         ['< 80','待提升','约谈责任单位，限期整改并复评']])+
-      '<div class="note">评估按事件维度生成，销号后自动归档；跨事件的责任单位分值取加权平均。</div>';
+      '<div class="note">评估按工单维度生成，销号后自动归档；跨工单的责任单位分值取加权平均。</div>';
   }}
 };
 $$('[data-drawer]').forEach(function(b){
@@ -1236,7 +1250,7 @@ $$('.panel').forEach(function(p){
   p.addEventListener('click',function(e){
     const m=p.querySelector('[data-drawer]');
     if(!m)return;
-    if(e.target.closest('[data-drawer],.flv,.ws,.wcard,.evc,table,button,select,input,textarea,.chip'))return;
+    if(e.target.closest('[data-drawer],.flv,.ws,.wcard,.woc,table,button,select,input,textarea,.chip'))return;
     m.click();
   });
 });
@@ -1261,7 +1275,7 @@ function renderMarks(){
   $$('#mapMarks .mk').forEach(function(el){
     el.addEventListener('click',function(){
       const m=MARKS[+el.getAttribute('data-mk')];
-      if(m.k==='fire'){openEventPop('M-1');return;}
+      if(m.k==='fire'){openOrderPop('WO-2611');return;}
       openMark(m);
     });
   });
@@ -1294,57 +1308,58 @@ $('#insetX').addEventListener('click',function(){
   const i=$('#mapInset');i.style.display='none';toast('卫星影像窗口已收起，可通过图层面板再次打开');
 });
 
-/* ================= 事件弹窗 ================= */
-const EVDATA={
-  'M-1':{town:'大箕铺镇',spot:'石家堍',lv:'red',status:'联合处置中',coord:'115.013620°E / 30.040978°N',dist:'12.4',
+/* ================= 工单弹窗 ================= */
+const ORDER_DETAIL={
+  'WO-2611':{town:'大箕铺镇',spot:'石家堍',lv:'red',status:'联合处置中',coord:'115.013620°E / 30.040978°N',dist:'12.4',
     area:'26.4',line:'1.8',wind:'13',windDir:'西南风 3 级',slope:'18',aspect:'东南坡',start:'2026-11-10 19:42'},
-  'M-2':{town:'刘仁八镇',spot:'云台山',lv:'red',status:'联合处置中',coord:'114.886200°E / 30.007400°N',dist:'21.6',
+  'WO-2612':{town:'刘仁八镇',spot:'云台山',lv:'red',status:'联合处置中',coord:'114.886200°E / 30.007400°N',dist:'21.6',
     area:'14.2',line:'0.9',wind:'9',windDir:'西风 2 级',slope:'24',aspect:'南坡',start:'2026-11-10 16:50'},
-  'M-3':{town:'还地桥镇',spot:'黄金湖',lv:'or',status:'待响应',coord:'114.718500°E / 30.150200°N',dist:'28.3',
+  'WO-2613':{town:'还地桥镇',spot:'黄金湖',lv:'or',status:'待响应',coord:'114.718500°E / 30.150200°N',dist:'28.3',
     area:'3.6',line:'0.4',wind:'11',windDir:'北风 3 级',slope:'6',aspect:'平地',start:'2026-11-10 18:56'}
 };
-function evByTown(town,spot,id){
-  if(EVDATA[id])return {id:id,d:EVDATA[id]};
+function orderByTown(town,spot,id){
+  if(ORDER_DETAIL[id])return {id:id,d:ORDER_DETAIL[id]};
   return null;
 }
-function openEventPop(id){
-  const d=EVDATA[id]||EVDATA['M-1'];
-  const html='<div class="ep-h"><i class="dm"></i><h4>火情事件</h4><span class="tag '+(d.lv==='red'?'red':'or')+'">'+LV[d.lv]+'</span>'+
+function openOrderPop(id){
+  const d=ORDER_DETAIL[id]||ORDER_DETAIL['WO-2611'];
+  const html='<div class="wop-h"><i class="dm"></i><h4>火情工单</h4><span class="tag '+(d.lv==='red'?'red':'or')+'">'+ORDER_LV[d.lv]+'工单</span>'+
     '<button class="x" id="popX">×</button></div>'+
-    '<div class="ep-title"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><use href="#i-fire"/></svg></div>'+
+    '<div class="wop-title"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><use href="#i-fire"/></svg></div>'+
     '<b>'+d.town+' · '+d.spot+'森林火情</b><span class="st">'+d.status+'</span></div>'+
-    '<div class="ep-coord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+
+    '<div class="wop-coord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+
     '<span>'+d.coord+'</span><span style="margin-left:auto;color:#5e7fa0">距市森防指 '+d.dist+' km</span></div>'+
-    '<div class="ep-grid">'+
-      '<div class="ep-cell"><em>过火面积</em><b>'+d.area+'<small>公顷</small></b></div>'+
-      '<div class="ep-cell"><em>火线长度</em><b>'+d.line+'<small>公里</small></b></div>'+
-      '<div class="ep-cell"><em>风速 / 风向</em><b>'+d.wind+'<small>km/h '+d.windDir+'</small></b></div>'+
-      '<div class="ep-cell"><em>坡度 / 坡向</em><b>'+d.slope+'<small>° '+d.aspect+'</small></b></div>'+
+    '<div class="wop-meta"><span>工单状态 <b>'+d.status+'</b></span><span>到场时限 <b>'+ORDER_LIMIT[d.lv]+'</b></span><span>研判方式 <b>'+ORDER_RULE[d.lv]+'</b></span></div>'+
+    '<div class="wop-grid">'+
+      '<div class="wop-cell"><em>过火面积</em><b>'+d.area+'<small>公顷</small></b></div>'+
+      '<div class="wop-cell"><em>火线长度</em><b>'+d.line+'<small>公里</small></b></div>'+
+      '<div class="wop-cell"><em>风速 / 风向</em><b>'+d.wind+'<small>km/h '+d.windDir+'</small></b></div>'+
+      '<div class="wop-cell"><em>坡度 / 坡向</em><b>'+d.slope+'<small>° '+d.aspect+'</small></b></div>'+
     '</div>'+
-    '<div class="ep-acts">'+
-      '<div class="ep-act" data-act="spread"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-spread"/></svg></i>'+
+    '<div class="wop-acts">'+
+      '<div class="wop-act" data-act="spread"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-spread"/></svg></i>'+
         '<div><h5>火势蔓延分析</h5><p>蔓延预测 6 小时 · 主方向东南 · 高风险</p></div><span class="ar">›</span></div>'+
-      '<div class="ep-act" data-act="evac"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-route"/></svg></i>'+
+      '<div class="wop-act" data-act="evac"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-route"/></svg></i>'+
         '<div><h5>转移避险</h5><p>周边群众转移 · 3 个村组 428 人</p></div><span class="ar">›</span></div>'+
-      '<div class="ep-act" data-act="dispatch"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-command"/></svg></i>'+
+      '<div class="wop-act" data-act="dispatch"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-command"/></svg></i>'+
         '<div><h5>指挥调度</h5><p>出动路线 · 队伍物资 · 3 个部门联动</p></div><span class="ar">›</span></div>'+
     '</div>'+
-    '<div class="ep-sec">研判依据</div>'+
-    '<ul class="ep-basis">'+
+    '<div class="wop-sec">研判依据</div>'+
+    '<ul class="wop-basis">'+
       '<li><b>1</b><span>热成像 CH-09 连续 3 帧识别高温热源，温度 78℃ 超阈值 12℃</span></li>'+
       '<li><b>2</b><span>NOAA-20 卫星热点像元与点位偏差 0.6 km，时间差 14 分钟</span></li>'+
       '<li><b>3</b><span>护林员 16:04 现场上传照片可见明火，位于东南坡林缘</span></li>'+
       '<li><b>4</b><span>未来 24 小时无有效降水，午后阵风 6 级，火险等级二级</span></li>'+
     '</ul>'+
-    '<div class="ep-foot"><button class="primary" data-act="publish">发布事件</button><button data-act="analyze">分析研判</button></div>';
-  const pop=$('#eventPop');pop.innerHTML=html;pop.classList.add('on');
-  $('#popX').addEventListener('click',closeEventPop);
-  $$('#eventPop [data-act]').forEach(function(b){
-    b.addEventListener('click',function(){eventAction(b.getAttribute('data-act'),d);});
+    '<div class="wop-foot"><button class="primary" data-act="publish">发布工单</button><button data-act="analyze">分析研判</button></div>';
+  const pop=$('#orderPop');pop.innerHTML=html;pop.classList.add('on');
+  $('#popX').addEventListener('click',closeOrderPop);
+  $$('#orderPop [data-act]').forEach(function(b){
+    b.addEventListener('click',function(){orderAction(b.getAttribute('data-act'),d);});
   });
 }
-function closeEventPop(){$('#eventPop').classList.remove('on');}
-function eventAction(act,d){
+function closeOrderPop(){$('#orderPop').classList.remove('on');}
+function orderAction(act,d){
   if(act==='spread')return spreadModal(d);
   if(act==='evac')return evacModal(d);
   if(act==='dispatch')return dispatchModal(d);
@@ -1412,29 +1427,29 @@ function dispatchModal(d){
     '<ul class="li-s"><li>取水点：石家堍水库东岸，距火场 1.4 km，可停靠消防车 4 辆</li>'+
     '<li>物资：镇物资库风力灭火机 42 台、水枪 60 支，可即时调用</li>'+
     '<li>隔离带机械：镇养护队挖掘机 2 台，30 分钟内可到位</li></ul>'+
-    '<div class="note">指挥调度实行“一事件一群”，指令、到场打卡与现场反馈全程留痕，市森防指可实时查看。</div>',
+    '<div class="note">指挥调度实行“一工单一群”，指令、到场打卡与现场反馈全程留痕，市森防指可实时查看。</div>',
     footer:'<button data-close="1">关闭</button><button id="dpGroup">一键拉群</button><button class="primary" id="dpGo">下发调度指令</button>'});
-  $('#dpGo').addEventListener('click',function(){closeModal();closeEventPop();toast('调度指令已下发，3 个联动部门已签收');});
-  $('#dpGroup').addEventListener('click',function(){toast('已创建事件群，成员含 3 个联动部门值班负责人');});
+  $('#dpGo').addEventListener('click',function(){closeModal();closeOrderPop();toast('调度指令已下发，3 个联动部门已签收');});
+  $('#dpGroup').addEventListener('click',function(){toast('已创建工单群，成员含 3 个联动部门值班负责人');});
 }
 function publishModal(d){
-  modal({title:'发布事件',sub:'事件要素确认后发布至指挥调度',w:820,body:
-    '<div class="sec-t">事件要素</div>'+
-    '<div class="frow"><div class="fitem"><label>事件标题</label><input value="'+d.town+' · '+d.spot+'森林火情"></div>'+
-    '<div class="fitem"><label>事件等级</label><select><option selected>'+LV[d.lv]+'（'+(d.lv==='red'?'一级响应':'二级响应')+'）</option><option>橙色（二级响应）</option><option>黄色（三级响应）</option></select></div></div>'+
+  modal({title:'发布工单',sub:'工单要素确认后发布至指挥调度',w:820,body:
+    '<div class="sec-t">工单要素</div>'+
+    '<div class="frow"><div class="fitem"><label>工单标题</label><input value="'+d.town+' · '+d.spot+'森林火情"></div>'+
+    '<div class="fitem"><label>工单等级</label><select>'+['red','or','ye'].map(function(k){return '<option value="'+k+'"'+(k===d.lv?' selected':'')+'>'+ORDER_LV[k]+'工单</option>';}).join('')+'</select></div></div>'+
     '<div class="frow"><div class="fitem"><label>坐标点位</label><input value="'+d.coord+'"></div>'+
     '<div class="fitem"><label>发生时间</label><input value="'+d.start+'"></div></div>'+
     '<div class="frow"><div class="fitem"><label>发布范围</label><div class="radios"><div class="radio on"><em></em>市森防指 + 属地乡镇</div><div class="radio"><em></em>全部联动部门</div><div class="radio"><em></em>社会面通告</div></div></div></div>'+
-    '<div class="frow"><div class="fitem"><label>事件描述</label><textarea>'+d.town+d.spot+'林区发生地表火，过火面积约 '+d.area+' 公顷，西南风 3 级，火头向东南方向蔓延，暂无人员伤亡。</textarea></div></div>'+
-    '<div class="note">发布后将生成事件编号并同步至移动端、短信与站内消息，处置进展按环节回写。</div>',
+    '<div class="frow"><div class="fitem"><label>工单描述</label><textarea>'+d.town+d.spot+'林区发生地表火，过火面积约 '+d.area+' 公顷，西南风 3 级，火头向东南方向蔓延，暂无人员伤亡。</textarea></div></div>'+
+    '<div class="note">发布后将生成工单编号并同步至移动端、短信与站内消息，处置进展按环节回写。</div>',
     footer:'<button data-close="1">取消</button><button class="primary" id="pbGo">确认发布</button>'});
   $$('#dlg .radios .radio').forEach(function(r){
     r.addEventListener('click',function(){$$('#dlg .radios .radio').forEach(function(x){x.classList.remove('on');});r.classList.add('on');});
   });
   $('#pbGo').addEventListener('click',function(){
-    closeModal();closeEventPop();
+    closeModal();closeOrderPop();
     FLOW[3].st='run';renderFlow();
-    toast('事件已发布，编号 FIRE-2026-1110-007，已推送 4 个接收单位');
+    toast('工单已发布，编号 WO-2026-1110-007，已推送 4 个接收单位');
   });
 }
 function analyzeModal(d){
@@ -1446,54 +1461,54 @@ function analyzeModal(d){
       ['护林员上报','现场照片可见明火','19:36','高'],
       ['林区气象站','温度 18℃、湿度 45%、西风 3 级','19:40','高']])+
     '<div class="sec-t">研判结论</div>'+
-    '<div class="ai-box"><h6>AI 辅助研判</h6><p>判定为<b style="color:#c9822a">真实火情（地表火）</b>，起火点位于东南坡林缘，与人为用火痕迹高度相关；当前火势处于初发阶段，具备快速处置条件，建议按'+LV[d.lv]+'预警响应，30 分钟内到场。</p>'+
+    '<div class="ai-box"><h6>AI 辅助研判</h6><p>判定为<b style="color:#c9822a">真实火情（地表火）</b>，起火点位于东南坡林缘，与人为用火痕迹高度相关；当前火势处于初发阶段，具备快速处置条件，建议按 '+ORDER_LV[d.lv]+'工单派发，'+ORDER_LIMIT[d.lv]+'。</p>'+
     '<div class="conf"><span>综合置信度</span><div class="bar"><i style="width:94%"></i></div><b>94%</b></div></div>'+
     '<div class="sec-t">人工确认</div>'+
-    '<div class="radios"><div class="radio on"><em></em>确认属实 · 维持等级</div><div class="radio"><em></em>升级为一级响应</div><div class="radio"><em></em>降级处置</div></div>'+
+    '<div class="radios"><div class="radio on"><em></em>确认属实 · 维持工单等级</div><div class="radio"><em></em>升级为红色工单</div><div class="radio"><em></em>降级为黄色工单</div></div>'+
     '<div class="note">AI 仅提供辅助建议，最终结论由值班指挥员确认，可回退为纯人工研判。</div>',
     footer:'<button data-close="1">关闭</button><button class="primary" id="anGo">提交研判结论</button>'});
   $$('#dlg .radios .radio').forEach(function(r){
     r.addEventListener('click',function(){$$('#dlg .radios .radio').forEach(function(x){x.classList.remove('on');});r.classList.add('on');});
   });
-  $('#anGo').addEventListener('click',function(){closeModal();toast('研判结论已提交，已写入事件流转留痕');});
+  $('#anGo').addEventListener('click',function(){closeModal();toast('研判结论已提交，已写入工单流转留痕');});
 }
 
-/* ================= 事件列表 ================= */
-function evCard(e,isMulti){
+/* ================= 工单列表 ================= */
+function woCard(e,isMulti){
   const title=e.town+' · '+e.spot;
-  const sub=isMulti?(e.title+' · '+e.info):(e.src+' · '+e.time.slice(5));
-  return '<div class="evc '+e.lv+(e.id==='M-1'?' on':'')+'" data-ev="'+e.id+'">'+
+  const sub=e.id+' · '+(isMulti?(e.title+' · '+e.info):(e.src+' · '+e.time.slice(5)));
+  return '<div class="woc '+e.lv+(e.id==='WO-2611'?' on':'')+'" data-wo="'+e.id+'">'+
     '<div class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-fire"/></svg></div>'+
-    '<div class="evc-main"><div class="evc-t"><h4>'+title+'</h4><span class="tag '+e.lv+'">'+LV[e.lv]+'</span></div>'+
-    '<div class="evc-s">'+sub+'</div></div>'+
-    '<div class="evc-r"><span class="st-tag '+e.sb+'">'+e.status+'</span><span class="go">›</span></div></div>';
+    '<div class="woc-main"><div class="woc-t"><h4>'+title+'</h4><span class="tag '+e.lv+'">'+ORDER_LV[e.lv]+'</span></div>'+
+    '<div class="woc-s">'+sub+'</div></div>'+
+    '<div class="woc-r"><span class="st-tag '+e.sb+'">'+e.status+'</span><span class="go">›</span></div></div>';
 }
-let singleF='all',multiF='all';
-function renderEvents(){
-  const s=SINGLE.filter(function(e){return singleF==='all'||e.lv===singleF;});
-  $('#singleList').innerHTML=s.map(function(e){return evCard(e,false);}).join('');
-  const m=MULTI.filter(function(e){return multiF==='all'||e.lv===multiF;});
-  $('#multiList').innerHTML=m.map(function(e){return evCard(e,true);}).join('');
-  $$('#singleList .evc,#multiList .evc').forEach(function(el){
+let orderF='all',crossF='all';
+function renderOrders(){
+  const s=ORDERS.filter(function(e){return orderF==='all'||e.lv===orderF;});
+  $('#orderList').innerHTML=s.map(function(e){return woCard(e,false);}).join('');
+  const m=CROSS_ORDERS.filter(function(e){return crossF==='all'||e.lv===crossF;});
+  $('#crossList').innerHTML=m.map(function(e){return woCard(e,true);}).join('');
+  $$('#orderList .woc,#crossList .woc').forEach(function(el){
     el.addEventListener('click',function(){
-      $$('.evc').forEach(function(x){x.classList.remove('on');});
+      $$('.woc').forEach(function(x){x.classList.remove('on');});
       el.classList.add('on');
-      const id=el.getAttribute('data-ev');
-      openEventPop(id);
+      const id=el.getAttribute('data-wo');
+      openOrderPop(id);
       renderFlow();
     });
   });
 }
-$$('#singleFilter .chip').forEach(function(c){
+$$('#orderFilter .chip').forEach(function(c){
   c.addEventListener('click',function(){
-    $$('#singleFilter .chip').forEach(function(x){x.classList.remove('on');});
-    c.classList.add('on');singleF=c.getAttribute('data-f');renderEvents();
+    $$('#orderFilter .chip').forEach(function(x){x.classList.remove('on');});
+    c.classList.add('on');orderF=c.getAttribute('data-f');renderOrders();
   });
 });
-$$('#multiFilter .chip').forEach(function(c){
+$$('#crossFilter .chip').forEach(function(c){
   c.addEventListener('click',function(){
-    $$('#multiFilter .chip').forEach(function(x){x.classList.remove('on');});
-    c.classList.add('on');multiF=c.getAttribute('data-f');renderEvents();
+    $$('#crossFilter .chip').forEach(function(x){x.classList.remove('on');});
+    c.classList.add('on');crossF=c.getAttribute('data-f');renderOrders();
   });
 });
 function renderFlow(){
@@ -1543,33 +1558,33 @@ function unitModal(name){
     tbl(['指标','得分','基准','说明'],[
       ['接单及时性','98','≥95','3 分钟内签收'],['到场时长',r[1],'按等级基准','19:52 指令 → 20:08 到场'],
       ['处置完成度',r[2],'≥90','火场控制率 80%'],['信息回传','95','≥90','全程 6 次反馈，含 2 次现场照片']])+
-    '<div class="note">该单位在本次多跨事件中承担'+(name.indexOf('应急')>=0?'统筹调度':'协同处置')+'职责，未出现超时环节。</div>',
+    '<div class="note">该单位在本次多跨工单中承担'+(name.indexOf('应急')>=0?'统筹调度':'协同处置')+'职责，未出现超时环节。</div>',
     footer:'<button data-close="1">关闭</button>'});
 }
 
 /* ================= 顶部按钮 ================= */
-let evMode=false;
-$('#btnEvent').addEventListener('click',function(){
-  evMode=!evMode;
-  document.body.classList.toggle('mode-event',evMode);
-  $('#pageTag').textContent=evMode?'事件处置':'总体态势';
-  $('#btnEventTxt').textContent=evMode?'返回总览':'事件处置';
-  this.classList.toggle('on',evMode);
-  if(evMode){renderEvents();renderFlow();openEventPop('M-1');}
-  else{closeEventPop();}
-  toast(evMode?'已进入事件处置视图':'已返回总体态势');
+let woMode=false;
+$('#btnOrder').addEventListener('click',function(){
+  woMode=!woMode;
+  document.body.classList.toggle('mode-order',woMode);
+  $('#pageTag').textContent=woMode?'工单处置':'总体态势';
+  $('#btnOrderTxt').textContent=woMode?'返回总览':'工单处置';
+  this.classList.toggle('on',woMode);
+  if(woMode){renderOrders();renderFlow();openOrderPop('WO-2611');}
+  else{closeOrderPop();}
+  toast(woMode?'已进入工单处置视图':'已返回总体态势');
 });
 $('#btnBell').addEventListener('click',function(){
   modal({title:'消息中心',sub:'未读 6 条',w:760,body:
     '<div class="sec-t">最新消息</div>'+
     tbl(['时间','来源','内容','级别'],[
-      ['20:01','市森防指','大箕铺镇石家堍火情已升级为红色事件，请指挥员确认调度方案','<span class="bad">紧急</span>'],
+      ['20:01','市森防指','大箕铺镇石家堍火情已升级为红色工单，请指挥员确认调度方案','<span class="bad">紧急</span>'],
       ['19:58','系统','指挥调度环节已启动，3 个部门已签收指令','<span class="warn">提醒</span>'],
       ['19:52','大箕铺镇','属地值班室已签收预警，半专业队出动','<span class="warn">提醒</span>'],
       ['19:48','系统','监测研判完成，多源印证一致','<span class="ok">一般</span>'],
       ['18:56','卫星遥感','刘仁八镇云台山新增热点 3 个','<span class="warn">提醒</span>'],
       ['17:20','人工巡护','灵乡镇宫台山林缘野外用火已劝阻','<span class="ok">一般</span>']])+
-    '<div class="note">消息按等级推送，紧急消息同时触发声音提醒与短信通知。</div>',
+    '<div class="note">消息按工单等级推送，紧急消息同时触发声音提醒与短信通知。</div>',
     footer:'<button data-close="1">关闭</button><button class="primary" id="readAll">全部标为已读</button>'});
   $('#readAll').addEventListener('click',function(){
     closeModal();$('#btnBell').querySelector('.dot').style.display='none';
@@ -1591,13 +1606,13 @@ $$('.ws').forEach(function(el){
   el.addEventListener('click',function(){
     const t=el.getAttribute('data-wtype');
     const rows=WARN.filter(function(w){return w.type===t;}).map(function(w){
-      return [w.time.slice(5),w.town+' · '+w.spot,w.desc,'<span class="'+(w.lv==='red'?'bad':w.lv==='or'?'warn':'ok')+'">'+LV[w.lv]+'</span>',w.status];
+      return [w.time.slice(5),w.town+' · '+w.spot,w.desc,'<span class="'+(w.lv==='red'?'bad':w.lv==='or'?'warn':'ok')+'">'+ORDER_LV[w.lv]+'</span>',w.status];
     });
     modal({title:t+'明细',sub:'今日 '+el.querySelector('b').textContent+' 条',w:860,body:
-      (rows.length?tbl(['时间','点位','触发规则','等级','状态'],rows):'<div class="note">今日暂无该类预警记录，历史记录可在预警列表按时间筛选查看。</div>')+
+      (rows.length?tbl(['时间','点位','触发规则','工单等级','状态'],rows):'<div class="note">今日暂无该类预警记录，历史记录可在预警列表按时间筛选查看。</div>')+
       '<div class="sec-t">处置概况</div>'+
-      '<ul class="li-s"><li>该类预警已全部纳入统一研判流程，黄色及以下由属地乡镇先行核查</li>'+
-      '<li>红色、橙色预警须经值班指挥员研判确认后派发</li></ul>',
+      '<ul class="li-s"><li>该类预警已全部纳入统一研判流程，黄色工单由属地乡镇先行核查</li>'+
+      '<li>红色、橙色工单须经值班指挥员研判确认后派发</li></ul>',
       footer:'<button data-close="1">关闭</button>'});
   });
 });
@@ -1624,7 +1639,7 @@ $$('.flv').forEach(function(el){
 (function init(){
   const sel=$('#regionSel');
   TOWNS.forEach(function(t){const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});
-  renderWL();renderMarks();renderEvents();renderFlow();renderPerf();
+  renderWL();renderMarks();renderOrders();renderFlow();renderPerf();
 })();
 })();
 </script>
