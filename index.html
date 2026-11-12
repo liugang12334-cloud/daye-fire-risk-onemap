@@ -763,10 +763,10 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
       <div class="ph"><i class="dm"></i><h3>森林火险等级</h3><span class="ph-sum">按乡镇判定 · 14 个</span><button class="more" data-drawer="firelv">说明<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb">
         <div class="fire-lv">
-          <div class="flv" data-lv="1" style="--c:#e64550;--p:7"><div class="ring2"><span>Ⅰ</span></div><div class="nm">一级预警</div><div class="vv">1<small>个</small></div></div>
-          <div class="flv" data-lv="2" style="--c:#d97a1f;--p:21"><div class="ring2"><span>Ⅱ</span></div><div class="nm">二级预警</div><div class="vv">3<small>个</small></div></div>
-          <div class="flv" data-lv="3" style="--c:#ffd75e;--p:43"><div class="ring2"><span>Ⅲ</span></div><div class="nm">三级预警</div><div class="vv">6<small>个</small></div></div>
-          <div class="flv" data-lv="4" style="--c:#2f8dee;--p:29"><div class="ring2"><span>Ⅳ</span></div><div class="nm">四级预警</div><div class="vv">4<small>个</small></div></div>
+          <div class="flv" data-lv="1" style="--c:#e64550;--p:7"><div class="ring2"><span>Ⅰ</span></div><div class="nm">红</div><div class="vv">1<small>个</small></div></div>
+          <div class="flv" data-lv="2" style="--c:#d97a1f;--p:21"><div class="ring2"><span>Ⅱ</span></div><div class="nm">橙</div><div class="vv">3<small>个</small></div></div>
+          <div class="flv" data-lv="3" style="--c:#ffd75e;--p:43"><div class="ring2"><span>Ⅲ</span></div><div class="nm">黄</div><div class="vv">6<small>个</small></div></div>
+          <div class="flv" data-lv="4" style="--c:#2f8dee;--p:29"><div class="ring2"><span>Ⅳ</span></div><div class="nm">蓝</div><div class="vv">4<small>个</small></div></div>
         </div>
         <div class="note" style="margin-top:10px;padding:6px 9px">注：气象条件为主要影响因素，未来 24 小时无有效降水，午后阵风可达 6 级。</div>
       </div>
@@ -1201,13 +1201,13 @@ const DRAW={
       '<div class="note">地灾防治专管员兼顾防火期巡查，重点时段执行“一日两巡”并回传带定位照片。</div>';
   }},
   firelv:{t:'森林火险等级',s:'等级判定口径',b:function(){
-    return '<div class="sec-t">四级火险等级</div>'+
+    return '<div class="sec-t">火险等级判定口径</div>'+
       tbl(['等级','名称','判定条件','响应要求'],[
-        ['Ⅰ','一级预警（极度危险）','连续无降水 15 天以上，风力≥5 级，可燃物含水率<10%','全面禁火，专业队全员备勤，无人机 24 小时巡护'],
-        ['Ⅱ','二级预警（高度危险）','连续无降水 7 天以上，风力 4 级','林区禁止一切野外用火，加密巡护频次'],
-        ['Ⅲ','三级预警（较高危险）','连续无降水 3 天以上，风力 3 级','限制野外用火，护林员一日两巡'],
-        ['Ⅳ','四级预警（较低危险）','降水正常，风力≤2 级','常规巡护，正常用火审批']])+
-      '<div class="note">当前全市 14 个乡镇（街道）中日均判定：一级 1 个、二级 3 个、三级 6 个、四级 4 个；气象条件为主要影响因素。</div>';
+        ['Ⅰ','红（极度危险）','连续无降水 15 天以上，风力≥5 级，可燃物含水率<10%','全面禁火，专业队全员备勤，无人机 24 小时巡护'],
+        ['Ⅱ','橙（高度危险）','连续无降水 7 天以上，风力 4 级','林区禁止一切野外用火，加密巡护频次'],
+        ['Ⅲ','黄（较高危险）','连续无降水 3 天以上，风力 3 级','限制野外用火，护林员一日两巡'],
+        ['Ⅳ','蓝（较低危险）','降水正常，风力≤2 级','常规巡护，正常用火审批']])+
+      '<div class="note">当前全市 14 个乡镇（街道）中日均判定：红 1 个、橙 3 个、黄 6 个、蓝 4 个；气象条件为主要影响因素。</div>';
   }},
   wstat:{t:'预警信息',s:'按信号来源分类统计',b:function(){
     return '<div class="kpi-row"><div class="kpi"><em>今日预警总量</em><b>192<small>条</small></b></div>'+
@@ -1349,7 +1349,7 @@ function openOrderPop(id){
       '<li><b>1</b><span>热成像 CH-09 连续 3 帧识别高温热源，温度 78℃ 超阈值 12℃</span></li>'+
       '<li><b>2</b><span>NOAA-20 卫星热点像元与点位偏差 0.6 km，时间差 14 分钟</span></li>'+
       '<li><b>3</b><span>护林员 16:04 现场上传照片可见明火，位于东南坡林缘</span></li>'+
-      '<li><b>4</b><span>未来 24 小时无有效降水，午后阵风 6 级，火险等级二级</span></li>'+
+      '<li><b>4</b><span>未来 24 小时无有效降水，午后阵风 6 级，火险等级：橙</span></li>'+
     '</ul>'+
     '<div class="wop-foot"><button class="primary" data-act="publish">发布工单</button><button data-act="analyze">分析研判</button></div>';
   const pop=$('#orderPop');pop.innerHTML=html;pop.classList.add('on');
@@ -1619,7 +1619,7 @@ $$('.ws').forEach(function(el){
 $$('.flv').forEach(function(el){
   el.addEventListener('click',function(){
     const lv=+el.getAttribute('data-lv');
-    const nm=['','一级预警（极度危险）','二级预警（高度危险）','三级预警（较高危险）','四级预警（较低危险）'][lv];
+    const nm=['','红（极度危险）','橙（高度危险）','黄（较高危险）','蓝（较低危险）'][lv];
     const arr=TOWNS.slice(0,14).filter(function(t,i){
       return lv===1?i===4:lv===2?[1,5,9].indexOf(i)>=0:lv===3?[0,2,3,6,7,8].indexOf(i)>=0:[10,11,12,13].indexOf(i)>=0;
     });
