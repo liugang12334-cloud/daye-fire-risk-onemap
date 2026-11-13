@@ -508,6 +508,10 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 /* ================= 弹窗 / 抽屉 ================= */
 #modalRoot{position:absolute;inset:0;z-index:60;display:none}
 #modalRoot.on{display:block}
+#modalRoot2{position:fixed;inset:0;z-index:90;display:none}
+#modalRoot2.on{display:block}
+#modalRoot2 .mask{background:rgba(24,70,120,.12);backdrop-filter:none}
+#modalRoot2 .dlg{z-index:2}
 .mask{position:absolute;inset:0;background:rgba(24,70,120,.36);backdrop-filter:blur(2px)}
 .dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:960px;max-height:78vh;display:flex;flex-direction:column;
   background:linear-gradient(180deg,#ffffff,#f0f8ff);border:1px solid rgba(120,175,230,.6);
@@ -1230,10 +1234,36 @@ function modal(o){
   modalRoot.classList.add('on');
 }
 function closeModal(){modalRoot.classList.remove('on');dlg.innerHTML='';}
+/* 二级弹窗：研判确认 / 误报归档叠加在原详情弹窗之上，原弹窗保持打开 */
+function modal2(o){
+ let root=$('#modalRoot2');
+ if(!root){
+  root=document.createElement('div');root.id='modalRoot2';
+  root.innerHTML='<div class="mask"></div>';
+  document.body.appendChild(root);
+  root.addEventListener('click',function(e){
+   if(e.target===root||e.target.className==='mask')closeModal2();
+  });
+ }
+ let d=$('#dlg2');
+ if(!d){d=document.createElement('div');d.id='dlg2';d.className='dlg';root.appendChild(d);}
+ d.style.width=(o.w||600)+'px';
+ d.innerHTML='<div class="dlg-h"><i class="dm"></i><h3>'+o.title+'</h3>'+
+   (o.sub?'<span class="sub">'+o.sub+'</span>':'')+
+   '<button class="x" data-close2="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-close"/></svg></button></div>'+
+   '<div class="dlg-b">'+o.body+'</div>'+
+   (o.footer?'<div class="dlg-f">'+o.footer+'</div>':'');
+ root.classList.add('on');
+ $$('#dlg2 [data-close2]').forEach(function(el){el.addEventListener('click',closeModal2);});
+}
+function closeModal2(){
+ const root=$('#modalRoot2');if(root)root.classList.remove('on');
+ const d=$('#dlg2');if(d)d.innerHTML='';
+}
 $$('[data-close]').forEach(function(el){el.addEventListener('click',closeModal);});
 modalRoot.addEventListener('click',function(e){
   var t=e.target&&e.target.closest?e.target.closest('[data-close]'):null;if(t)closeModal();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeOrderPop();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var r2=$('#modalRoot2');if(r2&&r2.classList.contains('on'))closeModal2();else closeModal();closeOrderPop();}});
 let toastTimer;
 function toast(msg){
   const t=$('#toast');t.textContent=msg;t.classList.add('on');
@@ -1343,8 +1373,7 @@ function detailBody(r){
     '<div class="ud-cell"><em>火线长度</em><b>'+r.line+'<small> 公里</small></b></div>'+
     '<div class="ud-cell"><em>风速 / 风向</em><b>'+r.wind+'<small> km/h '+r.windDir+'</small></b></div>'+
     '<div class="ud-cell"><em>坡度 / 坡向</em><b>'+r.slope+'<small>° '+r.aspect+'</small></b></div></div>';
-  h+=tbl(['工单要素','当前值','工单要素','当前值'],[
-    ['工单编号',r.wo,'派发单位',r.unit||''],
+  h+=tbl(null,[
     ['签收时间',r.signAt||'—','处置时限',r.limit||ORDER_LIMIT[lv]],
     ['处置结果',r.report||'—','复核意见',r.recheck||'—']]);
   if(r.status==='overtime')h+='<div class="ud-warn"><b>已超时</b>：进展反馈超限时触发。可「催办并继续处置」回到处置中，也可「直接提交处置结果」进入待复核；超时记录永久写入流转留痕并计入质效评估。</div>';
@@ -1361,19 +1390,13 @@ function detailFooter(r){
  const S=STATUS[r.status],list=TRANS[r.status]||[];
  let h='';
  if(S.phase==='order'){
-  h+='<button class="ud-fbtn" data-udx="spread">火势蔓延分析</button>'+
-     '<button class="ud-fbtn" data-udx="evac">转移避险</button>'+
-     '<button class="ud-fbtn" data-udx="dispatch">指挥调度</button>';
+  h+='<button class="ud-fbtn" data-udx="dispatch">指挥调度</button>';
  }
  list.forEach(function(t){h+='<button class="'+(t.primary?'primary':'ud-fbtn')+'" data-ud="'+t.a+'">'+t.t+'</button>';});
  if(!list.length)h+='<span style="align-self:center;font-size:11px;color:#7b8da6">已归档 · 只读</span>';
  return h;
 }
-function openDetail(id){
- const r=findRec(id);if(!r)return;
- CUR=id;
- modal({title:'预警详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
-  body:detailBody(r),footer:detailFooter(r)});
+function bindDetail(id,r){
  $$('#dlg [data-ud]').forEach(function(b){
   b.addEventListener('click',function(){
    const a=b.getAttribute('data-ud');
@@ -1384,10 +1407,28 @@ function openDetail(id){
  });
  $$('#dlg [data-udx]').forEach(function(b){
   b.addEventListener('click',function(){
-   const a=b.getAttribute('data-udx');
-   if(a==='spread')spreadModal(r);else if(a==='evac')evacModal(r);else dispatchModal(r);
+   if(b.getAttribute('data-udx')==='dispatch')dispatchModal(r);
   });
  });
+}
+function openDetail(id){
+ const r=findRec(id);if(!r)return;
+ CUR=id;
+ modal({title:'预警详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
+  body:detailBody(r),footer:detailFooter(r)});
+ bindDetail(id,r);
+ renderFlow();
+}
+/* 状态变更后就地刷新原详情弹窗：不关闭、不重新打开 */
+function refreshDetail(id){
+ const r=findRec(id);if(!r)return;
+ if(!modalRoot.classList.contains('on')||!$('#dlg .dlg-b')){openDetail(id);return}
+ CUR=id;
+ const sub=$('#dlg .dlg-h .sub');
+ if(sub)sub.textContent=r.id+(r.wo?' · '+r.wo:'')+' · '+r.type;
+ $('#dlg .dlg-b').innerHTML=detailBody(r);
+ $('#dlg .dlg-f').innerHTML=detailFooter(r);
+ bindDetail(id,r);
  renderFlow();
 }
 /* ================= 研判确认弹窗：人工定级 + 处置单位 + 处置时限 ================= */
@@ -1408,7 +1449,7 @@ function judgeModal(id,act){
    '</select></div></div>';
  body+='<div class="jd-tip">指定处置单位后提交，状态直接变更为「待签收」；未指定则进入「待指派」。'+
    '处置时限档位依据运行机制到场 15 / 30 / 60 分钟与核查 1 小时反馈。</div>';
- modal({title:isConfirm?'研判确认':'指派单位并派发',sub:r.id+' · '+r.type,w:600,body:body,
+ modal2({title:isConfirm?'研判确认':'指派单位并派发',sub:r.id+' · '+r.type,w:600,body:body,
    footer:'<button data-jd="cancel">取消</button><button class="primary" data-jd="ok">'+
      (isConfirm?'提交研判':'确认派发')+'</button>'});
  $$('#_jdLvs .jd-lv').forEach(function(el){
@@ -1422,20 +1463,20 @@ function judgeModal(id,act){
    const lim=$('#_jdLimit');if(lim)lim.value=String(limitDefault(lv));
   });
  });
- $$('#dlg [data-jd]').forEach(function(b){
+ $$('#dlg2 [data-jd]').forEach(function(b){
   b.addEventListener('click',function(){
-   if(b.getAttribute('data-jd')==='cancel'){openDetail(id);return}
+   if(b.getAttribute('data-jd')==='cancel'){closeModal2();return}
    r.lv=lv;r.judgeLv=lv;
    r.unit=$('#_jdUnit')?$('#_jdUnit').value:'';
    r.limit=LIMIT_OPTS[parseInt($('#_jdLimit')?$('#_jdLimit').value:'0',10)||0][0];
-   doTransition(id,act);
+   closeModal2();doTransition(id,act);
   });
  });
 }
 function falseAlarmModal(id){
  const r=findRec(id);if(!r)return;
  const reasons=['误报 · 云雾/热扰动','误报 · 秸秆焚烧/农事用火','误报 · 设备反光/镜头污损','误报 · 重复告警归并','误报 · 其他'];
- modal({title:'判定误报 · 归档',sub:r.id+' · '+r.type,w:560,
+ modal2({title:'判定误报 · 归档',sub:r.id+' · '+r.type,w:560,
   body:'<div class="fa-lead">告警 '+r.id+' 判定为误报，归档后不生成工单，本条记录状态变更为「已归档」。</div>'+
    '<div class="fitem" style="margin-top:14px"><label>判定误报 · 原因</label><select id="_faReason">'+
    reasons.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
@@ -1443,12 +1484,12 @@ function falseAlarmModal(id){
    '<textarea id="_faNote" placeholder="补充现场判断依据、处置要求…"></textarea></div>'+
    '<div class="fa-tip">归档后本条预警不再参与派发与处置；判定原因与研判备注写入状态流转留痕，可追溯、不可撤销。</div>',
   footer:'<button data-fa="cancel">取消</button><button class="primary" data-fa="ok">确认</button>'});
- $$('#dlg [data-fa]').forEach(function(b){
+ $$('#dlg2 [data-fa]').forEach(function(b){
   b.addEventListener('click',function(){
-   if(b.getAttribute('data-fa')==='cancel'){openDetail(id);return}
+   if(b.getAttribute('data-fa')==='cancel'){closeModal2();return}
    r.falseReason=$('#_faReason')?$('#_faReason').value:'';
    r.falseNote=$('#_faNote')?$('#_faNote').value.trim():'';
-   doTransition(id,'falseAlarm');
+   closeModal2();doTransition(id,'falseAlarm');
   });
  });
 }
@@ -1478,7 +1519,7 @@ function doTransition(id,act){
  if(act==='falseAlarm'&&r.falseReason)tx+='；原因：'+r.falseReason+(r.falseNote?'；备注：'+r.falseNote:'');
  r.timeline.push({t:hhmm(),b:'大屏指挥端',x:tx});
  saveShared();syncLists();renderWL();renderOrders();renderMarks();
- openDetail(id);
+ refreshDetail(id);
  toast('状态已更新：'+STATUS[to].t);
 }
 
@@ -1696,48 +1737,6 @@ $('#insetX').addEventListener('click',function(){
 /* 原「工单地图浮层」已由统一详情页 openDetail() 取代，保留空函数兼容历史调用点 */
 function closeOrderPop(){}
 
-function spreadModal(d){
-  modal({title:'火势蔓延分析',sub:d.town+' · '+d.spot,w:880,body:
-    '<div class="kpi-row"><div class="kpi"><em>当前过火面积</em><b>'+d.area+'<small>公顷</small></b></div>'+
-    '<div class="kpi"><em>6 小时预测</em><b>68<small>公顷</small></b></div>'+
-    '<div class="kpi"><em>12 小时预测</em><b>142<small>公顷</small></b></div>'+
-    '<div class="kpi"><em>主蔓延方向</em><b style="font-size:18px">东南</b></div>'+
-    '<div class="kpi"><em>风险等级</em><b style="font-size:18px;color:#d95b60">高</b></div></div>'+
-    '<div class="sec-t">蔓延模型输入</div>'+
-    tbl(['参数','取值','影响'],[
-      ['风速 / 风向','13 km/h · 西南风 3 级','推动火头向东南方向扩展'],
-      ['坡度 / 坡向',d.slope+'° · '+d.aspect,'上坡火蔓延速度提升约 1.8 倍'],
-      ['可燃物','马尾松 + 芒草，载量 1.6 kg/m²','连续性高，易形成树冠火'],
-      ['地形阻隔','东南侧 800 m 有山脊与水库','可作为天然隔离带']])+
-    '<div class="sec-t">处置建议</div>'+
-    '<ul class="li-s"><li>东侧沿山脊开设 30 m 宽隔离带，长度约 1.2 km</li>'+
-    '<li>西侧以水库为依托设置第二条防线，防止火势回旋</li>'+
-    '<li>12 小时内若风力升至 5 级，需前置疏散东南侧 2 个村组</li>'+
-    '<li>建议增调 1 架直升机实施吊桶作业，重点压制东南火头</li></ul>'+
-    '<div class="note">模型为林火蔓延经验模型（Rothermel 修正），叠加实时气象与地形数据，每 10 分钟滚动更新。</div>',
-    footer:'<button data-close="1">关闭</button><button class="primary" id="spGo">生成蔓延态势图</button>'});
-  $('#spGo').addEventListener('click',function(){closeModal();toast('蔓延态势图已生成并推送至指挥调度席');});
-}
-function evacModal(d){
-  modal({title:'转移避险',sub:d.town+' · '+d.spot,w:880,body:
-    '<div class="kpi-row"><div class="kpi"><em>需转移</em><b>428<small>人</small></b></div>'+
-    '<div class="kpi"><em>已转移</em><b>316<small>人</small></b></div>'+
-    '<div class="kpi"><em>安置点</em><b>2<small>处</small></b></div>'+
-    '<div class="kpi"><em>转移完成率</em><b>73.8<small>%</small></b></div></div>'+
-    '<div class="sec-t">受影响村组</div>'+
-    tbl(['村组','户数','人数','已转移','转移方式','状态'],[
-      ['石家堍村 3 组','46','138','138','大巴集中转移','已完成'],
-      ['石家堍村 5 组','38','112','112','大巴集中转移','已完成'],
-      ['刘胜二村 1 组','52','178','66','自行转移 + 协助','进行中']])+
-    '<div class="sec-t">安置点与路线</div>'+
-    '<ul class="li-s"><li>主安置点：大箕铺镇中心小学（容量 400 人，已安置 250 人）</li>'+
-    '<li>备用安置点：石家堍村党群服务中心（容量 120 人，已安置 66 人）</li>'+
-    '<li>主路线：乡道 X012 → 镇区大道，全长 6.8 km，交警 4 人沿线管制</li>'+
-    '<li>特殊人群：独居老人 12 人、行动不便 5 人，已安排专车 1 对 1 接送</li></ul>'+
-    '<div class="note">转移指令由属地乡镇下达，转移进度每 15 分钟回传一次，全部完成后方可用于评估销号。</div>',
-    footer:'<button data-close="1">关闭</button><button class="primary" id="evGo">下达转移指令</button>'});
-  $('#evGo').addEventListener('click',function(){closeModal();toast('转移指令已下达，短信与站内消息同步推送至包保责任人');});
-}
 function dispatchModal(d){
   modal({title:'指挥调度',sub:d.town+' · '+d.spot,w:920,body:
     '<div class="kpi-row"><div class="kpi"><em>联动部门</em><b>3<small>个</small></b></div>'+
@@ -1861,7 +1860,7 @@ $('#btnOrder').addEventListener('click',function(){
   $('#pageTag').textContent=woMode?'工单处置':'总体态势';
   $('#btnOrderTxt').textContent=woMode?'返回总览':'工单处置';
   this.classList.toggle('on',woMode);
-  if(woMode){renderOrders();renderFlow();openDetail(DEFAULT_ID);}
+  if(woMode){renderOrders();renderFlow();}
   else{closeModal();}
   toast(woMode?'已进入工单处置视图':'已返回总体态势');
 });
