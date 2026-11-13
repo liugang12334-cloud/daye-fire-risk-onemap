@@ -1485,17 +1485,12 @@ function detailBody(r){
  h+='<div class="sec-t">上报图片 · 点击查看大图</div>'+photoHtml(r);
  h+='<div class="sec-t">研判依据 · 预警阶段留痕，两阶段一致</div><ul class="li-s">'+
     BASIS.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
- h+='<div class="sec-t">'+(S.phase==='warn'?'预警阶段信息':'预警工单阶段信息')+' · 按当前状态动态展示</div>';
+ h+='<div class="sec-t">'+(S.phase==='warn'?'预警阶段信息 · 按当前状态动态展示':'预警工单阶段信息')+'</div>';
  if(S.phase==='warn'){
   h+='<div class="ai-box"><h6>AI 研判结果</h6><p>'+
     (r.lv==='bl'?'判定为低等级关注类信号，建议持续监测、暂不生成工单。':'综合视频热源、卫星热点与护林员上报，判定为真实火情风险点。')+
     '</p><div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%"></i></div><b>'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%</b></div></div>';
  }else{
-  h+='<div class="ud-grid">'+
-    '<div class="ud-cell"><em>过火面积</em><b>'+r.area+'<small> 公顷</small></b></div>'+
-    '<div class="ud-cell"><em>火线长度</em><b>'+r.line+'<small> 公里</small></b></div>'+
-    '<div class="ud-cell"><em>风速 / 风向</em><b>'+r.wind+'<small> km/h '+r.windDir+'</small></b></div>'+
-    '<div class="ud-cell"><em>坡度 / 坡向</em><b>'+r.slope+'<small>° '+r.aspect+'</small></b></div></div>';
   h+=tbl(null,[
     ['签收时间',r.signAt||'—','处置时限',r.limit||ORDER_LIMIT[lv]],
     ['处置结果',r.report||'—','复核意见',r.recheck||'—']]);
@@ -1540,10 +1535,11 @@ function bindDetail(id,r){
   });
  });
 }
-function openDetail(id){
+let DETAIL_ORDER=false;
+function openDetail(id,fromOrder){
  const r=findRec(id);if(!r)return;
- CUR=id;
- modal({title:'预警详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
+ CUR=id;DETAIL_ORDER=!!fromOrder;
+ modal({title:DETAIL_ORDER?'预警工单详情':'预警详情',sub:r.id+' · '+r.type,w:960,
   body:detailBody(r),footer:detailFooter(r)});
  bindDetail(id,r);
  renderFlow();
@@ -1551,10 +1547,10 @@ function openDetail(id){
 /* 状态变更后就地刷新原详情弹窗：不关闭、不重新打开 */
 function refreshDetail(id){
  const r=findRec(id);if(!r)return;
- if(!modalRoot.classList.contains('on')||!$('#dlg .dlg-b')){openDetail(id);return}
+ if(!modalRoot.classList.contains('on')||!$('#dlg .dlg-b')){openDetail(id,DETAIL_ORDER);return}
  CUR=id;
  const sub=$('#dlg .dlg-h .sub');
- if(sub)sub.textContent=r.id+(r.wo?' · '+r.wo:'')+' · '+r.type;
+ if(sub)sub.textContent=r.id+' · '+r.type;
  $('#dlg .dlg-b').innerHTML=detailBody(r);
  const _f=$('#dlg .dlg-f');if(_f)_f.innerHTML=detailFooter(r);
  bindDetail(id,r);
@@ -2084,7 +2080,7 @@ function renderOrders(){
       $$('.woc').forEach(function(x){x.classList.remove('on');});
       el.classList.add('on');
       const id=el.getAttribute('data-wo');
-      openDetail(id);
+      openDetail(id,true);
     });
   });
 }
