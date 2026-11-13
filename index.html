@@ -2128,19 +2128,151 @@ function renderFlow(){
     li.addEventListener('click',function(){stepModal(+li.getAttribute('data-step'));});
   });
 }
+/* ================= 环节详情：按当前选中工单动态渲染 =================
+   FLOW 环节描述保留演示口径；要素字段、进度与留痕按 CUR 记录动态取值；
+   待启动环节不显示留痕，改为预计触发条件；底部不设「关闭」，仅右上角 ×。 */
+function addMin(hm,n){
+  const p=(hm||'').split(':');if(p.length<2)return '—';
+  let m=parseInt(p[0],10)*60+parseInt(p[1],10)+n;m=((m%1440)+1440)%1440;
+  return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+(m%60)).slice(-2);
+}
+const WAIT_TIP={
+ 1:'告警信号接入并完成多源比对后启动',
+ 2:'监测研判定级、需推送涉及部门时启动',
+ 3:'预警下达、工单生成并需联动调度时启动',
+ 4:'属地签收预警工单、组织力量到场后启动',
+ 5:'处置单位提交处置结果后启动',
+ 6:'现场复核通过、工单完成后启动'};
 function stepModal(i){
-  const f=FLOW[i];
-  modal({title:'环节详情',sub:f.n,w:760,body:
-    '<div class="kpi-row"><div class="kpi"><em>环节</em><b style="font-size:17px">'+f.n+'</b></div>'+
-    '<div class="kpi"><em>对应状态</em><b style="font-size:17px">'+f.s+'</b></div>'+
-    '<div class="kpi"><em>进度</em><b style="font-size:17px">'+f.tag+'</b></div>'+
-    '<div class="kpi"><em>时间</em><b style="font-size:16px">'+(f.tm||'—')+'</b></div></div>'+
-    '<div class="sec-t">处置说明</div><p style="font-size:12.5px;color:#2c5680;line-height:1.8">'+f.d+'</p>'+
-    '<div class="sec-t">操作留痕</div>'+
-    tbl(['时间','操作人','操作内容'],[
-      [f.tm||'—','系统','自动生成环节记录'],['19:47','李建军（值班指挥员）','确认处置方向与调度范围'],['19:50','王海涛（属地乡镇）','签收并反馈现场情况']])+
-    '<div class="note">环节记录不可修改，如需更正须由指挥员发起补录并留痕。</div>',
-    footer:'<button data-close="1">关闭</button>'});
+  const f=FLOW[i],r=findRec(CUR)||RECS[0];if(!r)return;
+  const base=udBase(r),cur=STATUS[base].stage,mode=i<cur?'done':(i===cur?'now':'wait');
+  const lvTxt=WARN_LV[r.lv]||r.lv,LVC={red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'};
+  const lvC=LVC[r.lv]||'#163e66',conf=(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62);
+  const limit=r.limit||ORDER_LIMIT[r.lv==='bl'?'ye':r.lv];
+  const t0=(r.time||'').slice(11,16)||'—',signed=cur>3;
+  const fbs=Array.isArray(r.feedbacks)?r.feedbacks:[];
+  const e=r.eval||(r.status==='archived'?{score:94,level:'优秀',dims:{'响应速度':95,'处置效率':94,'协同配合':92},
+    note:'响应及时，处置规范，部门联动顺畅',at:'—',by:'市森防指（历史归档）'}:null);
+  const OWNER=['感知设备 / 上报人','值班监测席位','市森防指办公室','值班指挥员',eh(r.unit||'处置单位'),'复核单位','市森防指办公室'];
+  /* 头部 KPI：环节 / 进度 / 环节时间 / 责任主体（对应状态并入副标题） */
+  let h='<div class="kpi-row">'+
+    '<div class="kpi"><em>环节</em><b style="font-size:17px">'+(i+1)+' · '+f.n+'</b></div>'+
+    '<div class="kpi"><em>进度</em><b style="font-size:17px;color:'+(mode==='done'?'#1fa05e':mode==='now'?'#c9822a':'#5e7fa0')+'">'+
+      (mode==='done'?'已完成':mode==='now'?'进行中':'待启动')+'</b></div>'+
+    '<div class="kpi"><em>环节时间</em><b style="font-size:16px">'+(mode==='wait'?'—':(f.tm||'—'))+'</b></div>'+
+    '<div class="kpi"><em>责任主体</em><b style="font-size:15px">'+OWNER[i]+'</b></div></div>';
+  /* 各环节专属要素 */
+  if(i===0){
+    h+='<div class="sec-t">感知要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>告警来源</em><b style="font-size:15px">'+eh(r.src)+'</b></div>'+
+      '<div class="kpi"><em>告警时间</em><b style="font-size:15px">'+eh(r.time)+'</b></div>'+
+      '<div class="kpi"><em>坐标点位</em><b style="font-size:14px">'+eh(r.coord||'115.0136°E / 30.0410°N')+'</b></div>'+
+      '<div class="kpi"><em>AI 置信度</em><b style="font-size:15px">'+(r.ai?conf+'%':'人工上报')+'</b></div></div>'+
+      '<div class="sec-t">上报图片 · 点击查看大图</div>'+photoHtml(r);
+  }
+  if(i===1){
+    h+='<div class="sec-t">研判结论</div><div class="kpi-row">'+
+      '<div class="kpi"><em>研判结论</em><b style="font-size:15px">'+(r.lv==='bl'?'低等级关注类':'真实火情风险点')+'</b></div>'+
+      '<div class="kpi"><em>预警等级</em><b style="font-size:16px;color:'+lvC+'">'+lvTxt+'</b></div>'+
+      '<div class="kpi"><em>置信度</em><b style="font-size:15px">'+conf+'%</b></div>'+
+      '<div class="kpi"><em>研判时限</em><b style="font-size:15px">≤ 5 分钟</b></div></div>'+
+      '<div class="sec-t">多源信号明细</div>'+
+      tbl(['信号源','时间','内容'],[
+        ['视频热源',eh(r.time),'热成像连续多帧异常，初判地表火'],
+        ['卫星热点',eh(r.time),'NOAA-20 热点像元，与视频位置重合'],
+        ['护林员上报',addMin(t0,2),'人巡印证，可见轻烟 1 处']]);
+  }
+  if(i===2){
+    h+='<div class="sec-t">下达要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>下达时间</em><b style="font-size:15px">'+(mode==='wait'?'—':eh(r.time))+'</b></div>'+
+      '<div class="kpi"><em>推送对象</em><b style="font-size:15px">3 个</b></div>'+
+      '<div class="kpi"><em>已签收</em><b style="font-size:15px;color:'+(signed?'#1fa05e':'#d95b60')+'">'+(signed?'3 / 3':'0 / 3')+'</b></div>'+
+      '<div class="kpi"><em>预警等级</em><b style="font-size:16px;color:'+lvC+'">'+lvTxt+'</b></div></div>'+
+      '<div class="sec-t">推送对象签收情况</div>'+
+      tbl(['推送对象','推送渠道','签收时间'],[
+        ['市应急管理局','值班短信 + 平台推送',signed?eh(r.signAt||addMin(t0,8)):'<span style="color:#d95b60">未签收</span>'],
+        [eh(r.town)+' 值班室','值班电话 + 平台推送',signed?eh(r.signAt||addMin(t0,8)):'<span style="color:#d95b60">未签收</span>'],
+        ['市自然资源和建设局','平台推送',signed?eh(addMin(t0,8)):'<span style="color:#d95b60">未签收</span>']]);
+  }
+  if(i===3){
+    const units=UNITS.slice(0,r.multi?4:3);
+    h+='<div class="sec-t">调度要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>调度单位</em><b style="font-size:15px">'+units.length+' 个'+(r.multi?' · 多跨联动':'')+'</b></div>'+
+      '<div class="kpi"><em>处置时限</em><b style="font-size:15px">'+eh(limit)+'</b></div>'+
+      '<div class="kpi"><em>属地签收</em><b style="font-size:15px;color:'+(signed?'#1fa05e':'#d95b60')+'">'+(signed?'已签收 '+eh(r.signAt):'未签收')+'</b></div>'+
+      '<div class="kpi"><em>指令下达</em><b style="font-size:15px">'+(mode==='wait'?'—':'值班指挥员 李建军')+'</b></div></div>'+
+      '<div class="sec-t">调度对象</div>'+
+      tbl(['联动单位','值班力量','指令状态'],units.map(function(u){
+        return [u[0],u[2],cur>3?'<span style="color:#1fa05e">已接收</span>':(mode==='now'?'<span style="color:#d95b60">待接收</span>':'—')];}));
+  }
+  if(i===4){
+    const late=r.overtime||r.status==='overtime';
+    h+='<div class="sec-t">处置要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>处置单位</em><b style="font-size:15px">'+eh(r.unit||'—')+'</b></div>'+
+      '<div class="kpi"><em>到场时间</em><b style="font-size:15px">'+(signed?eh(r.signAt||'—'):'—')+'</b></div>'+
+      '<div class="kpi"><em>时限对照</em><b style="font-size:15px;color:'+(late?'#d95b60':'#1fa05e')+'">'+(late?'已超时':'时限内')+'</b></div>'+
+      '<div class="kpi"><em>进展反馈</em><b style="font-size:15px">'+fbs.length+' 次</b></div></div>';
+    h+='<div class="sec-t">进展反馈</div>';
+    h+=fbs.length?tbl(['时间','类型','方式','内容'],fbs.map(function(x){
+        return [x.t,eh(x.kind),eh(x.way||'—'),eh(x.note||'—')];})):
+      '<div class="note">'+(mode==='wait'?'该环节尚未启动，无进展反馈。':'暂无进展反馈记录（演示数据为空）。')+'</div>';
+    h+='<div class="sec-t">现场照片 · 点击查看大图</div>'+photoHtml(r);
+  }
+  if(i===5){
+    const rc=r.status==='returned'?'退回待补充':(cur>5?'已复核':'待复核');
+    h+='<div class="sec-t">复核要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>复核方式</em><b style="font-size:15px">'+eh(r.recheckWay||'现场核查')+'</b></div>'+
+      '<div class="kpi"><em>复核结论</em><b style="font-size:15px;color:'+(r.status==='returned'?'#d95b60':(cur>5?'#1fa05e':'#c9822a'))+'">'+rc+'</b></div>'+
+      '<div class="kpi"><em>复核时限</em><b style="font-size:15px">复核通过后 1 小时内</b></div>'+
+      '<div class="kpi"><em>复核意见</em><b style="font-size:14px">'+(r.recheck?eh(r.recheck):(mode==='wait'?'—':'待复核意见'))+'</b></div></div>';
+  }
+  if(i===6){
+    h+='<div class="sec-t">评估销号要素</div><div class="kpi-row">'+
+      '<div class="kpi"><em>综合得分</em><b style="font-size:18px;color:'+(e?'#17549b':'#5e7fa0')+'">'+(e?e.score+' 分':'待评估')+'</b></div>'+
+      '<div class="kpi"><em>评估等级</em><b style="font-size:16px">'+(e?eh(e.level):'—')+'</b></div>'+
+      '<div class="kpi"><em>归档时间</em><b style="font-size:15px">'+(r.status==='archived'?(e&&e.at&&e.at!=='—'?e.at:'已归档'):'—')+'</b></div>'+
+      '<div class="kpi"><em>销号确认</em><b style="font-size:15px">'+(r.status==='archived'?'市森防指':'—')+'</b></div></div>';
+    if(e)h+=tbl(null,[
+      ['响应速度',((e.dims||{})['响应速度']||'—')+' 分 · 权重 40%','处置效率',((e.dims||{})['处置效率']||'—')+' 分 · 权重 40%'],
+      ['协同配合',((e.dims||{})['协同配合']||'—')+' 分 · 权重 20%','评估意见',eh(e.note||'—')]]);
+  }
+  /* 处置说明 + 操作留痕（待启动环节不显示留痕） */
+  h+='<div class="sec-t">处置说明</div><p style="font-size:12.5px;color:#2c5680;line-height:1.8">'+f.d+'</p>';
+  h+='<div class="sec-t">操作留痕</div>';
+  if(mode==='wait'){
+    h+='<div class="ud-warn">该环节尚未启动。预计触发条件：'+WAIT_TIP[i]+'。触发后自动生成环节留痕。</div>';
+  }else{
+    let trace=[];
+    if(i===0)trace=[[t0,eh(r.src||'感知系统'),'识别异常热源，生成告警信号 '+eh(r.id)],
+      [t0,'AI 研判引擎','初判置信度 '+conf+'%，自动归并同类信号']];
+    if(i===1)trace=[[addMin(t0,4),'值班监测员 张敏','多源印证，判定'+(r.lv==='bl'?'低等级关注类信号':'真实火情风险点')+'，定级 '+lvTxt],
+      [addMin(t0,4),'值班监测员 张敏','研判结论同步推送值班指挥员']];
+    if(i===2)trace=[[addMin(t0,6),'市森防指办公室','预警下达并推送 3 个涉及部门']].concat(
+      signed?[[r.signAt||addMin(t0,8),eh(r.unit||'属地值班室'),'同步签收预警信息']]:[]);
+    if(i===3)trace=[[addMin(t0,7),'值班指挥员 李建军','确认处置方向与调度范围，下达联动指令']].concat(
+      signed?[[r.signAt||'—',eh(r.unit||'属地值班室'),'签收调度指令，组织力量到场']]:[]);
+    if(i===4)trace=(signed?[[r.signAt||'—',eh(r.unit||'处置单位'),'到场处置，反馈现场情况']]:[]).concat(
+      fbs.map(function(x){return [x.t,eh(r.unit||'处置单位'),eh(x.kind)+(x.note?'：'+eh(x.note):'')];}));
+    if(i===5)trace=cur>5?[[addMin(t0,55),'复核组 现场核查',eh(r.recheck||'复核通过，处置结果与现场一致')]]:
+      [[addMin(t0,50),'复核组','已派单，待现场复核反馈']];
+    if(i===6)trace=r.status==='archived'?
+      [[addMin(t0,65),'市森防指','质效评估 '+(e?e.score+' 分 · '+e.level:'—')+'，归档销号']]:
+      [[addMin(t0,60),'系统','待复核通过后自动进入评估销号']];
+    h+=trace.length?tbl(['时间','操作人','操作内容'],trace):
+      '<div class="note">暂无留痕记录（演示数据为空）。</div>';
+  }
+  h+='<div class="note">环节记录不可修改，如需更正须由指挥员发起补录并留痕。</div>';
+  /* 底部：跳转工单详情；指挥调度环节进行中提供催办引导（规划中 · 无数据源） */
+  let foot=(i===3&&mode==='now'&&!signed?'<button class="ud-fbtn" data-urge="1">催办未签收单位</button>':'')+
+    '<button class="primary" data-stepwo="1">查看预警工单详情 ›</button>';
+  modal({title:'环节详情',sub:eh(r.id)+' · '+eh(r.town)+' · '+eh(r.spot)+' ｜ '+eh(f.s),w:800,body:h,footer:foot});
+  const wb=$('#dlg [data-stepwo]');
+  if(wb)wb.addEventListener('click',function(){closeModal();openDetail(r.id,true);});
+  const ub=$('#dlg [data-urge]');
+  if(ub)ub.addEventListener('click',function(){toast('催办指令已下发至未签收单位（规划中 · 无数据源）');});
+  $$('#dlg [data-ph]').forEach(function(el){
+    el.addEventListener('click',function(){photoViewer(r.id,parseInt(el.getAttribute('data-ph'),10)||0);});
+  });
 }
 function renderPerf(){
   const cls=function(v){return v>=90?'hi':v>=80?'mid':'low';};
