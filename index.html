@@ -938,11 +938,11 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
   <!-- ================= 工单处置：右侧 ================= -->
   <aside id="woRight">
     <section class="panel" style="flex:0 0 452px">
-      <div class="ph"><i class="dm"></i><h3>处置流程</h3><span class="ledger">调度台账 <b>4 / 7</b> 环节</span></div>
+      <div class="ph"><i class="dm"></i><h3>处置流程</h3><span class="ledger">调度台账 <b id="flowStep">4</b> / 7 环节</span></div>
       <div class="pb" style="padding-top:6px">
         <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:#5e7fa0;margin-bottom:2px">
-          <span style="color:#d95b60">◆</span><span>多跨工单处置流程</span>
-          <span style="margin-left:auto;color:#c9822a">大箕铺镇 · 石家堍森林火情</span>
+          <span style="color:#d95b60">◆</span><span>工单处置流程</span>
+          <span style="margin-left:auto;color:#c9821a" id="flowRec">大箕铺镇 · 石家堍森林火情</span>
         </div>
         <ol class="flow" id="flowList"></ol>
       </div>
@@ -2067,7 +2067,7 @@ function woCard(e,isMulti){
     '<div class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-fire"/></svg></div>'+
     '<div class="woc-main"><div class="woc-t"><h4>'+title+'</h4><span class="tag '+e.lv+'">'+ORDER_LV[e.lv]+'</span></div>'+
     '<div class="woc-s">'+sub+'</div></div>'+
-    '<div class="woc-r"><span class="st-tag '+e.sb+'">'+e.status+'</span><span class="go">›</span></div></div>';
+    '<div class="woc-r"><span class="st-tag '+e.sb+'">'+e.status+'</span><button class="wc-btn" data-detail="'+e.rid+'">详情 ›</button></div></div>';
 }
 let orderF='all',crossF='all';
 function renderOrders(){
@@ -2076,11 +2076,25 @@ function renderOrders(){
   const m=CROSS_ORDERS.filter(function(e){return crossF==='all'||e.lv===crossF;});
   $('#crossList').innerHTML=m.map(function(e){return woCard(e,true);}).join('');
   $$('#orderList .woc,#crossList .woc').forEach(function(el){
-    el.addEventListener('click',function(){
+    el.addEventListener('click',function(e){
+      if(e.target.closest('[data-detail]'))return;
       $$('.woc').forEach(function(x){x.classList.remove('on');});
       el.classList.add('on');
-      const id=el.getAttribute('data-wo');
-      openDetail(id,true);
+      CUR=el.getAttribute('data-wo');
+      renderFlow();
+    });
+    el.addEventListener('dblclick',function(){
+      $$('.woc').forEach(function(x){x.classList.remove('on');});
+      el.classList.add('on');
+      openDetail(el.getAttribute('data-wo'),true);
+    });
+  });
+  $$('#orderList [data-detail],#crossList [data-detail]').forEach(function(b){
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      $$('.woc').forEach(function(x){x.classList.remove('on');});
+      b.closest('.woc').classList.add('on');
+      openDetail(b.getAttribute('data-detail'),true);
     });
   });
 }
@@ -2098,6 +2112,10 @@ $$('#crossFilter .chip').forEach(function(c){
 });
 function renderFlow(){
   const r=findRec(CUR)||RECS[0],cur=STATUS[r.status].stage;
+  const _fr=document.getElementById('flowRec');
+  if(_fr)_fr.textContent=(r.multi?'多跨工单 · ':'')+r.town+' · '+r.spot;
+  const _fs=document.getElementById('flowStep');
+  if(_fs)_fs.textContent=Math.min(cur+1,7);
   $('#flowList').innerHTML=FLOW.map(function(f,i){
     const cls=i<cur?'done':i===cur?'now':'wait';
     const fg=i<cur?'ok':i===cur?'run':'wait';
