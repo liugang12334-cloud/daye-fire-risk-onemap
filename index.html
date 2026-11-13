@@ -423,10 +423,16 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
   color:#fff;background:rgba(47,141,238,.9);font-weight:700}
 
 /* 统一详情页 */
-.ud-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 12px;margin-bottom:10px;
-  background:linear-gradient(90deg,rgba(47,141,238,.13),rgba(255,255,255,.55));border:1px solid rgba(47,141,238,.25)}
+.ud-top{display:flex;align-items:center;gap:9px;flex-wrap:nowrap;padding:0 12px 0 0;min-height:40px;margin-bottom:10px;
+  background:linear-gradient(90deg,rgba(47,141,238,.13),rgba(255,255,255,.55));border:1px solid rgba(47,141,238,.25);overflow:hidden}
+.ud-lv{align-self:stretch;display:inline-flex;align-items:center;padding:0 15px;color:#fff;font-size:12.5px;
+  font-weight:700;letter-spacing:1px;white-space:nowrap}
 .ud-badge{display:inline-flex;align-items:center;padding:4px 10px;font-size:12px;font-weight:700;letter-spacing:.6px;color:#fff}
 .ud-phase{font-size:11px;color:#17549b;font-weight:700;letter-spacing:1px}
+.fa-lead{font-size:13px;line-height:1.8;color:#2c5680;background:rgba(47,141,238,.07);
+  border:1px solid rgba(47,141,238,.2);padding:10px 12px}
+.fa-tip{margin-top:14px;padding:9px 12px;font-size:11.5px;line-height:1.7;color:#8a4b12;
+  background:rgba(217,122,31,.10);border-left:3px solid #c9822a}
 .ud-steps{display:flex;align-items:stretch;gap:2px;margin:0 0 12px}
 .ud-step{flex:1 1 0;min-width:0;text-align:center;padding:7px 2px;font-size:10.5px;color:#7b8da6;
   border-bottom:2px solid rgba(47,141,238,.18);background:rgba(47,141,238,.05)}
@@ -990,9 +996,9 @@ const STATUS={
    旁支：处置中 ⇄ 已超时；待复核 ⇄ 退回待补充。超时/退回均为可回边状态，非终态。 */
 const MAIN_CHAIN=['waitConfirm','waitAssign','waitSign','working','waitRecheck','done','archived'];
 const TRANS={
- waitConfirm:[{a:'confirmAssign',t:'研判确认 · 直接指派并派发',to:'waitSign',primary:1},
-              {a:'confirmOnly',  t:'研判确认 · 转指派',       to:'waitAssign'},
-              {a:'falseAlarm',   t:'误报 / 蓝色关注类归档',   to:'archived'}],
+ /* 研判确认：按是否选择处置单位动态决定「待签收 / 待指派」，见 doTransition */
+ waitConfirm:[{a:'confirm',    t:'研判确认',to:'waitSign',primary:1},
+              {a:'falseAlarm', t:'误报归档',to:'archived'}],
  waitAssign: [{a:'assign',       t:'指派单位并派发',           to:'waitSign',primary:1}],
  waitSign:   [{a:'sign',         t:'属地签收工单',             to:'working',primary:1}],
  working:    [{a:'submitResult', t:'提交处置结果',             to:'waitRecheck',primary:1},
@@ -1275,7 +1281,7 @@ $('#kw').addEventListener('input',function(){
 /* ================= 统一详情页：预警 / 预警工单共用 =================
    同一条 RECS 记录按 rec.status 渲染，两阶段基础信息与研判依据完全一致，
    差异仅体现在「阶段信息区」与「可用操作按钮」。状态变更只写 rec.status + 流转留痕。 */
-function stBadge(k){const S=STATUS[k];return '<span class="ud-badge" style="background:'+S.c+'">'+S.t+'</span>';}
+function stBadge(k){const S=STATUS[k],c=S.phase==='warn'?'#3a5a86':S.c;return '<span class="ud-badge" style="background:'+c+'">'+S.t+'</span>';}
 function udBase(r){return r.status==='overtime'?'working':r.status==='returned'?'waitRecheck':r.status;}
 function udSteps(r){
  const cur=STATUS[r.status].stage,base=udBase(r),side=base!==r.status;
@@ -1294,7 +1300,7 @@ function udSteps(r){
 function detailBody(r){
  const S=STATUS[r.status],lv=r.lv==='bl'?'ye':r.lv,lvTxt=WARN_LV[r.lv]||r.lv;
  const lvColor={red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'}[r.lv];
- let h='<div class="ud-top"><span class="ud-badge" style="background:'+lvColor+'">'+lvTxt+'预警</span>'+
+ let h='<div class="ud-top"><span class="ud-lv" style="background:'+lvColor+'">'+lvTxt+'预警</span>'+
    '<span class="ud-phase">'+(S.phase==='warn'?'预警阶段':'预警工单阶段')+'</span>'+
    stBadge(r.status)+
    '<span style="margin-left:auto;font-size:11px;color:#5e7fa0">到场时限 '+ORDER_LIMIT[lv]+' ｜ 统一记录 '+r.id+(r.wo?' · '+r.wo:'')+'</span></div>';
@@ -1313,14 +1319,11 @@ function detailBody(r){
   h+='<div class="ai-box"><h6>AI 研判结果</h6><p>'+
     (r.lv==='bl'?'判定为低等级关注类信号，建议持续监测、暂不生成工单。':'综合视频热源、卫星热点与护林员上报，判定为真实火情风险点。')+
     '</p><div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%"></i></div><b>'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%</b></div></div>';
-  if(r.status==='waitAssign'){
-   h+='<div class="frow"><div class="fitem"><label>指派单位</label><select id="udUnit">'+
-      UNITS_PICK.map(function(u){return '<option>'+u+'</option>';}).join('')+'</select></div>'+
-      '<div class="fitem"><label>处置时限</label><input value="'+ORDER_LIMIT[lv]+'" readonly></div></div>';
-  }else{
-   h+=tbl(['研判状态','拟派发单位','工单生成方式'],[
-    ['待值班指挥员确认','市森防指 + 属地乡镇','沿用告警记录变更状态，不新建数据对象']]);
-  }
+  var defU=r.status==='waitAssign'?(r.unit||UNITS_PICK[0]):'';
+  h+='<div class="frow"><div class="fitem"><label>'+(r.status==='waitAssign'?'指派单位':'处置单位')+'</label>'+
+     '<select id="udUnit"><option value="">不指定（研判后转待指派）</option>'+
+     UNITS_PICK.map(function(u){return '<option'+(u===defU?' selected':'')+'>'+u+'</option>';}).join('')+
+     '</select></div><div class="fitem"><label>处置时限</label><input value="'+ORDER_LIMIT[lv]+'" readonly></div></div>';
  }else{
   h+='<div class="ud-grid">'+
     '<div class="ud-cell"><em>过火面积</em><b>'+r.area+'<small> 公顷</small></b></div>'+
@@ -1359,7 +1362,11 @@ function openDetail(id){
  modal({title:'预警详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
   body:detailBody(r),footer:detailFooter(r)});
  $$('#dlg [data-ud]').forEach(function(b){
-  b.addEventListener('click',function(){doTransition(id,b.getAttribute('data-ud'));});
+  b.addEventListener('click',function(){
+   const a=b.getAttribute('data-ud');
+   if(a==='falseAlarm'){falseAlarmModal(id);return}
+   doTransition(id,a);
+  });
  });
  $$('#dlg [data-udx]').forEach(function(b){
   b.addEventListener('click',function(){
@@ -1369,11 +1376,37 @@ function openDetail(id){
  });
  renderFlow();
 }
+function falseAlarmModal(id){
+ const r=findRec(id);if(!r)return;
+ const reasons=['误报 · 云雾/热扰动','误报 · 秸秆焚烧/农事用火','误报 · 设备反光/镜头污损','误报 · 重复告警归并','误报 · 其他'];
+ modal({title:'判定误报 · 归档',sub:r.id+' · '+r.type,w:560,
+  body:'<div class="fa-lead">告警 '+r.id+' 判定为误报，归档后不生成工单，本条记录状态变更为「已归档」。</div>'+
+   '<div class="fitem" style="margin-top:14px"><label>判定误报 · 原因</label><select id="_faReason">'+
+   reasons.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
+   '<div class="fitem" style="margin-top:12px"><label>研判备注</label>'+
+   '<textarea id="_faNote" placeholder="补充现场判断依据、处置要求…"></textarea></div>'+
+   '<div class="fa-tip">归档后本条预警不再参与派发与处置；判定原因与研判备注写入状态流转留痕，可追溯、不可撤销。</div>',
+  footer:'<button data-fa="cancel">取消</button><button class="primary" data-fa="ok">确认</button>'});
+ $$('#dlg [data-fa]').forEach(function(b){
+  b.addEventListener('click',function(){
+   if(b.getAttribute('data-fa')==='cancel'){openDetail(id);return}
+   r.falseReason=$('#_faReason')?$('#_faReason').value:'';
+   r.falseNote=$('#_faNote')?$('#_faNote').value.trim():'';
+   doTransition(id,'falseAlarm');
+  });
+ });
+}
 function doTransition(id,act){
  const r=findRec(id);if(!r)return;
  const t=(TRANS[r.status]||[]).filter(function(x){return x.a===act;})[0];if(!t)return;
  const old=STATUS[r.status].t;
- if(act==='confirmAssign'||act==='confirmOnly'){if(!r.wo)r.wo=nextWoId();r.unit=r.unit||'市森防指 + 属地乡镇';}
+ let to=t.to;
+ if(act==='confirm'){
+  const sel=$('#udUnit'),unit=sel?sel.value:'';
+  to=unit?'waitSign':'waitAssign';
+  r.unit=unit;
+  if(!r.wo)r.wo=nextWoId();
+ }
  if(act==='assign'){const sel=$('#udUnit');if(sel)r.unit=sel.value;r.assigned=1;}
  if(act==='falseAlarm')r.wo='';
  if(act==='sign')r.signAt=hhmm();
@@ -1384,8 +1417,10 @@ function doTransition(id,act){
  if(act==='recheckPass')r.recheck='复核通过，处置结果与现场一致';
  if(act==='resubmit'){r.recheck='';r.report=(r.report||'')+'（已补充材料并重新提交）';}
  if(act==='rework')r.recheck='';
- r.status=t.to;
- r.timeline.push({t:hhmm(),b:'大屏指挥端',x:old+' → '+STATUS[t.to].t+'：'+t.t+(r.wo?'（'+r.wo+'）':'')});
+ r.status=to;
+ let tx=old+' → '+STATUS[to].t+'：'+t.t+(r.wo?'（'+r.wo+'）':'');
+ if(act==='falseAlarm'&&r.falseReason)tx+='；原因：'+r.falseReason+(r.falseNote?'；备注：'+r.falseNote:'');
+ r.timeline.push({t:hhmm(),b:'大屏指挥端',x:tx});
  saveShared();syncLists();renderWL();renderOrders();renderMarks();
  openDetail(id);
  toast('状态已更新：'+STATUS[t.to].t);
