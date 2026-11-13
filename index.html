@@ -1315,9 +1315,12 @@ function udSteps(r){
 }
 function detailBody(r){
  const S=STATUS[r.status],lv=r.lv==='bl'?'ye':r.lv,lvTxt=WARN_LV[r.lv]||r.lv;
+ /* 三信息卡「预警等级」值按等级本色显示（红/橙/黄/蓝） */
+ const LV_COLOR={red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'};
+ const lvColor=LV_COLOR[r.lv]||'#163e66';
  let h='<div class="ud-cards">'+
    '<div class="ud-card"><em>点位</em><b>'+r.town+' · '+r.spot+'</b></div>'+
-   '<div class="ud-card"><em>预警等级</em><b>'+lvTxt+'预警</b></div>'+
+   '<div class="ud-card"><em>预警等级</em><b style="color:'+lvColor+'">'+lvTxt+'预警</b></div>'+
    '<div class="ud-card"><em>告警时间</em><b>'+r.time+'</b></div></div>';
  h+=udSteps(r);
  h+='<div class="sec-t">基础信息</div>';
