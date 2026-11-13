@@ -441,12 +441,32 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 .fa-tip{margin-top:14px;padding:9px 12px;font-size:11.5px;line-height:1.7;color:#8a4b12;
   background:rgba(217,122,31,.10);border-left:3px solid #c9822a}
 .ud-steps{display:flex;align-items:stretch;gap:2px;margin:0 0 12px}
-.ud-step{flex:1 1 0;min-width:0;text-align:center;padding:7px 2px;font-size:10.5px;color:#7b8da6;
+.ud-step{flex:1 1 0;min-width:0;text-align:center;padding:8px 2px;font-size:13px;color:#7b8da6;
   border-bottom:2px solid rgba(47,141,238,.18);background:rgba(47,141,238,.05)}
-.ud-step small{display:block;font-size:9px;opacity:.78;margin-top:2px;white-space:nowrap}
+.ud-step small{display:block;font-size:10.5px;opacity:.78;margin-top:3px;white-space:nowrap}
 .ud-step.done{color:#17549b;border-bottom-color:#2f8dee;background:rgba(47,141,238,.12)}
 .ud-step.now{color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-bottom-color:#1f7fd6;font-weight:700}
 .ud-step.now small{opacity:.9}
+
+/* 上报图片：缩略图 / 大图预览（原型用抓拍画面兜底，真实图片由 r.photos 提供） */
+.ud-photos{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:2px}
+.ud-ph,.pv-img{position:relative;overflow:hidden;border:1px solid rgba(47,141,238,.3);background-size:cover}
+.ud-ph{width:152px;height:102px;border-radius:6px;cursor:zoom-in;box-shadow:0 2px 8px rgba(20,60,100,.14);transition:transform .18s,box-shadow .18s}
+.ud-ph:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(20,60,100,.24)}
+.ph-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px}
+.ph-grid:after{content:"";position:absolute;left:50%;top:46%;width:26px;height:26px;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.6);border-radius:50%}
+.ph-hill{position:absolute;left:0;right:0;bottom:0;height:62%;background:rgba(8,24,34,.42);clip-path:polygon(0 70%,16% 38%,32% 64%,50% 20%,68% 58%,85% 32%,100% 62%,100% 100%,0 100%)}
+.ph-hill2{position:absolute;left:0;right:0;bottom:0;height:42%;background:rgba(5,16,26,.62);clip-path:polygon(0 58%,22% 28%,44% 66%,64% 34%,82% 62%,100% 40%,100% 100%,0 100%)}
+.ph-wm{position:absolute;left:8px;right:34px;top:7px;color:rgba(255,255,255,.9);font-size:9.5px;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.ph-zoom{position:absolute;right:7px;top:6px;width:20px;height:20px;display:grid;place-items:center;color:#fff;font-size:13px;background:rgba(6,28,50,.5);border-radius:4px}
+.ph-t{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;color:#fff;background:linear-gradient(180deg,transparent,rgba(4,18,32,.86))}
+.ph-t b{display:block;font-size:11.5px;font-weight:600}
+.ph-t em{display:block;font-style:normal;font-size:9.5px;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ud-ph-empty{padding:14px;border:1px dashed rgba(47,141,238,.35);color:#7b8da6;font-size:12px;text-align:center}
+.pv-img{height:360px;border-radius:6px}
+.pv-cap{display:flex;align-items:baseline;gap:12px;margin-top:10px;color:#2c5680}
+.pv-cap b{font-size:14px}
+.pv-cap span{font-size:11.5px;color:#5e7fa0}
 .ud-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
 .ud-cell{padding:8px 10px;border:1px solid rgba(47,141,238,.2);background:rgba(255,255,255,.6)}
 .ud-cell em{display:block;font-size:10px;color:#5e7fa0;font-style:normal;letter-spacing:.5px}
@@ -1343,6 +1363,49 @@ function udSteps(r){
    '。主链进度停留在「'+STATUS[base].t+'」，处理后回到主链；超时 / 退回事实写入流转留痕，不因状态回退而清除。</div>';
  return h;
 }
+
+/* 上报图片：真实数据由移动端上报 / 处置回传写入 r.photos=[{n,s,t,bg}]；原型按来源生成抓拍画面兜底 */
+function photoList(r){
+ if(Array.isArray(r.photos))return r.photos;
+ const raw=r.time||r.t||'',t=raw.length>10?raw.slice(11,16):(raw||'--:--'),src=r.src||'监测设备';
+ const L=[{n:'告警抓拍',s:src,t:t,bg:r.thumb||TH.t1}];
+ if(/人巡|护林|移动端|巡查|上报/.test(src+' '+(r.type||''))){
+  L.push({n:'上报现场照片 1',s:'护林员移动端上报 · 定位水印',t:t,bg:TH.t1});
+  L.push({n:'上报现场照片 2',s:'护林员移动端上报 · 定位水印',t:t,bg:TH.t5});
+ }
+ if((STATUS[r.status]||{}).phase==='order')L.push({n:'现场处置照片',s:(r.unit||'处置单位')+'回传',t:r.signAt||t,bg:TH.t1});
+ if(/waitRecheck|returned|done|archived/.test(r.status))L.push({n:'现场复核照片',s:'现场复核回传',t:t,bg:TH.t2});
+ return L.slice(0,4);
+}
+function photoFace(p,id){
+ return '<span class="ph-grid"></span><span class="ph-hill"></span><span class="ph-hill2"></span>'+
+   '<span class="ph-wm">'+p.t+' · '+id+'</span>';
+}
+function photoHtml(r){
+ const L=photoList(r);
+ if(!L.length)return '<div class="ud-ph-empty">暂无上报图片</div>';
+ return '<div class="ud-photos">'+L.map(function(p,i){
+  return '<div class="ud-ph" data-ph="'+i+'" title="点击查看大图" style="background:'+p.bg+'">'+
+   photoFace(p,r.id)+'<span class="ph-zoom">⤢</span>'+
+   '<div class="ph-t"><b>'+p.n+'</b><em>'+p.s+'</em></div></div>';
+ }).join('')+'</div>';
+}
+function photoViewer(id,i){
+ const r=findRec(id);if(!r)return;
+ const L=photoList(r);if(!L.length)return;
+ let k=Math.max(0,Math.min(L.length-1,parseInt(i,10)||0));
+ function draw(){
+  const p=L[k];
+  modal2({title:'查看图片',sub:r.id+' · '+(k+1)+' / '+L.length,w:760,
+   body:'<div class="pv-img" style="background:'+p.bg+'">'+photoFace(p,r.id)+'</div>'+
+    '<div class="pv-cap"><b>'+p.n+'</b><span>'+p.s+' ｜ '+p.t+'</span></div>',
+   footer:(L.length>1?'<button data-pv="prev">上一张</button><button data-pv="next">下一张</button>':'')+'<button class="primary" data-close2="1">关闭</button>'});
+  const pr=$('#dlg2 [data-pv="prev"]'),nx=$('#dlg2 [data-pv="next"]');
+  if(pr)pr.onclick=function(){k=(k-1+L.length)%L.length;draw()};
+  if(nx)nx.onclick=function(){k=(k+1)%L.length;draw()};
+ }
+ draw();
+}
 function detailBody(r){
  const S=STATUS[r.status],lv=r.lv==='bl'?'ye':r.lv,lvTxt=WARN_LV[r.lv]||r.lv;
  /* 三信息卡「预警等级」值按等级本色显示（红/橙/黄/蓝） */
@@ -1360,6 +1423,7 @@ function detailBody(r){
    ['所在区域',r.town+' · '+r.spot,'信息来源',r.src],
    ['坐标点位',r.coord,'告警时间',r.time],
    ['告警描述',r.desc,'处置单位',S.phase==='warn'?'':(r.unit||'')]]);
+ h+='<div class="sec-t">上报图片 · 点击查看大图</div>'+photoHtml(r);
  h+='<div class="sec-t">研判依据 · 预警阶段留痕，两阶段一致</div><ul class="li-s">'+
     BASIS.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
  h+='<div class="sec-t">'+(S.phase==='warn'?'预警阶段信息':'预警工单阶段信息')+' · 按当前状态动态展示</div>';
@@ -1404,6 +1468,9 @@ function bindDetail(id,r){
    if(a==='confirm'||a==='assign'){judgeModal(id,a);return}
    doTransition(id,a);
   });
+ });
+ $$('#dlg [data-ph]').forEach(function(el){
+  el.addEventListener('click',function(){photoViewer(id,parseInt(el.getAttribute('data-ph'),10)||0);});
  });
  $$('#dlg [data-udx]').forEach(function(b){
   b.addEventListener('click',function(){
