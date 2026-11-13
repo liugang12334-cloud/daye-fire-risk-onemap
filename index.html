@@ -2121,7 +2121,7 @@ function renderFlow(){
     const fg=i<cur?'ok':i===cur?'run':'wait';
     const tag=i<cur?'已完成':i===cur?'进行中':'待启动';
     return '<li class="'+cls+'" data-step="'+i+'"><span class="idx">'+(i+1)+'</span>'+
-      '<div class="fc"><div class="st">'+f.n+'<span class="fstate">对应状态 · '+f.s+'</span></div><div class="sd">'+f.d+'</div></div>'+
+      '<div class="fc"><div class="st">'+f.n+'</div><div class="sd">'+f.d+'</div></div>'+
       '<span class="fg '+fg+'">'+tag+'</span></li>';
   }).join('');
   $$('#flowList li').forEach(function(li){
