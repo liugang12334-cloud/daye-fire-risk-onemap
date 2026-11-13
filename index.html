@@ -422,6 +422,35 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 .wop-basis li b{flex:0 0 auto;width:14px;height:14px;margin-top:1px;display:grid;place-items:center;font-size:9px;
   color:#fff;background:rgba(47,141,238,.9);font-weight:700}
 
+/* 统一详情页 */
+.ud-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 12px;margin-bottom:10px;
+  background:linear-gradient(90deg,rgba(47,141,238,.13),rgba(255,255,255,.55));border:1px solid rgba(47,141,238,.25)}
+.ud-badge{display:inline-flex;align-items:center;padding:4px 10px;font-size:12px;font-weight:700;letter-spacing:.6px;color:#fff}
+.ud-phase{font-size:11px;color:#17549b;font-weight:700;letter-spacing:1px}
+.ud-steps{display:flex;align-items:stretch;gap:2px;margin:0 0 12px}
+.ud-step{flex:1 1 0;min-width:0;text-align:center;padding:7px 2px;font-size:10.5px;color:#7b8da6;
+  border-bottom:2px solid rgba(47,141,238,.18);background:rgba(47,141,238,.05)}
+.ud-step small{display:block;font-size:9px;opacity:.78;margin-top:2px;white-space:nowrap}
+.ud-step.done{color:#17549b;border-bottom-color:#2f8dee;background:rgba(47,141,238,.12)}
+.ud-step.now{color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-bottom-color:#1f7fd6;font-weight:700}
+.ud-step.now small{opacity:.9}
+.ud-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.ud-cell{padding:8px 10px;border:1px solid rgba(47,141,238,.2);background:rgba(255,255,255,.6)}
+.ud-cell em{display:block;font-size:10px;color:#5e7fa0;font-style:normal;letter-spacing:.5px}
+.ud-cell b{display:block;margin-top:3px;font-size:15px;color:#163e66}
+.ud-cell b small{font-size:10px;color:#5e7fa0;font-weight:400}
+.ud-tl{list-style:none;margin:0;padding:0}
+.ud-tl li{display:flex;gap:9px;font-size:11.5px;line-height:1.6;color:#2c5680;padding:5px 2px;border-bottom:1px dashed rgba(47,141,238,.2)}
+.ud-tl li b{flex:0 0 auto;color:#17549b;font-family:var(--num)}
+.ud-warn{margin:8px 0;padding:8px 10px;font-size:11.5px;line-height:1.7;color:#8a4b12;background:rgba(217,122,31,.10);border-left:2px solid #c9822a}
+.ud-src{margin-top:12px;padding:9px 11px;font-size:10.5px;line-height:1.8;color:#5e7fa0;
+  background:rgba(47,141,238,.06);border:1px dashed rgba(47,141,238,.35)}
+.ud-src b{color:#17549b}
+.ud-src code{font-family:var(--num);color:#17549b;background:rgba(47,141,238,.10);padding:0 3px}
+.dlg-f button.ud-fbtn{height:34px;padding:0 13px;font-size:12px;letter-spacing:.5px;
+  border:1px solid rgba(47,141,238,.35);color:#17549b;background:rgba(47,141,238,.10)}
+.dlg-f button.ud-fbtn:hover{filter:brightness(1.1)}
+
 /* 处置流程 */
 .flow{list-style:none;position:relative;padding-left:2px}
 .flow::before{content:"";position:absolute;left:12px;top:12px;bottom:16px;width:1px;background:linear-gradient(180deg,rgba(47,141,238,.5),rgba(47,141,238,.12))}
@@ -938,26 +967,140 @@ const TH={
  t5:'radial-gradient(circle at 58% 42%,#ffe08a,#a16207 45%,#241a06)',
  t6:'radial-gradient(circle at 50% 60%,#b7c9d6,#42566b 45%,#101a24)'
 };
-const WARN=[
- {id:'W-2602',type:'视频预警',lv:'red',town:'大箕铺镇',spot:'石家堍',desc:'热成像 CH-09 连续 3 帧识别明火',time:'2026-11-10 19:42',ago:20,status:'待研判',st:'warn',thumb:TH.t1,ai:1},
- {id:'W-2601',type:'卫星预警',lv:'or',town:'刘仁八镇',spot:'云台山',desc:'NOAA-20 热点像元 3 个，置信度 87%',time:'2026-11-10 18:56',ago:66,status:'待研判',st:'warn',thumb:TH.t5,ai:1},
- {id:'W-2599',type:'人巡预警',lv:'or',town:'灵乡镇',spot:'宫台山',desc:'护林员巡护上报林缘野外用火',time:'2026-11-10 17:20',ago:162,status:'已派发',st:'warn',thumb:TH.t3,ai:0},
- {id:'W-2596',type:'无人机预警',lv:'ye',town:'陈贵镇',spot:'雷山风景区',desc:'巡护航线 UAV-03 烟点识别',time:'2026-11-10 16:05',ago:237,status:'处置中',st:'',thumb:TH.t2,ai:1},
- {id:'W-2593',type:'物联预警',lv:'ye',town:'保安镇',spot:'沼山林区',desc:'林区气象站温度骤升、湿度低于 30%',time:'2026-11-10 15:32',ago:270,status:'已归档',st:'done',thumb:TH.t6,ai:1},
- {id:'W-2589',type:'物联预警',lv:'bl',town:'茗山乡',spot:'杨桥林区',desc:'林区气象站回传短时降水，火险等级降至蓝色',time:'2026-11-10 14:26',ago:336,status:'待研判',st:'warn',thumb:TH.t4,ai:1},
- {id:'W-2586',type:'卫星预警',lv:'bl',town:'殷祖镇',spot:'大冶湖',desc:'FY-3D 低置信度热异常，纳入蓝色关注',time:'2026-11-10 13:48',ago:374,status:'已归档',st:'done',thumb:TH.t6,ai:1}
+/* ==================================================================
+   统一数据契约（大屏 / PC 后台共用同一份定义，同一数据库 dyyj_shared_v1）
+   业务口径：一条告警信号记录贯穿「预警 → 预警工单」全生命周期，
+   研判确认后【沿用该条数据进行状态变更】生成工单，不新建第二份对象；
+   预警详情页与工单详情页为同一组件 openDetail()，仅 rec.status 不同。
+   PC 后台 = 业务主端（研判/指派/复核/归档）；大屏 = 指挥视图（读取同库、可发起流转，变更回写同库）。
+   ================================================================== */
+const SHARED_KEY='dyyj_shared_v1', SHARED_NS='onemapRecs';
+const STATUS={
+ waitConfirm:{t:'待确认',      phase:'warn',  c:'#2f8dee', stage:1, d:'告警信号接入，等待研判确认'},
+ waitAssign: {t:'待指派',      phase:'warn',  c:'#2f8dee', stage:2, d:'研判已确认，等待指定处置单位'},
+ waitSign:   {t:'待签收',      phase:'order', c:'#c9822a', stage:3, d:'工单已生成并派发，等待属地签收'},
+ working:    {t:'处置中',      phase:'order', c:'#c9822a', stage:4, d:'现场处置与进展反馈中'},
+ overtime:   {t:'已超时',      phase:'order', c:'#d95b60', stage:4, d:'签收/反馈/报告超限时触发，超时事实全程留痕且不清除'},
+ waitRecheck:{t:'待复核',      phase:'order', c:'#2f8dee', stage:5, d:'处置结果已提交，等待现场复核'},
+ returned:   {t:'退回待补充',  phase:'order', c:'#d95b60', stage:5, d:'复核不通过，退回补充材料或重新现场处置'},
+ done:       {t:'已完成',      phase:'order', c:'#2e9e6b', stage:6, d:'复核通过，处置完成、待评估销号'},
+ archived:   {t:'已归档',      phase:'order', c:'#7b8da6', stage:7, d:'评估销号完成，归档留痕'}
+};
+/* 主链：待确认 → 待指派(可跳过) → 待签收 → 处置中 → 待复核 → 已完成 → 已归档
+   旁支：处置中 ⇄ 已超时；待复核 ⇄ 退回待补充。超时/退回均为可回边状态，非终态。 */
+const MAIN_CHAIN=['waitConfirm','waitAssign','waitSign','working','waitRecheck','done','archived'];
+const TRANS={
+ waitConfirm:[{a:'confirmAssign',t:'研判确认 · 直接指派并派发',to:'waitSign',primary:1},
+              {a:'confirmOnly',  t:'研判确认 · 转指派',       to:'waitAssign'},
+              {a:'falseAlarm',   t:'误报 / 蓝色关注类归档',   to:'archived'}],
+ waitAssign: [{a:'assign',       t:'指派单位并派发',           to:'waitSign',primary:1}],
+ waitSign:   [{a:'sign',         t:'属地签收工单',             to:'working',primary:1}],
+ working:    [{a:'submitResult', t:'提交处置结果',             to:'waitRecheck',primary:1},
+              {a:'markOvertime', t:'标记超时',                 to:'overtime'}],
+ overtime:   [{a:'urge',         t:'催办并继续处置',           to:'working',primary:1},
+              {a:'submitResult', t:'直接提交处置结果',         to:'waitRecheck'}],
+ waitRecheck:[{a:'recheckPass',  t:'复核通过',                 to:'done',primary:1},
+              {a:'recheckBack',  t:'复核退回',                 to:'returned'}],
+ returned:   [{a:'resubmit',     t:'补充材料并重新提交',       to:'waitRecheck',primary:1},
+              {a:'rework',       t:'重新现场处置',             to:'working'}],
+ done:       [{a:'archive',      t:'评估销号 · 归档',           to:'archived',primary:1}],
+ archived:   []
+};
+const UNITS_PICK=['市森防指 + 属地乡镇','属地乡镇值班室','村应急扑火小分队','市综合应急救援大队','市资规局（林业）'];
+const BASIS=[
+ '热成像 CH-09 连续 3 帧识别高温热源，温度 78℃ 超阈值 12℃',
+ 'NOAA-20 卫星热点像元与点位偏差 0.6 km，时间差 14 分钟',
+ '护林员 16:04 现场上传照片可见明火，位于东南坡林缘',
+ '未来 24 小时无有效降水，午后阵风 6 级，火险等级：橙'
 ];
-const ORDERS=[
- {id:'WO-2601',town:'大箕铺镇',spot:'石家堍',src:'热成像摄像机 CH-09',time:'2026-11-10 19:42',lv:'red',status:'处置中',sb:'b1',multi:1},
- {id:'WO-2602',town:'保安镇',spot:'后背山',src:'热成像摄像机 CH-03',time:'2026-11-10 19:19',lv:'or',status:'待派发',sb:'b3'},
- {id:'WO-2603',town:'陈贵镇',spot:'雷山风景区',src:'热成像摄像机 CH-05',time:'2026-11-10 18:18',lv:'ye',status:'核查中',sb:'b2'},
- {id:'WO-2604',town:'灵乡镇',spot:'宫台山',src:'卫星热点 · NOAA-20',time:'2026-11-10 17:15',lv:'or',status:'已处置',sb:'b2'}
+
+let woSeq=2620;
+function nextWoId(){return 'WO-'+String(woSeq++);}
+function hhmm(){const d=new Date(),p=function(x){return x<10?'0'+x:''+x};return p(d.getHours())+':'+p(d.getMinutes());}
+function mk(o){
+ const def={src:'热成像摄像机 CH-09',coord:'115.013620°E / 30.040978°N',dist:'12.4',area:'26.4',line:'1.8',
+  wind:'13',windDir:'西南风 3 级',slope:'18',aspect:'东南坡',unit:'市森防指 + 属地乡镇',
+  multi:0,ai:1,thumb:TH.t1,wo:'',overtime:0,assigned:0,signAt:'',report:'',recheck:''};
+ Object.keys(def).forEach(function(k){if(!(k in o))o[k]=def[k];});
+ if(!o.start)o.start=o.time;
+ o.timeline=[{t:o.time.slice(11,16),b:'平台自动',x:'告警信号接入，建立统一记录 '+o.id+'（状态：待确认）'}];
+ if(o.status!=='waitConfirm')o.timeline.push({t:o.time.slice(11,16),b:'指挥中心',x:'状态流转至 '+STATUS[o.status].t+(o.wo?'，工单编号 '+o.wo:'')});
+ return o;
+}
+const RECS=[
+ mk({id:'W-2602',type:'视频预警',lv:'red',town:'大箕铺镇',spot:'石家堍',desc:'热成像 CH-09 连续 3 帧识别明火',time:'2026-11-10 19:42',ago:20,thumb:TH.t1,ai:1,status:'waitConfirm'}),
+ mk({id:'W-2601',type:'卫星预警',lv:'or',town:'刘仁八镇',spot:'云台山',desc:'NOAA-20 热点像元 3 个，置信度 87%',time:'2026-11-10 18:56',ago:66,thumb:TH.t5,status:'waitConfirm',src:'卫星热点 · NOAA-20'}),
+ mk({id:'W-2589',type:'物联预警',lv:'bl',town:'茗山乡',spot:'杨桥林区',desc:'林区气象站回传短时降水，火险等级降至蓝色',time:'2026-11-10 14:26',ago:336,thumb:TH.t4,status:'waitConfirm',src:'林区气象站'}),
+ mk({id:'W-2599',type:'人巡预警',lv:'or',town:'灵乡镇',spot:'宫台山',desc:'护林员巡护上报林缘野外用火',time:'2026-11-10 17:20',ago:162,thumb:TH.t3,ai:0,status:'waitAssign',wo:'WO-2605',src:'护林员移动端上报'}),
+ mk({id:'W-2597',type:'无人机预警',lv:'ye',town:'金山店镇',spot:'燕儿山林区',desc:'巡护航线 UAV-07 识别烟点',time:'2026-11-10 16:40',ago:202,thumb:TH.t2,status:'waitConfirm',src:'无人机巡护航线'}),
+ mk({id:'W-2587',type:'物联预警',lv:'ye',town:'茗山乡',spot:'杨桥林区',desc:'烟感 12 号触发，需人工确认',time:'2026-11-10 13:52',ago:370,thumb:TH.t6,status:'waitConfirm',src:'林区烟感 12 号'}),
+ mk({id:'W-2596',type:'无人机预警',lv:'ye',town:'陈贵镇',spot:'雷山风景区',desc:'巡护航线 UAV-03 烟点识别',time:'2026-11-10 16:05',ago:237,thumb:TH.t2,status:'waitSign',wo:'WO-2603',unit:'陈贵镇值班室',src:'无人机巡护航线'}),
+ mk({id:'W-2595',type:'视频预警',lv:'red',town:'大箕铺镇',spot:'石家堍',desc:'多源信号归并：热成像 + 卫星 + 人巡',time:'2026-11-10 15:58',ago:244,thumb:TH.t1,status:'working',wo:'WO-2611',multi:1,unit:'市森防指 + 3 个联动部门',src:'热成像摄像机 CH-09',signAt:'20:08',coord:'115.013620°E / 30.040978°N',area:'26.4',line:'1.8'}),
+ mk({id:'W-2594',type:'卫星预警',lv:'red',town:'刘仁八镇',spot:'云台山',desc:'跨镇火情，涉及 4 个部门联动',time:'2026-11-10 15:12',ago:290,thumb:TH.t5,status:'working',wo:'WO-2612',multi:1,unit:'市森防指 + 4 个联动部门',src:'卫星热点 · NOAA-20',signAt:'15:34'}),
+ mk({id:'W-2592',type:'物联预警',lv:'or',town:'还地桥镇',spot:'黄金湖',desc:'进度反馈超时 42 分钟，已触发督办',time:'2026-11-10 14:35',ago:327,thumb:TH.t6,status:'overtime',wo:'WO-2613',multi:1,overtime:1,unit:'还地桥镇值班室',src:'林区气象站'}),
+ mk({id:'W-2590',type:'视频预警',lv:'ye',town:'保安镇',spot:'沼山林区',desc:'明火已扑灭，结果报告待复核',time:'2026-11-10 13:40',ago:382,thumb:TH.t2,status:'waitRecheck',wo:'WO-2606',unit:'保安镇值班室',report:'过火 0.6 公顷，明火已扑灭，现场照片 3 张',signAt:'14:02'}),
+ mk({id:'W-2588',type:'人巡预警',lv:'or',town:'殷祖镇',spot:'董家口林区',desc:'复核退回：缺少过火面积认定与现场照片',time:'2026-11-10 12:55',ago:427,thumb:TH.t3,ai:0,status:'returned',wo:'WO-2607',unit:'殷祖镇值班室',recheck:'复核不通过：需补充过火面积认定、现场复核照片与处置人签字'}),
+ mk({id:'W-2585',type:'卫星预警',lv:'ye',town:'金牛镇',spot:'龙角山',desc:'复核通过，处置完成待评估销号',time:'2026-11-10 11:30',ago:512,thumb:TH.t5,status:'done',wo:'WO-2608',unit:'金牛镇值班室',recheck:'复核通过，处置结果与现场一致'}),
+ mk({id:'W-2583',type:'物联预警',lv:'bl',town:'殷祖镇',spot:'大冶湖',desc:'FY-3D 低置信度热异常，纳入蓝色关注',time:'2026-11-10 10:48',ago:554,thumb:TH.t4,status:'archived',src:'卫星热点 · FY-3D'}),
+ mk({id:'W-2581',type:'视频预警',lv:'or',town:'金湖街道',spot:'龙角山',desc:'已完成评估销号并归档',time:'2026-11-10 09:20',ago:642,thumb:TH.t1,status:'archived',wo:'WO-2609',unit:'金湖街道值班室',recheck:'复核通过，质效评估 94 分'})
 ];
-const CROSS_ORDERS=[
- {id:'WO-2611',town:'大箕铺镇',spot:'石家堍',title:'石家堍森林火情',info:'涉及 3 个部门 · 已持续 20 分钟',lv:'red',status:'联合处置中',sb:'b4'},
- {id:'WO-2612',town:'刘仁八镇',spot:'云台山',title:'云台山跨镇火情',info:'涉及 4 个部门 · 已持续 3 小时 12 分',lv:'red',status:'联合处置中',sb:'b4'},
- {id:'WO-2613',town:'还地桥镇',spot:'黄金湖',title:'黄金湖湿地火情',info:'涉及 2 个部门 · 已持续 1 小时 06 分',lv:'or',status:'待响应',sb:'b3'}
-];
+const DEFAULT_ID='W-2595';
+let CUR=DEFAULT_ID;
+function findRec(id){return RECS.filter(function(r){return r.id===id;})[0];}
+function loadShared(){
+ try{
+  const o=JSON.parse(localStorage.getItem(SHARED_KEY)||'{}');
+  const arr=o&&o[SHARED_NS];if(!Array.isArray(arr))return;
+  arr.forEach(function(x){const r=findRec(x.id);if(!r||!STATUS[x.status])return;
+   r.status=x.status;r.wo=x.wo||r.wo;r.overtime=x.overtime||0;r.signAt=x.signAt||r.signAt;
+   r.unit=x.unit||r.unit;if(Array.isArray(x.timeline)&&x.timeline.length)r.timeline=x.timeline;});
+  if(typeof o.woSeq==='number'&&o.woSeq>woSeq)woSeq=o.woSeq;
+ }catch(e){}
+}
+function saveShared(){
+ try{
+  let o={};try{o=JSON.parse(localStorage.getItem(SHARED_KEY)||'{}')||{};}catch(e){o={};}
+  /* 合并写入：保留 PC 后台写入同库的其它统一记录，不覆盖其业务字段 */
+  const prev=Array.isArray(o[SHARED_NS])?o[SHARED_NS]:[];
+  const mine=RECS.map(function(r){return {id:r.id,wo:r.wo,status:r.status,overtime:r.overtime,
+   signAt:r.signAt,unit:r.unit,timeline:r.timeline};});
+  const mineIds={};mine.forEach(function(x){mineIds[x.id]=1});
+  o[SHARED_NS]=mine.concat(prev.filter(function(x){return x&&x.id&&!mineIds[x.id]}));
+  o.woSeq=woSeq;o[SHARED_NS+'_at']=new Date().toISOString();
+  localStorage.setItem(SHARED_KEY,JSON.stringify(o));
+  try{const _bc=new BroadcastChannel('dyyj_sync');_bc.postMessage({t:Date.now(),from:'SCREEN'});_bc.close();}catch(e){}
+ }catch(e){}
+}
+/* PC 后台状态变更广播 → 就地更新大屏同库记录并重绘 */
+function watchPC(){
+ try{
+  const bc=new BroadcastChannel('dyyj_sync');
+  bc.onmessage=function(e){
+   if(!e.data||e.data.from!=='PC')return;
+   try{
+    const o=JSON.parse(localStorage.getItem(SHARED_KEY)||'{}');
+    const arr=o&&o[SHARED_NS];if(!Array.isArray(arr))return;
+    let changed=0;
+    arr.forEach(function(x){const r=findRec(x.id);if(!r||!STATUS[x.status]||r.status===x.status)return;
+     r.status=x.status;r.wo=x.wo||r.wo;r.overtime=x.overtime||0;r.unit=x.unit||r.unit;
+     if(Array.isArray(x.timeline)&&x.timeline.length)r.timeline=x.timeline;changed++;});
+    if(!changed)return;
+    syncLists();renderWL();renderOrders();renderMarks();renderFlow();
+   }catch(err){}
+  };
+ }catch(e){}
+}
+let WARN=[],ORDERS=[],CROSS_ORDERS=[];
+function syncLists(){
+ WARN=RECS.filter(function(r){return STATUS[r.status].phase==='warn'||(r.status==='archived'&&!r.wo);})
+  .map(function(r){return Object.assign({},r,{status:STATUS[r.status].t,st:STATUS[r.status].c,rid:r.id});});
+ const os=RECS.filter(function(r){return STATUS[r.status].phase==='order'&&r.wo;})
+  .map(function(r){return Object.assign({},r,{status:STATUS[r.status].t,sb:'s'+STATUS[r.status].stage,rid:r.id});});
+ ORDERS=os.filter(function(r){return !r.multi;});
+ CROSS_ORDERS=os.filter(function(r){return r.multi;});
+}
+loadShared();syncLists();watchPC();
+
 const MARKS=[
  {k:'cmd', x:45,  y:37,  n:'市森林防火指挥部', m:'市应急管理局 · 在岗 12 人'},
  {k:'fire',x:56.5,y:47.5,n:'大箕铺镇 · 石家堍森林火情', m:'红色 · 过火 26.4 公顷 · 联合处置中'},
@@ -1090,7 +1233,7 @@ function wCard(w){
       '<div class="wc-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+w.desc+'</div>'+
       '<div class="wc-l" style="color:#5e7fa0">告警时间 '+w.time.slice(5)+'</div>'+
       '<div class="wc-f"><span class="wc-st '+(w.st||'')+'"><em></em>'+w.status+'</span>'+
-      '<button class="wc-btn'+(w.status==='已归档'?' dis':'')+'" data-judge="'+w.id+'">'+(w.status==='已归档'?'查看':'研判')+'</button></div>'+
+      '<button class="wc-btn" data-detail="'+w.rid+'">详情 ›</button></div>'+
     '</div></div>';
 }
 function renderWL(){
@@ -1107,12 +1250,12 @@ function renderWL(){
   $('#wlCount').textContent='共 '+list.length+' 条';
   $$('#wlBody .wcard').forEach(function(el){
     el.addEventListener('click',function(e){
-      if(e.target.closest('[data-judge]'))return;
-      openWarnDetail(el.getAttribute('data-warn'));
+      if(e.target.closest('[data-detail]'))return;
+      openDetail(el.getAttribute('data-warn'));
     });
   });
-  $$('#wlBody [data-judge]').forEach(function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();judge(b.getAttribute('data-judge'));});
+  $$('#wlBody [data-detail]').forEach(function(b){
+    b.addEventListener('click',function(e){e.stopPropagation();openDetail(b.getAttribute('data-detail'));});
   });
 }
 $$('#wlLevel .chip').forEach(function(c){
@@ -1129,65 +1272,124 @@ $('#kw').addEventListener('input',function(){
   kwTimer=setTimeout(function(){renderWL();renderMarks();},180);
 });
 
-/* ================= 预警详情 / 研判 ================= */
-function findWarn(id){return WARN.filter(function(w){return w.id===id;})[0];}
-function openWarnDetail(id){
-  const w=findWarn(id);if(!w)return;
-  modal({title:'预警详情',sub:w.id+' · '+w.type,body:
-    '<div class="kpi-row">'+
-      '<div class="kpi"><em>告警类型</em><b style="font-size:18px">'+w.type+'</b></div>'+
-      '<div class="kpi"><em>预警等级</em><b style="font-size:18px;color:'+({red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'})[w.lv]+'">'+WARN_LV[w.lv]+'预警</b></div>'+
-      '<div class="kpi"><em>处置状态</em><b style="font-size:18px">'+w.status+'</b></div>'+
-      '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
-    '</div>'+
-    '<div class="sec-t">告警内容</div>'+
-    '<ul class="li-s"><li>监测点位：'+w.town+' · '+w.spot+'</li><li>触发规则：'+w.desc+'</li>'+
-    '<li>信号来源：'+(w.ai?'系统自动识别':'护林员上报')+'，接入市城市安全预警平台统一编号 '+w.id+'</li></ul>'+
-    '<div class="sec-t">多源印证</div>'+
-    '<div class="ai-box"><h6>AI 研判结果</h6><p>综合视频热源、卫星热点与护林员上报信息，'+(w.lv==='bl'?'判定该点位为低等级关注类信号，建议持续监测、暂不生成工单。':'判定该点位为真实火情风险点，建议按 '+WARN_LV[w.lv]+'工单流程处置。')+'</p>'+
-    '<div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%"></i></div><b>'+(w.lv==='red'?94:w.lv==='or'?87:w.lv==='ye'?76:62)+'%</b></div></div>'+
-    '<div class="note">该预警关联工单：'+(w.town+' · '+w.spot)+'。研判结论提交后同步至工单流转留痕。</div>',
-    footer:'<button data-close="1">关闭</button><button class="primary" data-judge2="'+w.id+'">进入研判</button>'});
-  const b=$('[data-judge2]');if(b)b.addEventListener('click',function(){judge(w.id);});
+/* ================= 统一详情页：预警 / 预警工单共用 =================
+   同一条 RECS 记录按 rec.status 渲染，两阶段基础信息与研判依据完全一致，
+   差异仅体现在「阶段信息区」与「可用操作按钮」。状态变更只写 rec.status + 流转留痕。 */
+function stBadge(k){const S=STATUS[k];return '<span class="ud-badge" style="background:'+S.c+'">'+S.t+'</span>';}
+function udBase(r){return r.status==='overtime'?'working':r.status==='returned'?'waitRecheck':r.status;}
+function udSteps(r){
+ const cur=STATUS[r.status].stage,base=udBase(r),side=base!==r.status;
+ let h='<div class="ud-steps">';
+ MAIN_CHAIN.forEach(function(k){
+  const st=STATUS[k].stage;
+  let cls=k===base?'now':(st<cur?'done':'');
+  h+='<div class="ud-step '+cls+'">'+(st<cur&&k!==base?'✓ ':'')+STATUS[k].t+
+     '<small>'+(STATUS[k].phase==='warn'?'预警阶段':'工单阶段')+(k==='waitAssign'?' · 可跳过':'')+'</small></div>';
+ });
+ h+='</div>';
+ if(side)h+='<div class="ud-warn"><b>旁支状态 · '+STATUS[r.status].t+'</b>：'+STATUS[r.status].d+
+   '。主链进度停留在「'+STATUS[base].t+'」，处理后回到主链；超时 / 退回事实写入流转留痕，不因状态回退而清除。</div>';
+ return h;
 }
-let judgeId=null;
-function judge(id){
-  const w=findWarn(id);if(!w)return;judgeId=id;
-  modal({title:'预警研判',sub:w.id+' · '+w.type,w:820,body:
-    '<div class="kpi-row">'+
-      '<div class="kpi"><em>点位</em><b style="font-size:16px">'+w.town+' · '+w.spot+'</b></div>'+
-      '<div class="kpi"><em>预警等级</em><b style="font-size:16px">'+WARN_LV[w.lv]+'预警</b></div>'+
-      '<div class="kpi"><em>告警时间</em><b style="font-size:16px">'+w.time+'</b></div>'+
-    '</div>'+
-    '<div class="sec-t">研判依据</div>'+
-    '<ul class="li-s">'+
-      '<li>视频热源：CH-09 连续 3 帧命中热源，温度 78℃，超阈值 12℃</li>'+
-      '<li>卫星热点：NOAA-20 同期热点像元偏差 0.6 km，时间差 14 分钟</li>'+
-      '<li>人巡印证：护林员 16:04 现场照片可见明火，位于东南坡林缘</li>'+
-      '<li>气象条件：西风 3 级、湿度 45%，未来 24 小时无有效降水</li>'+
-    '</ul>'+
-    '<div class="sec-t">研判结论</div>'+
-    '<div class="radios" id="jgRadio">'+
-      '<div class="radio on" data-v="属实需处置"><em></em>属实 · 需处置</div>'+
-      '<div class="radio" data-v="属实 · 需现场核查"><em></em>属实 · 需现场核查</div>'+
-      '<div class="radio" data-v="误报 · 归档"><em></em>误报 · 归档</div>'+
-    '</div>'+
-    '<div class="frow">'+
-      '<div class="fitem"><label>派发单位</label><select id="jgUnit">'+UNITS.map(function(u){return '<option>'+u[0]+'</option>';}).join('')+'</select></div>'+
-      '<div class="fitem"><label>处置时限</label><select><option>黄色工单 · 2 小时内到场</option><option>橙色工单 · 1 小时内到场</option><option>红色工单 · 30 分钟内到场</option></select></div>'+
-    '</div>'+
-    '<div class="frow"><div class="fitem"><label>研判意见</label><textarea id="jgMemo">建议属地乡镇半专业队先行到场控制火势，市森防指同步备勤。</textarea></div></div>',
-    footer:'<button data-close="1">取消</button><button class="primary" id="jgSubmit">提交研判</button>'});
-  $$('#jgRadio .radio').forEach(function(r){
-    r.addEventListener('click',function(){$$('#jgRadio .radio').forEach(function(x){x.classList.remove('on');});r.classList.add('on');});
+function detailBody(r){
+ const S=STATUS[r.status],lv=r.lv==='bl'?'ye':r.lv,lvTxt=WARN_LV[r.lv]||r.lv;
+ const lvColor={red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'}[r.lv];
+ let h='<div class="ud-top"><span class="ud-phase">'+(S.phase==='warn'?'预警阶段':'预警工单阶段')+'</span>'+
+   stBadge(r.status)+'<span class="ud-badge" style="background:'+lvColor+'">'+lvTxt+(S.phase==='warn'?'预警':'工单')+'</span>'+
+   '<span style="margin-left:auto;font-size:11px;color:#5e7fa0">到场时限 '+ORDER_LIMIT[lv]+' ｜ 统一记录 '+r.id+(r.wo?' · '+r.wo:'')+'</span></div>';
+ h+=udSteps(r);
+ h+='<div class="sec-t">基础信息 · 预警与工单共用同一条数据</div>';
+ h+=tbl(['字段','内容','字段','内容'],[
+   ['告警编号',r.id,'工单编号',r.wo||'—（研判确认后生成）'],
+   ['告警类型',r.type,'预警等级',lvTxt],
+   ['所在区域',r.town+' · '+r.spot,'信息来源',r.src],
+   ['坐标点位',r.coord,'告警时间',r.time],
+   ['告警描述',r.desc,'处置单位',r.unit||'待指派']]);
+ h+='<div class="sec-t">研判依据 · 预警阶段留痕，两阶段一致</div><ul class="li-s">'+
+    BASIS.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
+ h+='<div class="sec-t">'+(S.phase==='warn'?'预警阶段信息':'预警工单阶段信息')+' · 按当前状态动态展示</div>';
+ if(S.phase==='warn'){
+  h+='<div class="ai-box"><h6>AI 研判结果</h6><p>'+
+    (r.lv==='bl'?'判定为低等级关注类信号，建议持续监测、暂不生成工单。':'综合视频热源、卫星热点与护林员上报，判定为真实火情风险点；研判通过后<b>沿用本条记录变更状态</b>生成工单并一次完成派发。')+
+    '</p><div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%"></i></div><b>'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%</b></div></div>';
+  if(r.status==='waitAssign'){
+   h+='<div class="frow"><div class="fitem"><label>指派单位</label><select id="udUnit">'+
+      UNITS_PICK.map(function(u){return '<option>'+u+'</option>';}).join('')+'</select></div>'+
+      '<div class="fitem"><label>处置时限</label><input value="'+ORDER_LIMIT[lv]+'" readonly></div></div>';
+  }else{
+   h+=tbl(['研判状态','拟派发单位','工单生成方式'],[
+    ['待值班指挥员确认','市森防指 + 属地乡镇','沿用告警记录变更状态，不新建数据对象']]);
+  }
+ }else{
+  h+='<div class="ud-grid">'+
+    '<div class="ud-cell"><em>过火面积</em><b>'+r.area+'<small> 公顷</small></b></div>'+
+    '<div class="ud-cell"><em>火线长度</em><b>'+r.line+'<small> 公里</small></b></div>'+
+    '<div class="ud-cell"><em>风速 / 风向</em><b>'+r.wind+'<small> km/h '+r.windDir+'</small></b></div>'+
+    '<div class="ud-cell"><em>坡度 / 坡向</em><b>'+r.slope+'<small>° '+r.aspect+'</small></b></div></div>';
+  h+=tbl(['工单要素','当前值','工单要素','当前值'],[
+    ['工单编号',r.wo,'派发单位',r.unit||'待指派'],
+    ['签收时间',r.signAt||'—','到场时限',ORDER_LIMIT[lv]],
+    ['处置结果',r.report||'—','复核意见',r.recheck||'—']]);
+  if(r.status==='overtime')h+='<div class="ud-warn"><b>已超时</b>：进展反馈超限时触发。可「催办并继续处置」回到处置中，也可「直接提交处置结果」进入待复核；超时记录永久写入流转留痕并计入质效评估。</div>';
+  if(r.status==='waitRecheck')h+='<div class="ai-box"><h6>待现场复核</h6><p>处置结果已提交，等待现场复核。复核通过 → 已完成 → 归档；复核不通过 → 退回待补充，补充材料后重新提交复核，或退回重新现场处置。</p></div>';
+  if(r.status==='returned')h+='<div class="ud-warn"><b>退回待补充</b>：'+(r.recheck||'复核不通过，需补充处置材料')+'。补充后回到待复核；若需重新到场，可退回处置中（原有超时标记保留）。</div>';
+  if(r.overtime&&r.status!=='overtime')h+='<div class="ud-warn">历史超时留痕：本记录曾触发超时，超时事实不因状态回退而清除，已计入质效评估。</div>';
+  if(r.status==='done'||r.status==='archived')h+='<div class="ai-box"><h6>复核与评估</h6><p>'+(r.recheck||'复核通过，处置结果与现场一致')+'。质效评估 94 分，'+(r.status==='done'?'待评估销号归档。':'已完成评估销号并归档。')+'</p></div>';
+ }
+ h+='<div class="sec-t">状态流转留痕 · 同一条记录</div><ul class="ud-tl">'+
+   r.timeline.slice().reverse().map(function(e){return '<li><b>'+e.t+'</b><span>'+e.b+'：'+e.x+'</span></li>';}).join('')+'</ul>';
+ h+='<div class="ud-src"><b>数据同源与端侧分工</b>：告警信号与预警工单为同一数据库中的同一条记录，研判确认后仅变更状态并生成工单编号，不新建数据对象，因此预警详情页与工单详情页为同一组件、仅当前状态不同。<br>'+
+   '<b>PC 后台</b>为业务主端（研判、指派、签收、复核、归档与台账留痕），<b>大屏</b>为指挥视图（读取同库记录、发起调度与状态流转）；两端共用状态字典、流转规则与 <code>dyyj_shared_v1</code> 数据源，状态变更实时回写同库。原型演示数据存于该 key 的 <code>onemapRecs</code> 命名空间，不覆盖 PC 后台原有业务字段。</div>';
+ return h;
+}
+function detailFooter(r){
+ const S=STATUS[r.status],list=TRANS[r.status]||[];
+ let h='<button data-close="1">关闭</button>';
+ if(S.phase==='order'){
+  h+='<button class="ud-fbtn" data-udx="spread">火势蔓延分析</button>'+
+     '<button class="ud-fbtn" data-udx="evac">转移避险</button>'+
+     '<button class="ud-fbtn" data-udx="dispatch">指挥调度</button>';
+ }
+ list.forEach(function(t){h+='<button class="'+(t.primary?'primary':'ud-fbtn')+'" data-ud="'+t.a+'">'+t.t+'</button>';});
+ if(!list.length)h+='<span style="align-self:center;font-size:11px;color:#7b8da6">已归档 · 只读</span>';
+ return h;
+}
+function openDetail(id){
+ const r=findRec(id);if(!r)return;
+ CUR=id;
+ modal({title:'预警 / 工单统一详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
+  body:detailBody(r),footer:detailFooter(r)});
+ $$('#dlg [data-ud]').forEach(function(b){
+  b.addEventListener('click',function(){doTransition(id,b.getAttribute('data-ud'));});
+ });
+ $$('#dlg [data-udx]').forEach(function(b){
+  b.addEventListener('click',function(){
+   const a=b.getAttribute('data-udx');
+   if(a==='spread')spreadModal(r);else if(a==='evac')evacModal(r);else dispatchModal(r);
   });
-  $('#jgSubmit').addEventListener('click',function(){
-    const v=$('#jgRadio .radio.on').getAttribute('data-v');
-    const w2=findWarn(judgeId);
-    w2.status=v.indexOf('误报')>=0?'已归档':'已派发';w2.st=v.indexOf('误报')>=0?'done':'warn';
-    closeModal();renderWL();
-    toast('研判结论已提交：'+v+'，已同步至工单流转记录');
-  });
+ });
+ renderFlow();
+}
+function doTransition(id,act){
+ const r=findRec(id);if(!r)return;
+ const t=(TRANS[r.status]||[]).filter(function(x){return x.a===act;})[0];if(!t)return;
+ const old=STATUS[r.status].t;
+ if(act==='confirmAssign'||act==='confirmOnly'){if(!r.wo)r.wo=nextWoId();r.unit=r.unit||'市森防指 + 属地乡镇';}
+ if(act==='assign'){const sel=$('#udUnit');if(sel)r.unit=sel.value;r.assigned=1;}
+ if(act==='falseAlarm')r.wo='';
+ if(act==='sign')r.signAt=hhmm();
+ if(act==='markOvertime')r.overtime=1;
+ if(act==='urge')r.overtime=r.overtime||1;
+ if(act==='submitResult')r.report=r.report||'现场明火已扑灭，过火面积待复核，已上传现场处置记录';
+ if(act==='recheckBack')r.recheck='复核不通过：需补充过火面积认定、现场复核照片与处置人签字';
+ if(act==='recheckPass')r.recheck='复核通过，处置结果与现场一致';
+ if(act==='resubmit'){r.recheck='';r.report=(r.report||'')+'（已补充材料并重新提交）';}
+ if(act==='rework')r.recheck='';
+ r.status=t.to;
+ r.timeline.push({t:hhmm(),b:'大屏指挥端',x:old+' → '+STATUS[t.to].t+'：'+t.t+(r.wo?'（'+r.wo+'）':'')});
+ saveShared();syncLists();renderWL();renderOrders();renderMarks();
+ openDetail(id);
+ toast('状态已更新：'+STATUS[t.to].t);
 }
 
 /* ================= 应急物资：清单与档案 ================= */
@@ -1367,7 +1569,7 @@ function renderMarks(){
   $$('#mapMarks .mk').forEach(function(el){
     el.addEventListener('click',function(){
       const m=MARKS[+el.getAttribute('data-mk')];
-      if(m.k==='fire'){openOrderPop('WO-2611');return;}
+      if(m.k==='fire'){openDetail(DEFAULT_ID);return;}
       openMark(m);
     });
   });
@@ -1401,60 +1603,9 @@ $('#insetX').addEventListener('click',function(){
 });
 
 /* ================= 工单弹窗 ================= */
-const ORDER_DETAIL={
-  'WO-2611':{town:'大箕铺镇',spot:'石家堍',lv:'red',status:'联合处置中',coord:'115.013620°E / 30.040978°N',dist:'12.4',
-    area:'26.4',line:'1.8',wind:'13',windDir:'西南风 3 级',slope:'18',aspect:'东南坡',start:'2026-11-10 19:42'},
-  'WO-2612':{town:'刘仁八镇',spot:'云台山',lv:'red',status:'联合处置中',coord:'114.886200°E / 30.007400°N',dist:'21.6',
-    area:'14.2',line:'0.9',wind:'9',windDir:'西风 2 级',slope:'24',aspect:'南坡',start:'2026-11-10 16:50'},
-  'WO-2613':{town:'还地桥镇',spot:'黄金湖',lv:'or',status:'待响应',coord:'114.718500°E / 30.150200°N',dist:'28.3',
-    area:'3.6',line:'0.4',wind:'11',windDir:'北风 3 级',slope:'6',aspect:'平地',start:'2026-11-10 18:56'}
-};
-function orderByTown(town,spot,id){
-  if(ORDER_DETAIL[id])return {id:id,d:ORDER_DETAIL[id]};
-  return null;
-}
-function openOrderPop(id){
-  const d=ORDER_DETAIL[id]||ORDER_DETAIL['WO-2611'];
-  const html='<div class="wop-h"><i class="dm"></i><h4>火情工单</h4><span class="tag '+(d.lv==='red'?'red':'or')+'">'+ORDER_LV[d.lv]+'工单</span>'+
-    '<button class="x" id="popX">×</button></div>'+
-    '<div class="wop-title"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><use href="#i-fire"/></svg></div>'+
-    '<b>'+d.town+' · '+d.spot+'森林火情</b><span class="st">'+d.status+'</span></div>'+
-    '<div class="wop-coord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><use href="#i-pin"/></svg>'+
-    '<span>'+d.coord+'</span><span style="margin-left:auto;color:#5e7fa0">距市森防指 '+d.dist+' km</span></div>'+
-    '<div class="wop-meta"><span>工单状态 <b>'+d.status+'</b></span><span>到场时限 <b>'+ORDER_LIMIT[d.lv]+'</b></span><span>研判方式 <b>'+ORDER_RULE[d.lv]+'</b></span></div>'+
-    '<div class="wop-grid">'+
-      '<div class="wop-cell"><em>过火面积</em><b>'+d.area+'<small>公顷</small></b></div>'+
-      '<div class="wop-cell"><em>火线长度</em><b>'+d.line+'<small>公里</small></b></div>'+
-      '<div class="wop-cell"><em>风速 / 风向</em><b>'+d.wind+'<small>km/h '+d.windDir+'</small></b></div>'+
-      '<div class="wop-cell"><em>坡度 / 坡向</em><b>'+d.slope+'<small>° '+d.aspect+'</small></b></div>'+
-    '</div>'+
-    '<div class="wop-acts">'+
-      '<div class="wop-act" data-act="spread"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-spread"/></svg></i>'+
-        '<div><h5>火势蔓延分析</h5><p>蔓延预测 6 小时 · 主方向东南 · 高风险</p></div><span class="ar">›</span></div>'+
-      '<div class="wop-act" data-act="evac"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-route"/></svg></i>'+
-        '<div><h5>转移避险</h5><p>周边群众转移 · 3 个村组 428 人</p></div><span class="ar">›</span></div>'+
-      '<div class="wop-act" data-act="dispatch"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-command"/></svg></i>'+
-        '<div><h5>指挥调度</h5><p>出动路线 · 队伍物资 · 3 个部门联动</p></div><span class="ar">›</span></div>'+
-    '</div>'+
-    '<div class="wop-sec">研判依据</div>'+
-    '<ul class="wop-basis">'+
-      '<li><b>1</b><span>热成像 CH-09 连续 3 帧识别高温热源，温度 78℃ 超阈值 12℃</span></li>'+
-      '<li><b>2</b><span>NOAA-20 卫星热点像元与点位偏差 0.6 km，时间差 14 分钟</span></li>'+
-      '<li><b>3</b><span>护林员 16:04 现场上传照片可见明火，位于东南坡林缘</span></li>'+
-      '<li><b>4</b><span>未来 24 小时无有效降水，午后阵风 6 级，火险等级：橙</span></li>'+
-    '</ul>';
-  const pop=$('#orderPop');pop.innerHTML=html;pop.classList.add('on');
-  $('#popX').addEventListener('click',closeOrderPop);
-  $$('#orderPop [data-act]').forEach(function(b){
-    b.addEventListener('click',function(){orderAction(b.getAttribute('data-act'),d);});
-  });
-}
-function closeOrderPop(){$('#orderPop').classList.remove('on');}
-function orderAction(act,d){
-  if(act==='spread')return spreadModal(d);
-  if(act==='evac')return evacModal(d);
-  if(act==='dispatch')return dispatchModal(d);
-}
+/* 原「工单地图浮层」已由统一详情页 openDetail() 取代，保留空函数兼容历史调用点 */
+function closeOrderPop(){}
+
 function spreadModal(d){
   modal({title:'火势蔓延分析',sub:d.town+' · '+d.spot,w:880,body:
     '<div class="kpi-row"><div class="kpi"><em>当前过火面积</em><b>'+d.area+'<small>公顷</small></b></div>'+
@@ -1524,8 +1675,8 @@ function dispatchModal(d){
 /* ================= 工单列表 ================= */
 function woCard(e,isMulti){
   const title=e.town+' · '+e.spot;
-  const sub=e.id+' · '+(isMulti?(e.title+' · '+e.info):(e.src+' · '+e.time.slice(5)));
-  return '<div class="woc '+e.lv+(e.id==='WO-2611'?' on':'')+'" data-wo="'+e.id+'">'+
+  const sub=(e.wo||e.id)+' · '+(isMulti?('多跨工单 · '+(e.desc||'')):(e.src+' · '+e.time.slice(5)));
+  return '<div class="woc '+e.lv+(e.rid===CUR?' on':'')+'" data-wo="'+e.rid+'">'+
     '<div class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-fire"/></svg></div>'+
     '<div class="woc-main"><div class="woc-t"><h4>'+title+'</h4><span class="tag '+e.lv+'">'+ORDER_LV[e.lv]+'</span></div>'+
     '<div class="woc-s">'+sub+'</div></div>'+
@@ -1542,8 +1693,7 @@ function renderOrders(){
       $$('.woc').forEach(function(x){x.classList.remove('on');});
       el.classList.add('on');
       const id=el.getAttribute('data-wo');
-      openOrderPop(id);
-      renderFlow();
+      openDetail(id);
     });
   });
 }
@@ -1560,12 +1710,14 @@ $$('#crossFilter .chip').forEach(function(c){
   });
 });
 function renderFlow(){
+  const r=findRec(CUR)||RECS[0],cur=STATUS[r.status].stage;
   $('#flowList').innerHTML=FLOW.map(function(f,i){
-    const cls=f.st==='ok'?'done':f.st==='run'?'now':'wait';
-    const fg=f.st==='ok'?'ok':f.st==='run'?'run':'wait';
+    const cls=i<cur?'done':i===cur?'now':'wait';
+    const fg=i<cur?'ok':i===cur?'run':'wait';
+    const tag=i<cur?'已完成':i===cur?'进行中':'待启动';
     return '<li class="'+cls+'" data-step="'+i+'"><span class="idx">'+(i+1)+'</span>'+
       '<div class="fc"><div class="st">'+f.n+'<span class="fstate">对应状态 · '+f.s+'</span></div><div class="sd">'+f.d+'</div></div>'+
-      '<span class="fg '+fg+'">'+f.tag+'</span></li>';
+      '<span class="fg '+fg+'">'+tag+'</span></li>';
   }).join('');
   $$('#flowList li').forEach(function(li){
     li.addEventListener('click',function(){stepModal(+li.getAttribute('data-step'));});
@@ -1619,8 +1771,8 @@ $('#btnOrder').addEventListener('click',function(){
   $('#pageTag').textContent=woMode?'工单处置':'总体态势';
   $('#btnOrderTxt').textContent=woMode?'返回总览':'工单处置';
   this.classList.toggle('on',woMode);
-  if(woMode){renderOrders();renderFlow();openOrderPop('WO-2611');}
-  else{closeOrderPop();}
+  if(woMode){renderOrders();renderFlow();openDetail(DEFAULT_ID);}
+  else{closeModal();}
   toast(woMode?'已进入工单处置视图':'已返回总体态势');
 });
 $('#btnBell').addEventListener('click',function(){
