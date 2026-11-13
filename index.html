@@ -1218,7 +1218,7 @@ function toast(msg){
   clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('on');},2200);
 }
 const tbl=function(hs,rs){
-  return '<table class="dt"><thead><tr>'+hs.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>'+
+  return '<table class="dt">'+(hs&&hs.length?'<thead><tr>'+hs.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead>':'')+'<tbody>'+
   rs.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+
   '</tbody></table>';
 };
@@ -1294,12 +1294,13 @@ function udSteps(r){
 function detailBody(r){
  const S=STATUS[r.status],lv=r.lv==='bl'?'ye':r.lv,lvTxt=WARN_LV[r.lv]||r.lv;
  const lvColor={red:'#d95b60',or:'#c9822a',ye:'#c9921a',bl:'#2f8dee'}[r.lv];
- let h='<div class="ud-top"><span class="ud-phase">'+(S.phase==='warn'?'预警阶段':'预警工单阶段')+'</span>'+
-   stBadge(r.status)+'<span class="ud-badge" style="background:'+lvColor+'">'+lvTxt+(S.phase==='warn'?'预警':'工单')+'</span>'+
+ let h='<div class="ud-top"><span class="ud-badge" style="background:'+lvColor+'">'+lvTxt+'预警</span>'+
+   '<span class="ud-phase">'+(S.phase==='warn'?'预警阶段':'预警工单阶段')+'</span>'+
+   stBadge(r.status)+
    '<span style="margin-left:auto;font-size:11px;color:#5e7fa0">到场时限 '+ORDER_LIMIT[lv]+' ｜ 统一记录 '+r.id+(r.wo?' · '+r.wo:'')+'</span></div>';
  h+=udSteps(r);
- h+='<div class="sec-t">基础信息 · 预警与工单共用同一条数据</div>';
- h+=tbl(['字段','内容','字段','内容'],[
+ h+='<div class="sec-t">基础信息</div>';
+ h+=tbl(null,[
    ['告警编号',r.id,'工单编号',r.wo||'—（研判确认后生成）'],
    ['告警类型',r.type,'预警等级',lvTxt],
    ['所在区域',r.town+' · '+r.spot,'信息来源',r.src],
@@ -1310,7 +1311,7 @@ function detailBody(r){
  h+='<div class="sec-t">'+(S.phase==='warn'?'预警阶段信息':'预警工单阶段信息')+' · 按当前状态动态展示</div>';
  if(S.phase==='warn'){
   h+='<div class="ai-box"><h6>AI 研判结果</h6><p>'+
-    (r.lv==='bl'?'判定为低等级关注类信号，建议持续监测、暂不生成工单。':'综合视频热源、卫星热点与护林员上报，判定为真实火情风险点；研判通过后<b>沿用本条记录变更状态</b>生成工单并一次完成派发。')+
+    (r.lv==='bl'?'判定为低等级关注类信号，建议持续监测、暂不生成工单。':'综合视频热源、卫星热点与护林员上报，判定为真实火情风险点。')+
     '</p><div class="conf"><span>置信度</span><div class="bar"><i style="width:'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%"></i></div><b>'+(r.lv==='red'?94:r.lv==='or'?87:r.lv==='ye'?76:62)+'%</b></div></div>';
   if(r.status==='waitAssign'){
    h+='<div class="frow"><div class="fitem"><label>指派单位</label><select id="udUnit">'+
@@ -1336,10 +1337,8 @@ function detailBody(r){
   if(r.overtime&&r.status!=='overtime')h+='<div class="ud-warn">历史超时留痕：本记录曾触发超时，超时事实不因状态回退而清除，已计入质效评估。</div>';
   if(r.status==='done'||r.status==='archived')h+='<div class="ai-box"><h6>复核与评估</h6><p>'+(r.recheck||'复核通过，处置结果与现场一致')+'。质效评估 94 分，'+(r.status==='done'?'待评估销号归档。':'已完成评估销号并归档。')+'</p></div>';
  }
- h+='<div class="sec-t">状态流转留痕 · 同一条记录</div><ul class="ud-tl">'+
+ h+='<div class="sec-t">状态流转留痕</div><ul class="ud-tl">'+
    r.timeline.slice().reverse().map(function(e){return '<li><b>'+e.t+'</b><span>'+e.b+'：'+e.x+'</span></li>';}).join('')+'</ul>';
- h+='<div class="ud-src"><b>数据同源与端侧分工</b>：告警信号与预警工单为同一数据库中的同一条记录，研判确认后仅变更状态并生成工单编号，不新建数据对象，因此预警详情页与工单详情页为同一组件、仅当前状态不同。<br>'+
-   '<b>PC 后台</b>为业务主端（研判、指派、签收、复核、归档与台账留痕），<b>大屏</b>为指挥视图（读取同库记录、发起调度与状态流转）；两端共用状态字典、流转规则与 <code>dyyj_shared_v1</code> 数据源，状态变更实时回写同库。原型演示数据存于该 key 的 <code>onemapRecs</code> 命名空间，不覆盖 PC 后台原有业务字段。</div>';
  return h;
 }
 function detailFooter(r){
@@ -1357,7 +1356,7 @@ function detailFooter(r){
 function openDetail(id){
  const r=findRec(id);if(!r)return;
  CUR=id;
- modal({title:'预警 / 工单统一详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
+ modal({title:'预警详情',sub:r.id+(r.wo?' · '+r.wo:'')+' · '+r.type,w:960,
   body:detailBody(r),footer:detailFooter(r)});
  $$('#dlg [data-ud]').forEach(function(b){
   b.addEventListener('click',function(){doTransition(id,b.getAttribute('data-ud'));});
