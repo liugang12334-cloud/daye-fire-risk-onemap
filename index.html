@@ -548,7 +548,7 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
 .dlg-b{flex:1 1 auto;overflow-y:auto;padding:14px 18px 18px}
 .dlg-b::-webkit-scrollbar{width:5px}
 .dlg-b::-webkit-scrollbar-thumb{background:rgba(47,141,238,.35)}
-.dlg-f{flex:0 0 auto;display:flex;gap:10px;justify-content:flex-end;padding:12px 18px;border-top:1px solid rgba(47,141,238,.18)}
+.dlg-f{flex:0 0 auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding:12px 18px;border-top:1px solid rgba(47,141,238,.18)}
 .dlg-f button{height:34px;padding:0 20px;font-size:13px;letter-spacing:1px;border:1px solid rgba(47,141,238,.35);color:#17549b;font-weight:600;background:rgba(47,141,238,.10)}
 .dlg-f button.primary{color:#fff;background:linear-gradient(180deg,#3fa2f5,#1f7fd6);border-color:#3fa2f5;font-weight:600}
 .dlg-f button:hover{filter:brightness(1.1)}
@@ -1030,19 +1030,69 @@ const TRANS={
  /* 研判确认：按是否选择处置单位动态决定「待签收 / 待指派」，见 doTransition */
  waitConfirm:[{a:'confirm',    t:'研判确认',to:'waitSign',primary:1},
               {a:'falseAlarm', t:'误报归档',to:'archived'}],
- waitAssign: [{a:'assign',       t:'指派单位并派发',           to:'waitSign',primary:1}],
- waitSign:   [{a:'sign',         t:'属地签收工单',             to:'working',primary:1}],
+ waitAssign: [{a:'assign',       t:'指派单位并派发',           to:'waitSign',primary:1},
+              {a:'adjustLv',     t:'调整等级',                 to:'waitAssign'}],
+ waitSign:   [{a:'sign',         t:'签收预警工单',             to:'working',primary:1},
+              {a:'applyTransfer', t:'申请转派',                to:'waitAssign'},
+              {a:'acceptTransfer',t:'接收转派',                to:'waitSign'},
+              {a:'assignDuty',   t:'分派责任',                 to:'waitSign'},
+              {a:'reassign',     t:'重新分派',                 to:'waitSign'},
+              {a:'ignoreFalse',  t:'误报忽略',                 to:'archived'}],
  working:    [{a:'submitResult', t:'提交处置结果',             to:'waitRecheck',primary:1},
-              {a:'markOvertime', t:'标记超时',                 to:'overtime'}],
+              {a:'submitFeedback',t:'提交反馈',                to:'working'},
+              {a:'supplementFeedback',t:'补充反馈',            to:'working'},
+              {a:'replyProgress',t:'回复办理情况',             to:'working'}],
  overtime:   [{a:'urge',         t:'催办并继续处置',           to:'working',primary:1},
               {a:'submitResult', t:'直接提交处置结果',         to:'waitRecheck'}],
- waitRecheck:[{a:'recheckPass',  t:'复核通过',                 to:'done',primary:1},
-              {a:'recheckBack',  t:'复核退回',                 to:'returned'}],
+ waitRecheck:[{a:'recheckPass',  t:'开始复核',                 to:'done',primary:1},
+              {a:'recheckBack',  t:'退回补充',                 to:'returned'},
+              {a:'reopen',       t:'重开',                     to:'working'}],
  returned:   [{a:'resubmit',     t:'补充材料并重新提交',       to:'waitRecheck',primary:1},
               {a:'rework',       t:'重新现场处置',             to:'working'}],
  done:       [{a:'archive',      t:'评估销号 · 归档',           to:'archived',primary:1}],
  archived:   []
 };
+/* 指挥调度仅保留在需要现场调度的状态；待签收 / 待复核 / 已完成 / 已归档不显示 */
+const DISPATCH_ST=['working','overtime','returned'];
+/* 扩展动作表单：动作键全局唯一，表单值回写同一条记录，状态流转统一由 TRANS[].to 决定 */
+const EX_ACTS={
+ applyTransfer:{t:'申请转派',ok:'提交申请',tip:'提交后本条回到「待指派」，由指挥中心重新指派处置单位，转派事由写入流转留痕。',
+  f:[['转派原因','select',['超出本辖区范围','处置力量不足','需专业队伍处置','重复派发归并','其他'],'reason'],
+     ['拟转派单位','@units','','unit'],['情况说明','textarea','请说明转派事由与现场情况…','note']]},
+ acceptTransfer:{t:'接收转派',ok:'确认接收',tip:'接收后处置单位更新为承接单位，当前状态保持「待签收」。',
+  f:[['承接单位','@units','','unit'],['接收说明','textarea','请填写承接依据与到场安排…','note']]},
+ assignDuty:{t:'分派责任',ok:'确认分派',tip:'分派结果写入本条记录留痕，当前状态保持「待签收」，不改变原派发单位。',
+  f:[['责任单位','@units','','unit'],['责任人','text','如：徐志强','person'],
+     ['责任事项','textarea','请明确责任分工与办理要求…','item']]},
+ reassign:{t:'重新分派',ok:'确认重新分派',tip:'重新分派后仍为「待签收」，处置单位与处置时限同步更新，原派发记录留痕保留。',
+  f:[['处置单位','@units','','unit'],['处置时限','@limit','','limit'],
+     ['分派说明','textarea','请说明重新分派原因…','note']]},
+ ignoreFalse:{t:'误报忽略',ok:'确认忽略',tip:'忽略后本条不再参与派发与处置，工单编号清空、状态变更为「已归档」，原因写入流转留痕。',
+  f:[['忽略原因','select',['误报 · 云雾/热扰动','误报 · 秸秆焚烧/农事用火','误报 · 设备反光/镜头污损','误报 · 重复告警归并','误报 · 其他'],'reason'],
+     ['研判备注','textarea','补充现场判断依据…','note']]},
+ submitFeedback:{t:'提交反馈',ok:'提交反馈',tip:'反馈内容写入处置进展留痕，当前状态保持「处置中」。',
+  f:[['反馈类型','select',['到场反馈','处置进展','阶段结果','请求支援'],'type'],
+     ['反馈内容','textarea','请填写现场反馈内容…','note']]},
+ supplementFeedback:{t:'补充反馈',ok:'提交补充',tip:'补充材料写入处置进展留痕，当前状态保持「处置中」，不重复触发流转。',
+  f:[['补充材料','select',['现场照片','过火面积认定','处置人签字','现场视频','其他'],'material'],
+     ['补充内容','textarea','请填写补充说明…','note']]},
+ replyProgress:{t:'回复办理情况',ok:'提交回复',tip:'办理情况写入处置进展留痕，当前状态保持「处置中」。',
+  f:[['办理情况','select',['正在处置','火势已控制','需增援','已扑灭待复核'],'status'],
+     ['回复内容','textarea','请填写办理情况回复…','note']]},
+ recheckPass:{t:'开始复核',ok:'提交复核记录',tip:'录入现场复核记录后状态变更为「已完成」，进入评估销号环节。',
+  f:[['复核方式','select',['现场复核','视频复核','资料复核'],'way'],
+     ['复核意见','textarea','请填写现场复核意见…','note']]},
+ reopen:{t:'重开',ok:'确认重开',tip:'重开后本条回到「处置中」，须重新提交处置结果；原复核意见与流转留痕保留。',
+  f:[['重开原因','select',['复核资料不完整','现场需补充处置','处置结果认定有误','其他'],'reason'],
+     ['情况说明','textarea','请说明重开原因…','note']]}
+};
+/* 质效评估：指标维度、权重与等级标准，取自「质效评估规则」 */
+const EVAL_DIMS=[['响应速度','40%','接单至到场时长，按等级基准时长折算','工单流转留痕'],
+                 ['处置效率','40%','派发至核查完成时长，超时扣分','工单与现场反馈'],
+                 ['协同配合','20%','多跨工单部门联动、信息回传完整度','联合处置记录']];
+const EVAL_LV=[['优秀','95','#2e9e6b'],['良好','85','#c9822a'],['待提升','75','#d95b60']];
+function eh(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function evalScore(d){return Math.round(d[0]*.4+d[1]*.4+d[2]*.2);}
 const UNITS_PICK=['市森防指 + 属地乡镇','属地乡镇值班室','村应急扑火小分队','市综合应急救援大队','市资规局（林业）'];
 /* 处置时限下拉：依据《运行机制》第十四条到场 15 / 30 / 60 分钟、第十二条核查 1 小时反馈 */
 const JUDGE_LV=[['red','红色','#d95b60'],['or','橙色','#c9822a'],['ye','黄色','#c9921a']];
@@ -1098,9 +1148,15 @@ function loadShared(){
   const arr=o&&o[SHARED_NS];if(!Array.isArray(arr))return;
   arr.forEach(function(x){const r=findRec(x.id);if(!r||!STATUS[x.status])return;
    r.status=x.status;r.wo=x.wo||r.wo;r.overtime=x.overtime||0;r.signAt=x.signAt||r.signAt;
-   r.unit=x.unit||r.unit;if(Array.isArray(x.timeline)&&x.timeline.length)r.timeline=x.timeline;});
+   r.unit=x.unit||r.unit;uMergeFields(r,x);
+   if(Array.isArray(x.timeline)&&x.timeline.length)r.timeline=x.timeline;});
   if(typeof o.woSeq==='number'&&o.woSeq>woSeq)woSeq=o.woSeq;
  }catch(e){}
+}
+/* 同库合并：质效评估、反馈与派发调整等新字段随状态一并回写/读取 */
+function uMergeFields(r,x){
+ ['lv','limit','judgeLv','recheck','report','eval','feedbacks','transfer','duty',
+  'falseReason','falseNote','recheckWay'].forEach(function(k){if(x[k]!==undefined)r[k]=x[k];});
 }
 function saveShared(){
  try{
@@ -1108,7 +1164,9 @@ function saveShared(){
   /* 合并写入：保留 PC 后台写入同库的其它统一记录，不覆盖其业务字段 */
   const prev=Array.isArray(o[SHARED_NS])?o[SHARED_NS]:[];
   const mine=RECS.map(function(r){return {id:r.id,wo:r.wo,status:r.status,overtime:r.overtime,
-   signAt:r.signAt,unit:r.unit,timeline:r.timeline};});
+   signAt:r.signAt,unit:r.unit,timeline:r.timeline,lv:r.lv,limit:r.limit,judgeLv:r.judgeLv,
+   recheck:r.recheck,report:r.report,eval:r.eval,feedbacks:r.feedbacks,transfer:r.transfer,
+   duty:r.duty,falseReason:r.falseReason,falseNote:r.falseNote};});
   const mineIds={};mine.forEach(function(x){mineIds[x.id]=1});
   o[SHARED_NS]=mine.concat(prev.filter(function(x){return x&&x.id&&!mineIds[x.id]}));
   o.woSeq=woSeq;o[SHARED_NS+'_at']=new Date().toISOString();
@@ -1126,8 +1184,9 @@ function watchPC(){
     const o=JSON.parse(localStorage.getItem(SHARED_KEY)||'{}');
     const arr=o&&o[SHARED_NS];if(!Array.isArray(arr))return;
     let changed=0;
-    arr.forEach(function(x){const r=findRec(x.id);if(!r||!STATUS[x.status]||r.status===x.status)return;
+    arr.forEach(function(x){const r=findRec(x.id);if(!r||!STATUS[x.status])return;
      r.status=x.status;r.wo=x.wo||r.wo;r.overtime=x.overtime||0;r.unit=x.unit||r.unit;
+     uMergeFields(r,x);
      if(Array.isArray(x.timeline)&&x.timeline.length)r.timeline=x.timeline;changed++;});
     if(!changed)return;
     syncLists();renderWL();renderOrders();renderMarks();renderFlow();
@@ -1418,11 +1477,11 @@ function detailBody(r){
  h+=udSteps(r);
  h+='<div class="sec-t">基础信息</div>';
  h+=tbl(null,[
-   ['告警编号',r.id,'工单编号',r.wo||'—（研判确认后生成）'],
-   ['告警类型',r.type,'预警等级',lvTxt],
-   ['所在区域',r.town+' · '+r.spot,'信息来源',r.src],
-   ['坐标点位',r.coord,'告警时间',r.time],
-   ['告警描述',r.desc,'处置单位',S.phase==='warn'?'':(r.unit||'')]]);
+   ['告警编号',r.id,'告警类型',r.type],
+   ['预警等级',lvTxt,'信息来源',r.src],
+   ['所在区域',r.town+' · '+r.spot,'告警时间',r.time],
+   ['坐标点位',r.coord,'处置单位',r.unit||''],
+   ['告警描述',eh(r.desc),'','']]);
  h+='<div class="sec-t">上报图片 · 点击查看大图</div>'+photoHtml(r);
  h+='<div class="sec-t">研判依据 · 预警阶段留痕，两阶段一致</div><ul class="li-s">'+
     BASIS.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
@@ -1444,20 +1503,20 @@ function detailBody(r){
   if(r.status==='waitRecheck')h+='<div class="ai-box"><h6>待现场复核</h6><p>处置结果已提交，等待现场复核。复核通过 → 已完成 → 归档；复核不通过 → 退回待补充，补充材料后重新提交复核，或退回重新现场处置。</p></div>';
   if(r.status==='returned')h+='<div class="ud-warn"><b>退回待补充</b>：'+(r.recheck||'复核不通过，需补充处置材料')+'。补充后回到待复核；若需重新到场，可退回处置中（原有超时标记保留）。</div>';
   if(r.overtime&&r.status!=='overtime')h+='<div class="ud-warn">历史超时留痕：本记录曾触发超时，超时事实不因状态回退而清除，已计入质效评估。</div>';
-  if(r.status==='done'||r.status==='archived')h+='<div class="ai-box"><h6>复核与评估</h6><p>'+(r.recheck||'复核通过，处置结果与现场一致')+'。质效评估 94 分，'+(r.status==='done'?'待评估销号归档。':'已完成评估销号并归档。')+'</p></div>';
+  if(r.status==='done'||r.status==='archived')h+=evalHtml(r);
  }
  h+='<div class="sec-t">状态流转留痕</div><ul class="ud-tl">'+
    r.timeline.slice().reverse().map(function(e){return '<li><b>'+e.t+'</b><span>'+e.b+'：'+e.x+'</span></li>';}).join('')+'</ul>';
  return h;
 }
 function detailFooter(r){
- const S=STATUS[r.status],list=TRANS[r.status]||[];
+ /* 已归档：底部不显示任何操作按钮 */
+ if(r.status==='archived')return '';
+ const list=TRANS[r.status]||[];
  let h='';
- if(S.phase==='order'){
+ if(DISPATCH_ST.indexOf(r.status)>=0)
   h+='<button class="ud-fbtn" data-udx="dispatch">指挥调度</button>';
- }
  list.forEach(function(t){h+='<button class="'+(t.primary?'primary':'ud-fbtn')+'" data-ud="'+t.a+'">'+t.t+'</button>';});
- if(!list.length)h+='<span style="align-self:center;font-size:11px;color:#7b8da6">已归档 · 只读</span>';
  return h;
 }
 function bindDetail(id,r){
@@ -1466,6 +1525,9 @@ function bindDetail(id,r){
    const a=b.getAttribute('data-ud');
    if(a==='falseAlarm'){falseAlarmModal(id);return}
    if(a==='confirm'||a==='assign'){judgeModal(id,a);return}
+   if(a==='adjustLv'){adjustModal(id);return}
+   if(a==='archive'){evalModal(id);return}
+   if(EX_ACTS[a]){exModal(id,a);return}
    doTransition(id,a);
   });
  });
@@ -1494,7 +1556,7 @@ function refreshDetail(id){
  const sub=$('#dlg .dlg-h .sub');
  if(sub)sub.textContent=r.id+(r.wo?' · '+r.wo:'')+' · '+r.type;
  $('#dlg .dlg-b').innerHTML=detailBody(r);
- $('#dlg .dlg-f').innerHTML=detailFooter(r);
+ const _f=$('#dlg .dlg-f');if(_f)_f.innerHTML=detailFooter(r);
  bindDetail(id,r);
  renderFlow();
 }
@@ -1560,34 +1622,207 @@ function falseAlarmModal(id){
   });
  });
 }
-function doTransition(id,act){
+/* ========== 扩展动作统一弹窗：按 EX_ACTS 配置生成表单，提交后回写记录并流转 ========== */
+function exFields(cfg,r){
+ return cfg.f.map(function(f,i){
+  const id='_ex'+i;let inp='';
+  let opts=f[2];
+  if(f[1]==='@units')opts=UNITS_PICK;
+  if(f[1]==='select'||f[1]==='@units')
+   inp='<select id="'+id+'">'+opts.map(function(x){return '<option>'+eh(x)+'</option>';}).join('')+'</select>';
+  else if(f[1]==='@limit')
+   inp='<select id="'+id+'">'+LIMIT_OPTS.map(function(x,j){
+     return '<option value="'+j+'"'+(x[0]===r.limit?' selected':'')+'>'+eh(x[0])+'</option>';}).join('')+'</select>';
+  else if(f[1]==='textarea')inp='<textarea id="'+id+'" placeholder="'+eh(f[2])+'"></textarea>';
+  else inp='<input id="'+id+'" placeholder="'+eh(f[2])+'">';
+  return '<div class="fitem" style="margin-top:10px"><label>'+f[0]+'</label>'+inp+'</div>';
+ }).join('');
+}
+function exModal(id,act){
+ const r=findRec(id),cfg=EX_ACTS[act];if(!r||!cfg)return;
+ modal2({title:cfg.t,sub:r.id+' · '+STATUS[r.status].t,w:560,
+  body:'<div class="fa-lead">'+eh(r.id)+' ｜ '+eh(r.town)+' · '+eh(r.spot)+
+    '<br>当前状态：'+STATUS[r.status].t+'</div>'+exFields(cfg,r)+
+    '<div class="jd-tip">'+cfg.tip+'</div>',
+  footer:'<button data-ex="cancel">取消</button><button class="primary" data-ex="ok">'+cfg.ok+'</button>'});
+ $$('#dlg2 [data-ex]').forEach(function(b){
+  b.addEventListener('click',function(){
+   if(b.getAttribute('data-ex')==='cancel'){closeModal2();return}
+   const v={};
+   cfg.f.forEach(function(f,i){
+    const el=$('#_ex'+i);if(!el)return;
+    v[f[3]]=f[1]==='@limit'?LIMIT_OPTS[parseInt(el.value,10)||0][0]:el.value;
+   });
+   closeModal2();doTransition(id,act,v);
+  });
+ });
+}
+/* 待指派：调整预警等级（红/橙/黄）、处置单位、处置时限；不改变当前状态 */
+function adjustModal(id){
+ const r=findRec(id);if(!r)return;
+ let lv=r.lv==='bl'?'ye':r.lv;
+ let body='<div class="fa-lead">'+eh(r.id)+' ｜ '+eh(r.town)+' · '+eh(r.spot)+
+   '<br>调整预警等级与派发配置，保存后状态仍为「待指派」。</div>';
+ body+='<div class="fitem" style="margin-top:14px"><label>预警等级（红 / 橙 / 黄）</label><div class="jd-lvs" id="_adLvs">'+
+   JUDGE_LV.map(function(x){return '<div class="jd-lv'+(x[0]===lv?' on':'')+'" data-lv="'+x[0]+'"'+
+     (x[0]===lv?' style="background:'+x[2]+'"':'')+'>'+x[1]+'</div>';}).join('')+'</div></div>';
+ body+='<div class="fitem" style="margin-top:12px"><label>处置单位</label><select id="_adUnit">'+
+   '<option value="">不指定（保留待指派）</option>'+
+   UNITS_PICK.map(function(u){return '<option'+(u===r.unit?' selected':'')+'>'+eh(u)+'</option>';}).join('')+
+   '</select></div>';
+ body+='<div class="fitem" style="margin-top:12px"><label>处置时限</label><select id="_adLimit">'+
+   LIMIT_OPTS.map(function(x,i){return '<option value="'+i+'"'+(x[0]===r.limit?' selected':'')+'>'+eh(x[0])+'</option>';}).join('')+
+   '</select></div>';
+ body+='<div class="jd-tip">调整结果写入基础信息与状态流转留痕；如需完成派发，请点「指派单位并派发」。</div>';
+ modal2({title:'调整等级',sub:r.id+' · '+STATUS[r.status].t,w:560,body:body,
+  footer:'<button data-ad="cancel">取消</button><button class="primary" data-ad="ok">保存调整</button>'});
+ $$('#_adLvs .jd-lv').forEach(function(el){
+  el.addEventListener('click',function(){
+   lv=el.getAttribute('data-lv');
+   const c=(JUDGE_LV.filter(function(q){return q[0]===lv;})[0]||[])[2]||'#2f8dee';
+   $$('#_adLvs .jd-lv').forEach(function(z){
+    const on=z.getAttribute('data-lv')===lv;z.classList.toggle('on',on);z.style.background=on?c:'';
+   });
+   const lim=$('#_adLimit');if(lim)lim.value=String(limitDefault(lv));
+  });
+ });
+ $$('#dlg2 [data-ad]').forEach(function(b){
+  b.addEventListener('click',function(){
+   if(b.getAttribute('data-ad')==='cancel'){closeModal2();return}
+   r.lv=lv;r.judgeLv=lv;
+   r.unit=$('#_adUnit')?$('#_adUnit').value:'';
+   r.limit=LIMIT_OPTS[parseInt($('#_adLimit')?$('#_adLimit').value:'0',10)||0][0];
+   r.timeline.push({t:hhmm(),b:'大屏指挥端',x:'待指派 · 调整等级：'+(WARN_LV[lv]||lv)+
+     '；处置单位 '+(r.unit||'未指定')+'；处置时限 '+r.limit+'（状态不变）'});
+   closeModal2();saveShared();syncLists();renderWL();renderOrders();renderMarks();refreshDetail(id);
+   toast('等级与派发配置已更新');
+  });
+ });
+}
+/* 质效评估数据回显：优先读取本条记录的 r.eval；历史归档演示记录用既有留痕兜底 */
+function evalHtml(r){
+ let e=r.eval;
+ if(!e&&r.status==='archived')e={score:94,level:'优秀',
+   dims:{'响应速度':95,'处置效率':94,'协同配合':92},
+   note:'响应及时，处置规范，部门联动顺畅',at:String(r.time||'').slice(11,16)||'—',by:'市森防指（历史归档）'};
+ if(!e)return '<div class="ai-box"><h6>复核与评估</h6><p>'+eh(r.recheck||'复核通过，处置结果与现场一致')+
+   '。质效评估待开展，请在「评估销号 · 归档」时完成评级。</p></div>';
+ const d=e.dims||{};
+ let h='<div class="ud-grid">'+
+   '<div class="ud-cell"><em>综合得分</em><b>'+e.score+'<small> 分</small></b></div>'+
+   '<div class="ud-cell"><em>评估等级</em><b>'+eh(e.level)+'</b></div>'+
+   '<div class="ud-cell"><em>评估单位</em><b>'+eh(e.by)+'</b></div>'+
+   '<div class="ud-cell"><em>评估时间</em><b>'+eh(e.at)+'</b></div></div>';
+ h+=tbl(null,[
+   ['响应速度',(d['响应速度']||'—')+' 分 · 权重 40%','处置效率',(d['处置效率']||'—')+' 分 · 权重 40%'],
+   ['协同配合',(d['协同配合']||'—')+' 分 · 权重 20%','等级标准','≥90 优秀 / 80–89 良好 / &lt;80 待提升'],
+   ['评估意见',eh(e.note||'—'),'','']]);
+ return '<div class="sec-t">质效评估 · 销号归档后回显</div>'+h;
+}
+/* 已完成：评估销号弹窗，展示指标维度与等级标准，评级后归档 */
+function evalModal(id){
+ const r=findRec(id);if(!r)return;
+ let lv=0;
+ let body='<div class="fa-lead">'+eh(r.id)+' ｜ '+eh(r.town)+' · '+eh(r.spot)+
+   '<br>按质效评估指标与维度评级，提交后完成评估销号并归档。</div>';
+ body+='<div class="sec-t" style="margin-top:12px">综合得分构成 · 指标与维度</div>'+tbl(['维度','权重','计分方式','数据来源'],EVAL_DIMS);
+ body+='<div class="fitem" style="margin-top:12px"><label>评级</label><div class="jd-lvs" id="_evLvs">'+
+   EVAL_LV.map(function(x,i){return '<div class="jd-lv'+(i===0?' on':'')+'" data-ev="'+i+'"'+
+     (i===0?' style="background:'+x[2]+'"':'')+'>'+x[0]+'</div>';}).join('')+'</div></div>';
+ body+='<div class="frow">'+EVAL_DIMS.map(function(d,i){
+    return '<div class="fitem"><label>'+d[0]+' · 权重 '+d[1]+'</label><select class="_evDim" data-i="'+i+'">'+
+      EVAL_LV.map(function(x,j){return '<option value="'+x[1]+'"'+(j===0?' selected':'')+'>'+x[0]+' '+x[1]+' 分</option>';}).join('')+
+      '</select></div>';}).join('')+'</div>';
+ body+='<div class="fitem" style="margin-top:12px"><label>综合得分</label>'+
+   '<div id="_evScore" style="font-size:22px;font-weight:700;color:#17549b">95 分 · 优秀</div></div>';
+ body+='<div class="fitem" style="margin-top:8px"><label>评估意见</label>'+
+   '<textarea id="_evNote" placeholder="请填写本次处置的质效评价与改进建议…"></textarea></div>';
+ body+='<div class="jd-tip">等级标准：≥ 90 优秀（纳入年度考核加分项）｜80 – 89 良好（针对薄弱环节整改）｜&lt; 80 待提升（约谈责任单位、限期整改并复评）。评估数据归档后在本详情回显。</div>';
+ modal2({title:'评估销号 · 质效评估',sub:r.id+' · '+r.type,w:720,body:body,
+  footer:'<button data-evbtn="cancel">取消</button><button class="primary" data-evbtn="ok">确认评估并归档</button>'});
+ function calc(){
+  const ds=$$('#dlg2 ._evDim').map(function(el){return parseInt(el.value,10)||0;});
+  const sc=evalScore(ds),nm=sc>=90?'优秀':sc>=80?'良好':'待提升';
+  const el=$('#_evScore');if(el)el.textContent=sc+' 分 · '+nm;
+  return {ds:ds,sc:sc,nm:nm};
+ }
+ $$('#dlg2 ._evDim').forEach(function(el){el.addEventListener('change',function(){
+   const x=calc(),i=x.nm==='优秀'?0:x.nm==='良好'?1:2;
+   $$('#_evLvs .jd-lv').forEach(function(z,j){
+    const on=i===j;z.classList.toggle('on',on);z.style.background=on?EVAL_LV[j][2]:'';
+   });lv=i;
+ });});
+ $$('#_evLvs .jd-lv').forEach(function(el){
+  el.addEventListener('click',function(){
+   lv=parseInt(el.getAttribute('data-ev'),10);
+   $$('#_evLvs .jd-lv').forEach(function(z,j){
+    const on=lv===j;z.classList.toggle('on',on);z.style.background=on?EVAL_LV[j][2]:'';
+   });
+   $$('#dlg2 ._evDim').forEach(function(sel){sel.value=EVAL_LV[lv][1];});
+   calc();
+  });
+ });
+ $$('#dlg2 [data-evbtn]').forEach(function(b){
+  b.addEventListener('click',function(){
+   if(b.getAttribute('data-evbtn')==='cancel'){closeModal2();return}
+   const x=calc();
+   r.eval={score:x.sc,level:x.nm,
+     dims:{'响应速度':x.ds[0],'处置效率':x.ds[1],'协同配合':x.ds[2]},
+     note:$('#_evNote')?$('#_evNote').value.trim():'',at:hhmm(),by:'市森防指'};
+   closeModal2();doTransition(id,'archive');
+  });
+ });
+}
+function doTransition(id,act,v){
  const r=findRec(id);if(!r)return;
  const t=(TRANS[r.status]||[]).filter(function(x){return x.a===act;})[0];if(!t)return;
  const old=STATUS[r.status].t;
  let to=t.to;
+ const same=(to===r.status);
  if(act==='confirm'){
   to=r.unit?'waitSign':'waitAssign';
   if(!r.wo)r.wo=nextWoId();
  }
  if(act==='assign'){to=r.unit?'waitSign':'waitAssign';r.assigned=1;}
- if(act==='falseAlarm')r.wo='';
+ if(act==='falseAlarm'||act==='ignoreFalse')r.wo='';
  if(act==='sign')r.signAt=hhmm();
  if(act==='markOvertime')r.overtime=1;
  if(act==='urge')r.overtime=r.overtime||1;
  if(act==='submitResult')r.report=r.report||'现场明火已扑灭，过火面积待复核，已上传现场处置记录';
  if(act==='recheckBack')r.recheck='复核不通过：需补充过火面积认定、现场复核照片与处置人签字';
- if(act==='recheckPass')r.recheck='复核通过，处置结果与现场一致';
+ if(act==='recheckPass')r.recheck=(v&&v.note)||'复核通过，处置结果与现场一致';
  if(act==='resubmit'){r.recheck='';r.report=(r.report||'')+'（已补充材料并重新提交）';}
- if(act==='rework')r.recheck='';
+ if(act==='rework'||act==='reopen')r.recheck='';
+ /* 扩展动作：表单值回写同一条记录，不新建对象、不串状态 */
+ if(v){
+  if(act==='applyTransfer')r.transfer={reason:v.reason,unit:v.unit,note:v.note,at:hhmm()};
+  if(act==='acceptTransfer'){r.unit=v.unit;r.acceptNote=v.note;}
+  if(act==='assignDuty')r.duty={unit:v.unit,person:v.person,item:v.item,at:hhmm()};
+  if(act==='reassign'){r.unit=v.unit;r.limit=v.limit;r.reassignNote=v.note;}
+  if(act==='ignoreFalse'){r.falseReason=v.reason;r.falseNote=v.note;}
+  if(act==='submitFeedback'||act==='supplementFeedback'||act==='replyProgress'){
+   if(!Array.isArray(r.feedbacks))r.feedbacks=[];
+   r.feedbacks.push({t:hhmm(),kind:t.t,way:v.type||v.material||v.status||'',note:v.note||''});
+  }
+  if(act==='recheckPass')r.recheckWay=v.way;
+  if(act==='reopen'){r.reopenReason=v.reason;r.reopenNote=v.note;}
+ }
  r.status=to;
- let tx=old+' → '+STATUS[to].t+'：'+t.t+(r.wo?'（'+r.wo+'）':'');
+ let tx=(same?STATUS[to].t+'（状态不变）':old+' → '+STATUS[to].t)+'：'+t.t+(r.wo?'（'+r.wo+'）':'');
+ if(v){
+  const brief=[];
+  Object.keys(v).forEach(function(k){if(v[k]&&brief.length<2)brief.push(String(v[k]));});
+  if(brief.length)tx+='；'+brief.join(' / ');
+ }
  if((act==='confirm'||act==='assign')&&r.judgeLv)tx+='；人工定级 '+(WARN_LV[r.judgeLv]||r.judgeLv)+
    '；处置时限 '+(r.limit||'—')+(r.unit?'；处置单位 '+r.unit:'（未指派）');
- if(act==='falseAlarm'&&r.falseReason)tx+='；原因：'+r.falseReason+(r.falseNote?'；备注：'+r.falseNote:'');
+ if((act==='falseAlarm'||act==='ignoreFalse')&&r.falseReason)
+   tx+='；原因：'+r.falseReason+(r.falseNote?'；备注：'+r.falseNote:'');
+ if(act==='archive'&&r.eval)tx+='；质效评估 '+r.eval.score+' 分 · '+r.eval.level;
  r.timeline.push({t:hhmm(),b:'大屏指挥端',x:tx});
  saveShared();syncLists();renderWL();renderOrders();renderMarks();
  refreshDetail(id);
- toast('状态已更新：'+STATUS[to].t);
+ toast(same?'已记录：'+t.t:'状态已更新：'+STATUS[to].t);
 }
 
 /* ================= 应急物资：清单与档案 ================= */
