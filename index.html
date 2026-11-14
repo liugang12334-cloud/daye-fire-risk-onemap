@@ -1067,7 +1067,7 @@ const EX_ACTS={
  reassign:{t:'重新分派',ok:'确认重新分派',tip:'重新分派后仍为「待签收」，处置单位与处置时限同步更新，原派发记录留痕保留。',
   f:[['处置单位','@units','','unit'],['处置时限','@limit','','limit'],
      ['分派说明','textarea','请说明重新分派原因…','note']]},
- ignoreFalse:{t:'误报忽略',ok:'确认忽略',tip:'忽略后本条不再参与派发与处置，工单编号清空、状态变更为「已归档」，原因写入流转留痕。',
+ ignoreFalse:{t:'误报忽略',ok:'确认忽略',tip:'忽略后本条不再参与派发与处置，告警工单编号清空、状态变更为「已归档」，原因写入流转留痕。',
   f:[['忽略原因','select',['误报 · 云雾/热扰动','误报 · 秸秆焚烧/农事用火','误报 · 设备反光/镜头污损','误报 · 重复告警归并','误报 · 其他'],'reason'],
      ['研判备注','textarea','补充现场判断依据…','note']]},
  submitFeedback:{t:'提交反馈',ok:'提交反馈',tip:'反馈内容写入处置进展留痕，当前状态保持「处置中」。',
@@ -1119,7 +1119,7 @@ function mk(o){
  Object.keys(def).forEach(function(k){if(!(k in o))o[k]=def[k];});
  if(!o.start)o.start=o.time;
  o.timeline=[{t:o.time.slice(11,16),b:'平台自动',x:'告警信号接入，建立统一记录 '+o.id+'（状态：待确认）'}];
- if(o.status!=='waitConfirm')o.timeline.push({t:o.time.slice(11,16),b:'指挥中心',x:'状态流转至 '+STATUS[o.status].t+(o.wo?'，工单编号 '+o.wo:'')});
+ if(o.status!=='waitConfirm')o.timeline.push({t:o.time.slice(11,16),b:'指挥中心',x:'状态流转至 '+STATUS[o.status].t+(o.wo?'，告警工单编号 '+o.wo:'')});
  return o;
 }
 const RECS=[
