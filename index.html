@@ -284,6 +284,12 @@ svg{display:block}
   background:rgba(255,255,255,.94);border:1px solid currentColor;box-shadow:0 0 12px currentColor;transition:.18s}
 .mk .pt svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.7}
 .mk:hover .pt{transform:scale(1.22)}
+.mk.sel{z-index:6}
+.mk.sel .pt{background:#d95b60;color:#fff;box-shadow:0 0 0 4px rgba(217,91,96,.28),0 0 22px rgba(217,91,96,.8);transform:scale(1.2)}
+.mk.sel .ml{color:#b9363c;font-weight:700}
+.pf-focus{margin:0 0 10px;padding:9px 11px;border:1px solid rgba(47,141,238,.22);border-left:3px solid #2f8dee;border-radius:8px;background:rgba(232,241,254,.6)}
+.pf-focus .pf-hd{font-size:12px;font-weight:700;color:#163e66;margin-bottom:7px}
+.pf-focus .kpi-row{margin-top:0}
 .mk .ml{position:absolute;left:50%;top:30px;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#163e66;
   background:rgba(252,254,255,.88);border:1px solid rgba(47,141,238,.35);padding:2px 6px;opacity:0;transition:.16s;pointer-events:none}
 .mk:hover .ml{opacity:1}
@@ -951,8 +957,9 @@ body.mode-order #leftCol,body.mode-order #rightCol{display:none}
     <section class="panel" style="flex:1 1 auto;min-height:0">
       <div class="ph"><i class="dm"></i><h3>质效评估</h3><button class="more" data-drawer="rules">规则<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#i-chev"/></svg></button></div>
       <div class="pb" style="overflow-y:auto">
+        <div id="perfFocus"></div>
         <div class="score-row">
-          <div class="score-big"><b>90.5</b><span>综合得分</span></div>
+          <div class="score-big"><b id="perfScore">90.5</b><span>综合得分</span></div>
           <div class="std">
             <span><i style="background:#1fa05e;box-shadow:0 0 6px #1fa05e"></i>优秀 ≥ 90</span>
             <span><i style="background:#c98a1a;box-shadow:0 0 6px #c98a1a"></i>良好 80–89</span>
@@ -2127,6 +2134,33 @@ function renderFlow(){
   $$('#flowList li').forEach(function(li){
     li.addEventListener('click',function(){stepModal(+li.getAttribute('data-step'));});
   });
+  syncFireFocus(r);   /* 选中联动：地图火点定位 */
+  renderPerf();       /* 选中联动：质效评估按本条工单回显 */
+}
+/* 选中工单 → 地图火点定位：按记录坐标映射到地图百分比，无坐标时按记录编号稳定散列 */
+function syncFireFocus(r){
+  const box=document.getElementById('mapMarks');if(!box)return;
+  let el=document.getElementById('mapFocusFire');
+  if(!el){
+    el=document.createElement('div');el.id='mapFocusFire';el.className='mk fire sel';
+    box.appendChild(el);
+  }
+  if(!r||!document.body.classList.contains('mode-order')){el.style.display='none';return}
+  el.style.display='';
+  const c=String(r.coord||''),m=c.match(/(\d{2,3}\.\d+)\s*°?E[^\d]*(\d{1,2}\.\d+)/i);
+  let x=46,y=44;
+  if(m){
+    x=Math.max(14,Math.min(86,14+((parseFloat(m[1])-114.80)/0.42)*72));
+    y=Math.max(14,Math.min(86,86-((parseFloat(m[2])-29.88)/0.34)*72));
+  }else{
+    const h=String(r.id||'').split('').reduce(function(a,ch){return a+ch.charCodeAt(0)},0);
+    x=22+h%56;y=22+(h>>3)%52;
+  }
+  el.style.left=x+'%';el.style.top=y+'%';
+  el.innerHTML='<span class="halo"></span><span class="halo d2"></span>'+
+    '<div class="pt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><use href="#i-fire"/></svg></div>'+
+    '<div class="ml">选中火点 · '+eh(r.spot||r.town||r.id)+'</div>';
+  el.onclick=function(){openDetail(r.id,true)};
 }
 /* ================= 环节详情：按当前选中工单动态渲染 =================
    FLOW 环节描述保留演示口径；要素字段、进度与留痕按 CUR 记录动态取值；
@@ -2262,20 +2296,45 @@ function stepModal(i){
       '<div class="note">暂无留痕记录（演示数据为空）。</div>';
   }
   h+='<div class="note">环节记录不可修改，如需更正须由指挥员发起补录并留痕。</div>';
-  /* 底部：跳转工单详情；指挥调度环节进行中提供催办引导（规划中 · 无数据源） */
+  /* 底部：跳转工单详情；指挥调度环节进行中可发起真实催办并写入流转留痕 */
   let foot=(i===3&&mode==='now'&&!signed?'<button class="ud-fbtn" data-urge="1">催办未签收单位</button>':'')+
     '<button class="primary" data-stepwo="1">查看预警工单详情 ›</button>';
   modal({title:'环节详情',sub:eh(r.id)+' · '+eh(r.town)+' · '+eh(r.spot)+' ｜ '+eh(f.s),w:800,body:h,footer:foot});
   const wb=$('#dlg [data-stepwo]');
   if(wb)wb.addEventListener('click',function(){closeModal();openDetail(r.id,true);});
   const ub=$('#dlg [data-urge]');
-  if(ub)ub.addEventListener('click',function(){toast('催办指令已下发至未签收单位（规划中 · 无数据源）');});
+  if(ub)ub.addEventListener('click',function(){
+    const cr=findRec(CUR)||RECS[0];if(!cr)return;
+    const unit=cr.unit||'属地值班室',tm=new Date().toTimeString().slice(0,5);
+    cr.timeline=Array.isArray(cr.timeline)?cr.timeline:[];
+    cr.timeline.push({t:tm,b:'值班指挥员',x:'催办未签收单位 '+unit+'（大屏指挥调度环节发起）'});
+    saveShared();
+    toast('催办指令已下发至 '+unit+'，已写入流转留痕并同步 PC / 移动端');
+  });
   $$('#dlg [data-ph]').forEach(function(el){
     el.addEventListener('click',function(){photoViewer(r.id,parseInt(el.getAttribute('data-ph'),10)||0);});
   });
 }
 function renderPerf(){
   const cls=function(v){return v>=90?'hi':v>=80?'mid':'low';};
+  /* 选中联动：优先回显本条工单的质效评估；未评估时回退按单位汇总的演示数据 */
+  const cur=CUR?findRec(CUR):null,e=cur&&cur.eval;
+  const pf=document.getElementById('perfFocus'),ps=document.getElementById('perfScore');
+  if(pf){
+    if(e&&e.score!==undefined){
+      const d=e.dims||{};
+      pf.innerHTML='<div class="pf-focus"><div class="pf-hd">当前选中工单 · '+eh(cur.id)+' 质效评估</div>'+
+        '<div class="kpi-row"><div class="kpi"><em>综合评估</em><b>'+eh(String(e.score))+'<small>分</small></b></div>'+
+        '<div class="kpi"><em>响应速度</em><b>'+eh(String(d['响应速度']||'—'))+'<small>分</small></b></div>'+
+        '<div class="kpi"><em>处置效率</em><b>'+eh(String(d['处置效率']||'—'))+'<small>分</small></b></div>'+
+        '<div class="kpi"><em>等级</em><b style="font-size:16px">'+eh(e.level||'—')+'</b></div></div>'+
+        (e.note?'<div class="note" style="margin:7px 0 0">'+eh(e.note)+'</div>':'')+'</div>';
+    }else{
+      pf.innerHTML='<div class="pf-focus"><div class="pf-hd">当前选中工单 · '+(cur?eh(cur.id):'—')+'</div>'+
+        '<div class="note" style="margin:0">该工单尚未开展质效评估，下方显示按责任单位汇总的演示数据；评估销号后自动回显本条记录分值。</div></div>';
+    }
+  }
+  if(ps)ps.textContent=(e&&e.score!==undefined)?String(e.score):'90.5';
   $('#perfTable tbody').innerHTML=PERF.map(function(r){
     return '<tr data-unit="'+r[0]+'"><td>'+r[0]+'</td><td><span class="'+cls(r[1])+'">'+r[1]+'</span></td>'+
       '<td><span class="'+cls(r[2])+'">'+r[2]+'</span></td><td><span class="'+cls(r[3])+'">'+r[3]+'</span></td></tr>';
@@ -2309,7 +2368,7 @@ $('#btnOrder').addEventListener('click',function(){
   $('#btnOrderTxt').textContent=woMode?'返回总览':'工单处置';
   this.classList.toggle('on',woMode);
   if(woMode){renderOrders();renderFlow();}
-  else{closeModal();}
+  else{closeModal();const mf=document.getElementById('mapFocusFire');if(mf)mf.style.display='none';}
   toast(woMode?'已进入工单处置视图':'已返回总体态势');
 });
 $('#btnBell').addEventListener('click',function(){
